@@ -171,8 +171,10 @@ sub xyz {
     print "\n";
     exit;
   }
-  if (($commands->{"r"} || $commands->{"remove"}) && $commands->{"purge"} &&
-      $commands->{"reinstall"}) {
+  if ((($commands->{"r"} || $commands->{"remove"}) && $commands->{"purge"}) ||
+      (($commands->{"r"} || $commands->{"remove"}) && $commands->{"reinstall"})
+      || ($commands->{"reinstall"} && $commands->{"purge"})
+) {
     print "swim: ";
     print "-r " if defined $commands->{"r"};
     print "--remove " if defined $commands->{"remove"};
@@ -271,11 +273,20 @@ sub xyz {
          history_print($arg,\%commands);
       }
     } 
-    !($commands->{"r"} || $commands{"remove"}) ?
-      system "$apt_get install -qs $arg" :
-      system "$apt_get remove -qs $arg";
-    system "$apt_get --purge remove -qs $arg" if $commands->{"purge"};
-    system "$apt_get --reinstall install -qs $arg" if $commands->{"reinstall"};
+
+    if ( $commands->{"r"} || $commands{"remove"} ) {
+	system "$apt_get remove -qs $arg";
+    }
+    elsif ( $commands->{"purge"} ) {
+	system "$apt_get --purge remove -qs $arg";
+    }
+    elsif ( $commands->{"reinstall"} ) {
+	system "$apt_get --reinstall install -qs $arg";
+    }
+    else {
+	system "$apt_get install -qs $arg";
+    }
+
 
   }
   #####################
