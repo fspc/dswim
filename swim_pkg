@@ -43,7 +43,7 @@ use File::Find;
 # Makefile.pkg in $gbootroot_cvs in used as the packages Makefile.
 
 my $user_home = "/home/mttrader";
-my $prog = "swim";
+my $prog = "dswim";
 my $prog_real_name = "swim";
 my $revision = 1;
 my $dist = "unstable";

@@ -9,8 +9,8 @@ install:
 	cp -fa SWIM/*pm /usr/share/perl5/SWIM
 	install -d /usr/lib/dswim 
 	cp -fa bin/*swim /usr/lib/dswim
-	install -d /etc/swim
-	cp -fa swimrc /etc/swim
+	install -d /etc/dswim
+	cp -fa swimrc /etc/dswim
 	install -d /usr/share/man/man8
 	cp -fa swim.8 /usr/share/man/man8
 	install -d /usr/share/man/man5
@@ -23,6 +23,8 @@ remove:
 	rm /usr/bin/swim
 	rm /usr/lib/dswim/*swim
 	rmdir /usr/lib/dswim
+	rm /etc/dswim/swimrc
+	rmdir /etc/dswim
 	rm /usr/share/man/man8/swim.8
 	rm /usr/share/man/man5/swimrc.5
 

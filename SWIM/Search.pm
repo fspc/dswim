@@ -214,7 +214,7 @@ sub search {
             } 
            }
           }
-    print "swim: found $count package(s)\n"; 
+    print STDERR "swim: found $count package(s)\n"; 
 
     }
     if (!$line) {
@@ -300,7 +300,7 @@ sub search {
             }
            }
     }
-    print "swim: found $count package(s)\n"; 
+    print STDERR "swim: found $count package(s)\n"; 
     if (!$line) {
       $line = "";
     }
@@ -390,7 +390,7 @@ sub search {
             }
            }
           }
-    print "swim: found $count package(s)\n"; 
+    print STDERR "swim: found $count package(s)\n"; 
     if (!$line) {
       $line = "";
     }
@@ -709,7 +709,7 @@ sub search {
              }
            }
           }
-    print "swim: found $count package(s)\n"; 
+    print STDERR "swim: found $count package(s)\n"; 
     if (!$line) {
       $line = "";
     }
