@@ -369,7 +369,9 @@ $passive = 0;
 # You will never need to change this unless for some weird reason all the
 # files under dpkg are somewhere else (including /info*) , see --dbpath as
 # an alternative if you decide to access or make the databases somewhere
-# else.
+# else.  I should point out that this program was designed to work with only
+# one user .. root.
+
 $base = '/var/lib/dpkg';
 
 # --dbpath takes care of this so don't touch.
