@@ -89,7 +89,7 @@ sub db {
 
   dbi(\%commands); ib(\%commands); sb(\%commands);
   # Check differences now.
-  print "checking for new, changed, and removed packages\n";
+  print STDERR "checking for new, changed, and removed packages\n";
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
@@ -180,21 +180,21 @@ sub db {
       }      
      }
      else {
-       print "swim: missing important database\n"; return "missing";
+       print STDERR "swim: missing important database\n"; return "missing";
      }
     
      foreach (@GONE) {
-        print "GONE $_\n";
+        print STDERR "GONE $_\n";
      }
      foreach (@CHANGED) {
-       print "CHANGED $_\n";
+       print STDERR "CHANGED $_\n";
      }
      foreach (@changed_packages) {
        push(@CHANGED,$_);
-       print "CHANGED STATUS $_\n";
+       print STDERR "CHANGED STATUS $_\n";
      }
      foreach (@NEW) {
-      print "NEW $_\n";
+      print STDERR "NEW $_\n";
      }
 
       my $new=$#NEW + 1; my $cr=$#changed_packages + 1;
@@ -202,14 +202,14 @@ sub db {
 
 
     if ($commands->{"check"}) {
-      print "\n       TOTAL\n       -----\n";
-      print "NEW $new\n"; print "GONE $gon\n";
-      print "CHANGED $ch\n"; print "CHANGED STATUS $cr\n"; 
+      print STDERR "\n       TOTAL\n       -----\n";
+      print STDERR "NEW $new\n"; print "GONE $gon\n";
+      print STDERR "CHANGED $ch\n"; print "CHANGED STATUS $cr\n"; 
       return 1;
     }
-      print "\n       TOTAL\n       -----\n";
-      print "NEW $new\n"; print "GONE $gon\n";
-      print "CHANGED $ch\n"; print "CHANGED STATUS $cr\n";
+      print STDERR "\n       TOTAL\n       -----\n";
+      print STDERR "NEW $new\n"; print "GONE $gon\n";
+      print STDERR "CHANGED $ch\n"; print "CHANGED STATUS $cr\n";
 
 
     @GONE = (@GONE,@CHANGED);
@@ -291,7 +291,7 @@ sub db {
 
    $| = 1; my $x = 1;
    foreach (@GONE) {
-     print "G|C|CS $x $_.list\r";
+     print STDERR "G|C|CS $x $_.list\r";
      $x++;
      #first delete keys from package.deb
       # If I kept this the name_version would be remembered.
@@ -399,7 +399,7 @@ sub db {
 
    } # end foreach OLD   
 
-   print "\n" if $#GONE != -1 && $#NEW == -1;
+   print STDERR "\n" if $#GONE != -1 && $#NEW == -1;
 
    #############
    #           #
@@ -410,12 +410,12 @@ sub db {
        $the_status = "$parent$base/status";
    }
    else {
-       print "swim: crucial file(s)/directories are missing in $parent\n";
+       print STDERR "swim: crucial file(s)/directories are missing in $parent\n";
        exit;
    }
    my %exacts;
    my $goon;
-   print "\n" if $#NEW != -1; $x = 1;
+   print STDERR "\n" if $#NEW != -1; $x = 1;
    foreach (@NEW) {
      $exacts{$_} = "yes";
    } 
@@ -434,7 +434,7 @@ sub db {
           @package = split(/: /,$_);                                                  
           chomp $package[1];
           if (defined $exacts{$package[1]}) {
-             print "N|C|CS $x\r"; $x++;
+             print STDERR "N|C|CS $x\r"; $x++;
              $goon = "yes";
           }
           else {
@@ -794,7 +794,7 @@ sub db {
      if (!-d "$parent$base/info/backup") {
         mkdir("$parent$base/info/backup",0666);
      }
-     print "\n" if $#NEW != -1; $x = 1;
+     print STDERR "\n" if $#NEW != -1; $x = 1;
 
   foreach $package_name (@NEW) {
      open(FILENAME,"$parent$base/info/$package_name.list");
@@ -806,7 +806,7 @@ sub db {
      close(CP);
 
      my $file = "$parent$base/info/backup/$package_name.list.bk";
-     print "#$x"; print " N|C $package_name.list             \r";
+     print STDERR "#$x"; print STDERR " N|C $package_name.list             \r";
      $x++;
      open(LIST,"$file");
      while (<LIST>) {
@@ -867,7 +867,7 @@ sub db {
     }
 
   }  # end foreach NEW   
-  print "\n" if $#NEW != -1;
+  print STDERR "\n" if $#NEW != -1;
 
 } # end sub db
 
@@ -901,7 +901,7 @@ sub rebuildflatdb {
             unlink("$dir.gz") if -e "$dir.gz";
         } 
         else {
-	    print "swim: operation only implemented for installed system\n";
+	    print STDERR "swim: operation only implemented for installed system\n";
 	    exit;
        	}
   }
@@ -915,11 +915,10 @@ sub rebuildflatdb {
             unlink("$dir.gz") if -e "$dir.gz";
          }
         else {
-	    print "swim: operation only implemented for installed system\n";
+	    print STDERR "swim: operation only implemented for installed system\n";
 	    exit;
         }
   }
-
 
   open(DIR,">$dir");
   open(FILE,">$file");
