@@ -109,7 +109,7 @@ sub database {
         if (-e "$main::home$parent$library/packages.deb" &&
             -e "$main::home$parent$library/fileindex.deb") {            
             print STDERR "swim:  use --rebuilddb\n";
-            exit;
+            return "rebuilddb";
         }
         else {
           # if a database happens to be missing 
@@ -156,7 +156,7 @@ sub database {
         }
         else {
           print STDERR "swim:  use --initdb to create databases\n";
-          exit;
+          return "initdb";
         }
       }  
   }
@@ -165,7 +165,7 @@ sub database {
         if (-e "$main::home$parent$base/packages.deb" &&
             -e "$main::home$parent$base/fileindex.deb") {            
             print STDERR "swim:  use --rebuilddb\n";
-            exit;
+            return "rebuilddb";
         }
         else {
           # if a database happens to be missing 
@@ -212,7 +212,7 @@ sub database {
         }
         else {
           print STDERR "swim:  use --initdb to create databases\n";
-          exit;
+          return "initdb";
         }
       }  
   }

@@ -238,7 +238,9 @@ $longswim = "$pre/lib/SWIM/longswim";
 # explanation for making such a disk.  There is also
 # /usr/src/kernel-source.version/Documentation.  Whether this will speed
 # things up is a subject of experimentation.
-$tmp = '/tmp';
+my $tmp_home = substr($main::home,1,);
+$tmp = "/tmp/.gbootroot_$tmp_home";
+home_builder($tmp);
 
 ##################
 # MAIN CONFFILES #
@@ -465,6 +467,30 @@ if (!-d $swim_conf) {
     mkdir($swim_conf,0666) or die "Couldn't create configuration file directory,
                                    please make the directories which are needed.\n";
 }
+
+
+# Pulled this from *_pkg from the gbootroot project.
+sub home_builder {
+
+    my ($home_builder) = @_; 
+
+    if (!-d $home_builder) {
+	if (-e $home_builder) {
+	    print "ERROR: A file exists where $home_builder should be.\n";
+	}	 
+	else {
+	    my @directory_parts = split(m,/,,$home_builder);
+	    my $placement = "/";
+	    for (1 .. $#directory_parts) {
+		$_ == 1 ? ($placement = "/$directory_parts[$_]")
+		    : ($placement = $placement . "/" . $directory_parts[$_]);
+		-d $placement or mkdir $placement;
+	    }
+	}
+    }
+
+} # end home_builder
+
 
 1;
 
