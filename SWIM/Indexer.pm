@@ -64,6 +64,7 @@ sub T_indexer {
 	 SWIM::File->import(qw(file));
 	   file(\%commands);
        }
+       # R 1.10 somehow added a return here
        print "\n";
    }
 
