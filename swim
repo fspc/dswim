@@ -128,6 +128,7 @@ my($result) =
 		"extract=s",      # extract all files/file from package
 		"remove", "r",    # remove all, but conf.
 		"purge",          # remove it all
+		"reinstall",      # reinstall
 		"apt",            # apt-get
 		"update",         # using sources.list
 		"clean",          # remove archives or apt2ftp
@@ -1167,7 +1168,7 @@ sub command {
          $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"} ) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1196,7 +1197,7 @@ sub command {
          $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1228,7 +1229,7 @@ sub command {
          $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1265,7 +1266,7 @@ sub command {
          $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1302,7 +1303,7 @@ sub command {
          $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1328,10 +1329,10 @@ sub command {
          }
          if (!($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"})) {  
+             $commands{"purge"} || $commands{"reinstall"})) {  
           if ($commands{"x"} || $commands{"ftp"} || $commands{"source"} ||
               $commands{"source_only"} || $commands{"remove"} ||
-              $commands{"r"} || $commands{"purge"}) {
+              $commands{"r"} || $commands{"purge"} || $commands{"reinstall"}) {
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1353,7 +1354,7 @@ sub command {
          $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1395,7 +1396,7 @@ sub command {
          @PACKAGES = @ARGV;
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1436,7 +1437,7 @@ sub command {
          @PACKAGES = @ARGV;
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1483,7 +1484,7 @@ sub command {
          @PACKAGES = @ARGV;
          if ($commands{"z"} || 
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1509,10 +1510,10 @@ sub command {
          }
          if (!($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"})) {  
+             $commands{"purge"} || $commands{"reinstall"})) {  
           if ($commands{"x"} || $commands{"ftp"} || $commands{"source"} ||
               $commands{"source_only"} || $commands{"remove"} ||
-              $commands{"r"} || $commands{"purge"}) {
+              $commands{"r"} || $commands{"purge"} || $commands{"reinstall"}) {
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1546,7 +1547,7 @@ sub command {
          @PACKAGES = @ARGV; 
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1594,7 +1595,7 @@ sub command {
          @PACKAGES = @ARGV;
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1620,10 +1621,10 @@ sub command {
          }
          if (!($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"})) {  
+             $commands{"purge"} || $commands{"reinstall"})) {  
           if ($commands{"x"} || $commands{"ftp"} || $commands{"source"} ||
               $commands{"source_only"} || $commands{"remove"} ||
-              $commands{"r"} || $commands{"purge"}) {
+              $commands{"r"} || $commands{"purge"} || $commands{"reinstall"}) {
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1658,7 +1659,7 @@ sub command {
          @PACKAGES = @ARGV;
          if ($commands{"z"} ||
              $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
-             $commands{"purge"}) {  
+             $commands{"purge"} || $commands{"reinstall"}) {  
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);          
@@ -1722,12 +1723,12 @@ Usage: swim [--nopager -n]
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
                         [-xyrz --remove ? <[--nz]>] [--stdin]
-                        [--purge] [<\\d{1,}>]  
+                        [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
                         [-xyrz --remove ? <[--nz]>] [--stdin]
-                        [--purge] [<\\d{1,}>]  
+                        [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
@@ -1738,7 +1739,7 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] 
+                        [-xyrz --remove ? <[--nz]>] [--purge] [--reinstall] 
                         [targets | -S ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
@@ -1794,12 +1795,12 @@ Usage: swim [--nopager -n]
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
                         [-xyrz --remove ? <[--nz]>] [--stdin]
-                        [--purge] [<\\d{1,}>] 
+                        [--purge] [--reinstall] [<\\d{1,}>] 
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
                         [-xyrz --remove ? <[--nz]>] [--stdin]
-                        [--purge] [<\\d{1,}>]  
+                        [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
@@ -1810,7 +1811,7 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] 
+                        [-xyrz --remove ? <[--nz]>] [--purge] [--reinstall] 
                         [targets | -S  ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
@@ -1920,6 +1921,8 @@ usage:
         --remove
         -r                 - remove the installed package, but not the
                              package's configuration files  
+        --reinstall        - reinstall the installed package      
+
       Editing Option
         --stdin            - allows readline editing capabilities when
                              used with virtual options 
@@ -1960,6 +1963,8 @@ usage:
         --remove
         -r                     - remove the installed package, but not the
                                  package's configuration files  
+        --reinstall        - reinstall the installed package      
+
       Editing Option
         --stdin                - allows readline editing capabilities when
                                  used with virtual options 
@@ -2122,13 +2127,13 @@ Usage: swim [--nopager -n]
                         [--arch <architecture>] [--dists <distribution>] 
                         [--ftp ? --source | --source_only ? <[--diff]>] 
                         [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
-                        [--df2apt] [--purge] [<\\d{1,}>] 
+                        [--df2apt] [--purge] [--reinstall] [<\\d{1,}>] 
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
                         [--ftp ? --source | --source_only <[--diff]>] 
                         [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
-                        [--df2apt] [--purge] [<\\d{1,}>]  
+                        [--df2apt] [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [-v] [--dbpath <dir>] [--menu -m] 
@@ -2139,7 +2144,7 @@ Usage: swim [--nopager -n]
                         [--arch <architecture>] [--dists <distribution>] 
                         [--ftp ? --source | --source_only ? <[--diff]>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df] 
+                        [-xyrz --remove ? <[--nz]>] [--purge] [--reinstall] [--apt2df] 
                         [--df2apt] [targets | -S  ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--ftp} [--Contents <DF|directory>] [--Packages <DF|directory>]
