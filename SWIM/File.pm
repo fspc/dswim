@@ -541,17 +541,30 @@ sub file {
 
  untie %db;
  
+         if (defined $file_now && 
+	     
+	     !($commands->{"z"} ||
+	       $commands->{"ftp"} ||
+	       $commands->{"remove"} || 
+	       $commands->{"r"} ||
+	       $commands->{"purge"} || 
+	       $commands->{"reinstall"} || 
+	       $commands->{"build-dep"})) {
 
-         if (defined $file_now && !($commands->{"z"} ||
-                                    $commands->{"ftp"} ||
-                   $commands->{"remove"} || $commands->{"r"} ||
-                   $commands->{"purge"} || $commands->{"reinstall"})) {
-          if ($commands{"x"} || $commands{"ftp"} || $commands{"source"} ||
-              $commands{"source_only"} || $commands{"remove"} ||
-              $commands{"r"} || $commands{"purge"} || $commands->{"reinstall"} ) {
+	     if ($commands{"x"} || 
+		 $commands{"ftp"} || 
+		 $commands{"source"} ||
+		 $commands{"source_only"} || 
+		 $commands{"remove"} ||
+		 $commands{"r"} || 
+		 $commands{"purge"} || 
+		 $commands->{"reinstall"} || 
+		 $commands->{"build-dep"}) {
+
             require SWIM::Safex;
             SWIM::Safex->import(qw(safex));
             safex(\%commands);
+
           } 
          }
 

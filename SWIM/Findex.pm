@@ -67,9 +67,14 @@ sub findexer {
        my $package = $ib{"$argument"};
        @alot = split(/\s/, $package);       
        @PACKAGES = @alot;
-       if ($commands->{"z"} || $commands->{"ftp"} ||
-                   $commands->{"remove"} || $commands->{"r"} ||
-                   $commands->{"purge"}  || $commands->{"reinstall"}) {
+       if ($commands->{"z"} || 
+	   $commands->{"ftp"} ||
+	   $commands->{"remove"} || 
+	   $commands->{"r"} ||
+	   $commands->{"purge"} || 
+	   $commands->{"reinstall"} || 
+	   $commands->{"build-dep"}) {
+
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);
@@ -79,9 +84,13 @@ sub findexer {
         if ($commands->{"T"}) { 
          foreach (@alot) {
           $argument = $_;
-            if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} ) {
+            if ($commands->{"scripts"} || 
+		$commands->{"preinst"} ||
+                $commands->{"postinst"} ||
+		$commands->{"prerm"} ||
+                $commands->{"postrm"} || 
+		$commands->{"config"} || 
+		$commands->{"templates"} ) {
              scripts(\%commands);
           }
           menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -123,9 +132,13 @@ sub findexer {
           # no -Ts.
           foreach (@alot) {
              $argument = $_;                     
-             if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}  || $commands->{"config"} || $commands->{"templates"}) {
+             if ($commands->{"scripts"} || 
+		 $commands->{"preinst"} ||
+                $commands->{"postinst"} || 
+		 $commands->{"prerm"} ||
+                $commands->{"postrm"}  || 
+		 $commands->{"config"} || 
+		 $commands->{"templates"}) {
                  scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -158,9 +171,14 @@ sub findexer {
           if ($commands->{"T"}) {
            foreach (@alot) {                                                    
              $argument = $_;                                     
-             if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
+             if ($commands->{"scripts"} || 
+		 $commands->{"preinst"} ||
+		 $commands->{"postinst"} || 
+		 $commands->{"prerm"} ||
+		 $commands->{"postrm"} || 
+		 $commands->{"config"} || 
+		 $commands->{"templates"}) {
+
                  scripts(\%commands);                                                     
              }                                                                  
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -198,9 +216,13 @@ sub findexer {
           } # which_character
           foreach (@alot) {
             $argument = $_;                     
-            if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
+            if ($commands->{"scripts"} || 
+		$commands->{"preinst"} ||
+                $commands->{"postinst"} || 
+		$commands->{"prerm"} ||
+                $commands->{"postrm"} || 
+		$commands->{"config"} || 
+		$commands->{"templates"}) {
                 scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -241,13 +263,25 @@ sub findexer {
   }
   untie %ib;
 
-  if (!($commands->{"z"} || $commands->{"ftp"} ||
-                   $commands->{"remove"} || $commands->{"r"} ||
-                   $commands->{"purge"}|| $commands->{"reinstall"} )) {
-    if ($commands->{"x"} || $commands->{"ftp"} || $commands->{"source"} ||
-         $commands->{"source_only"} || $commands->{"remove"} ||
-         $commands->{"r"} || $commands->{"purge"}|| $commands->{"reinstall"} ) {
+  if (!($commands->{"z"} || 
+	$commands->{"ftp"} ||
+	$commands->{"remove"} || 
+	$commands->{"r"} ||
+	$commands->{"purge"} || 
+	$commands->{"reinstall"} || 
+	$commands->{"build-dep"} )) {
+
+      if ($commands->{"x"} || 
+	  $commands->{"ftp"} || 
+	  $commands->{"source"} ||
+	  $commands->{"source_only"} || 
+	  $commands->{"remove"} ||
+	  $commands->{"r"} || 
+	  $commands->{"purge"} || 
+	  $commands->{"reinstall"} || 
+	  $commands->{"build-dep"} ) {
            require SWIM::Safex;
+
            SWIM::Safex->import(qw(safex));
            safex(\%commands);
     }
@@ -264,10 +298,15 @@ sub qindexer {
    require SWIM::Ag;
    SWIM::Ag->import(qw(description));
 
-   if ($commands->{"scripts"} || $commands->{"preinst"} ||
-       $commands->{"postinst"} || $commands->{"prerm"} ||
-       $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
-      scripts(\%commands);
+   if ($commands->{"scripts"} || 
+       $commands->{"preinst"} ||
+       $commands->{"postinst"} || 
+       $commands->{"prerm"} ||
+       $commands->{"postrm"} || 
+       $commands->{"config"} || 
+       $commands->{"templates"}) {
+
+       scripts(\%commands);
    }
    menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
    copyright(\%commands) if $commands->{"copyright"}; 
@@ -296,9 +335,14 @@ sub qindexer {
        my $package = $ib{"$argument"};
        @alot = split(/\s/, $package);
        @PACKAGES = @alot;
-       if ($commands->{"z"} || $commands->{"ftp"} ||
-                   $commands->{"remove"} || $commands->{"r"} ||
-                   $commands->{"purge"} || $commands->{"reinstall"}) { 
+       if ($commands->{"z"} || 
+	   $commands->{"ftp"} ||
+	   $commands->{"remove"} || 
+	   $commands->{"r"} ||
+	   $commands->{"purge"} || 
+	   $commands->{"reinstall"} || 
+	   $commands->{"build-dep"}) { 
+
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);

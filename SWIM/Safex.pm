@@ -42,7 +42,8 @@ sub safex {
      $commands->{"remove"} || 
      $commands->{"r"} ||
      $commands->{"purge"} || 
-     $commands->{"reinstall"}) {
+     $commands->{"reinstall"} || 
+     $commands->{"build-dep"}) {
  
   
      if (!defined @PACKAGES) {
@@ -75,7 +76,8 @@ sub safex {
 		 $commands->{"purge"} || 
 		 $commands->{"remove"} ||
 		 $commands->{"r"}  || 
-		 $commands->{"reinstall"} ) {
+		 $commands->{"reinstall"} ||
+		 $commands->{"build-dep"} ) {
 		 if ($PACKAGES[$#PACKAGES] =~ /_/) {
 		     $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
 		     $aptor = $1;
@@ -97,7 +99,8 @@ sub safex {
 	     $commands->{"purge"} || 
 	     $commands->{"remove"} ||
 	     $commands->{"r"}  || 
-	     $commands->{"reinstall"}) {
+	     $commands->{"reinstall"} || 
+	     $commands->{"build-dep"}) {
 	     if ($PACKAGES[$#PACKAGES] =~ /_/) {
 		 $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
 		 $aptor = $1;
@@ -189,32 +192,49 @@ sub xyz {
       ($commands->{"r"} || 
        $commands->{"remove"} ||
        $commands->{"purge"}  || 
-       $commands->{"reinstall"}) ) {
+       $commands->{"reinstall"} || 
+       $commands->{"build-dep"}) ) {
 
     print "swim: --ftp cannot be used with ";  
     print "-r " if defined $commands->{"r"};
     print "--remove " if defined $commands->{"remove"};
     print "--purge " if defined $commands->{"purge"};
     print "--reinstall " if defined $commands->{"reinstall"};
+    print "--build-dep " if defined $commands->{"build-dep"};
     print "\n";
     exit;
   }
-  if ((($commands->{"r"} || 
+  if (
+
+      (($commands->{"r"} || 
 	$commands->{"remove"}) && 
        $commands->{"purge"}) ||
 
       (($commands->{"r"} || 
 	$commands->{"remove"}) && 
+       $commands->{"build-dep"}) ||
+      
+      (($commands->{"r"} || 
+	$commands->{"remove"}) && 
        $commands->{"reinstall"}) || 
+	   
+      ($commands->{"reinstall"} && 
+       $commands->{"purge"}) ||
 
       ($commands->{"reinstall"} && 
-       $commands->{"purge"})
-) {
+       $commands->{"build-dep"}) ||
+
+      ($commands->{"purge"} && 
+       $commands->{"build-dep"})
+
+	   ) {
+
     print "swim: ";
     print "-r " if defined $commands->{"r"};
     print "--remove " if defined $commands->{"remove"};
     print "--purge " if defined $commands->{"purge"};
     print "--reinstall " if defined $commands->{"reinstall"};
+    print "--build-dep " if defined $commands->{"build-dep"};
     print "cannot be used together\n";
     exit;
   }
@@ -342,6 +362,9 @@ sub xyz {
       elsif ( $commands->{"reinstall"} ) {
 	  system "$apt_get --reinstall install -qs $arg";
       }
+      elsif ( $commands->{"build-dep"} ) {
+	  system "$apt_get build-dep -qs $arg";
+      }
       else {
 	  system "$apt_get install -qs $arg";
       }
@@ -401,6 +424,9 @@ sub xyz {
       elsif ( $commands->{"reinstall"} ) {
 	  system "$apt_get --reinstall install -qds $arg";
       }
+      elsif ( $commands->{"build-dep"} ) {
+	  system "$apt_get build-dep -qds $arg";
+      }
       else {
 	  system "$apt_get install -qds $arg";
       }
@@ -452,33 +478,43 @@ sub xyz {
     #######
     # XYZ #
     #######
-    if (!($commands->{"ftp"} || $commands->{"purge"} || 
-	  $commands->{"reinstall"})) {
-     if (!$commands->{"y"}) {
-      if (!$commands->{"download-only"}) {
-       !($commands->{"r"} || $commands{"remove"}) ?
-         system "$apt_get install $arg" :
-         system "$apt_get remove $arg";
-      }
-      else {
-       !($commands->{"r"} || $commands{"remove"}) ?
-         system "$apt_get -d install $arg" :
-         system "$apt_get  remove $arg";
-      } 
-     }
-     else {
-      if (!$commands->{"download-only"}) {
-       !($commands->{"r"} || $commands{"remove"}) ?
-         system "$apt_get install -y $arg" :
-         system "$apt_get remove -y $arg";
-      }
-      else {
-       # not that the y does anything
-       !($commands->{"r"} || $commands{"remove"}) ?
-         system "$apt_get install -y -d $arg" :
-         system "$apt_get remove -y $arg";
-      }
-     }
+    if (
+	!($commands->{"ftp"} || 
+	  $commands->{"purge"} || 
+	  $commands->{"reinstall"} ||
+	  $commands->{"build-dep"} )
+
+	) {
+
+	if (!$commands->{"y"}) {
+	    if (!$commands->{"download-only"}) {
+
+		!($commands->{"r"} || $commands{"remove"}) ?
+		    system "$apt_get install $arg" :
+			system "$apt_get remove $arg";
+	    }
+	    else {
+
+		!($commands->{"r"} || $commands{"remove"}) ?
+		    system "$apt_get -d install $arg" :
+			system "$apt_get  remove $arg";
+	    } 
+	}
+	else {
+	    if (!$commands->{"download-only"}) {
+
+		!($commands->{"r"} || $commands{"remove"}) ?
+		    system "$apt_get install -y $arg" :
+			system "$apt_get remove -y $arg";
+	    }
+	    else {
+
+		# not that the y does anything or d for that matter
+		!($commands->{"r"} || $commands{"remove"}) ?
+		    system "$apt_get install -y -d $arg" :
+			system "$apt_get remove -y $arg";
+	    }
+	}
     }
     #######
     # FTP #
@@ -489,12 +525,17 @@ sub xyz {
       qftp($arg,\%commands);
     }
   
-    ##############################
-    # PURGE & REMOVE & REINSTALL #
-    ##############################
-    elsif ($commands->{"purge"} || $commands->{"remove"} || $commands->{"r"} ||
-	   $commands->{"reinstall"}) {        
+    ##########################################
+    # PURGE & REMOVE & REINSTALL & BUILD-DEP #
+    #########################################
+    elsif ($commands->{"purge"} || $
+	   commands->{"remove"} || 
+	   $commands->{"r"} ||
+	   $commands->{"reinstall"} ||
+	   $commands->{"build-dep"} ) {        
+
       purge($arg,\%commands);
+
     }
 
     # this is a good time to return the versions, too, as well as
@@ -530,6 +571,9 @@ sub purge {
      elsif ($commands->{"reinstall"}) {
 	 system "$apt_get --reinstall install $arg";
      }
+     elsif ($commands->{"build-dep"}) {
+	 system "$apt_get build-dep $arg";
+     }
     }
     else {
       print "swim: ";
@@ -537,6 +581,7 @@ sub purge {
       print "--remove " if defined $commands->{"remove"};
       print "--purge " if defined $commands->{"purge"};
       print "--reinstall " if defined $commands->{"reinstall"};
+      print "--build-dep " if defined $commands->{"build-dep"};
       print "can only be used with installed packages\n";
     }
 
