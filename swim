@@ -811,7 +811,7 @@ sub command {
 	    
 	    (-x $tmp && !-w $tmp) ||
 
-	    (!-x && -w $tmp)
+	    (!-x $tmp && -w $tmp)
 
 	   ) {
 	   print STDERR "swim: $tmp is not ";
@@ -829,7 +829,7 @@ sub command {
 	   print STDERR "/" if !-w $tmp || !-r $tmp;
 	   print STDERR "executable" if !-x $tmp;
 	   print STDERR " by your effective uid/gid " . 
-	       "in $ENV{HOME}/.swimrc\n";
+	       "in $ENV{HOME}/.swim/swimrc\n";
 	   return "tmp not-writable";
        }
        $commands{"check"} = 1;
@@ -861,7 +861,7 @@ sub command {
 	    
 			 (-x $tmp && !-w $tmp) ||
 
-			 (!-x && -w $tmp)
+			 (!-x $tmp && -w $tmp)
 
 			 ) {
 			print STDERR "swim: $tmp is not ";
@@ -879,7 +879,7 @@ sub command {
 			print STDERR "/" if !-w $tmp || !-r $tmp;
 			print STDERR "executable" if !-x $tmp;
 			print STDERR " by your effective uid/gid " . 
-			    "in $ENV{HOME}/.swimrc\n";
+			    "in $ENV{HOME}/.swim/swimrc\n";
 			return "tmp not-writable";
 		    }
 
