@@ -40,7 +40,7 @@ sub description {
 
   if ($commands->{"scripts"} || $commands->{"preinst"} ||
       $commands->{"postinst"} || $commands->{"prerm"} ||
-      $commands->{"postrm"} || $commands{"config"} || $commands{"templates"}) {
+      $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
        scripts(\%commands);
   }
   menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -101,10 +101,10 @@ sub description {
 
     if (!($commands->{"z"} || $commands->{"ftp"} ||
                    $commands->{"remove"} || $commands->{"r"} ||
-                   $commands->{"purge"})) {
+                   $commands->{"purge"} || $commands->{"reinstall"})) {
      if ($commands->{"x"} || $commands->{"ftp"} || $commands->{"source"} ||
        $commands->{"source_only"} || $commands->{"remove"} || 
-       $commands->{"r"} || $commands->{"purge"}) {
+       $commands->{"r"} || $commands->{"purge"} || $commands->{"reinstall"}) {
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);
@@ -127,7 +127,7 @@ sub q_description {
 
   if ($commands->{"scripts"} || $commands->{"preinst"} ||
       $commands->{"postinst"} || $commands->{"prerm"} ||
-      $commands->{"postrm"} || $commands{"config"} || $commands{"templates"}) {
+      $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
       scripts(\%commands);
   }
   menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -245,10 +245,10 @@ sub q_description {
   if (!defined $file_now && 
               !($commands->{"z"} || $commands->{"ftp"} ||
                    $commands->{"remove"} || $commands->{"r"} ||
-                   $commands->{"purge"})) {
+                   $commands->{"purge"} || $commands->{"reinstall"})) {
     if ($commands->{"x"} || $commands->{"ftp"} || $commands->{"source"} ||
        $commands->{"source_only"} || $commands->{"remove"} || 
-       $commands->{"r"} || $commands->{"purge"}) {
+       $commands->{"r"} || $commands->{"purge"} || $commands->{"reinstall"}) {
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
            safex(\%commands);
