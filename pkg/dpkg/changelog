@@ -1,3 +1,9 @@
+dswim (0.4.1-1) unstable; urgency=low
+
+  * Adds the --enhances option for binary dependencies.
+
+ -- Jonathan Rosenbaum <freesource@users.sourceforge.net>  Wed, 24 Oct 2001 14:25:04 -0400
+
 dswim (0.4.0-2) unstable; urgency=low
 
   * Changed Suggests gcc to binutils because now ar is found in it.  Most people
