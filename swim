@@ -2,7 +2,7 @@
 
 ############################################################################
 #
-#    Package administration and research tool for Debian                       
+#    Debian System Wide Information Manager                       
 #
 #    Copyright (C) 1999-2001 Jonathan D. Rosenbaum 
 #                            Yahshua Mashiyach
@@ -1698,8 +1698,6 @@ sub command {
 
 sub usage {
 
-# Shameless publication of the ThE_* Project, and also shameless self
-# agrandizing....
 print "DSWIM version $version
 Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License\n";
