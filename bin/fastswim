@@ -47,7 +47,6 @@ my $temp;
 my %HL;
 my @name;
 my %version;
-my $home = $ENV{'HOME'} . "/";
 
 #$| = 1;
 #$#name = 2000;
@@ -115,9 +114,10 @@ my $home = $ENV{'HOME'} . "/";
              # humm let's rebuild the offending backup list, this
              # is important for --db.
              unshift(@redolist,"/."); 
-             open(REDOLIST, ">$home$ARGV[1]/backup/$thingy.bk.bk")
+             open(REDOLIST, ">$ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk")
              or warn "needed to edit $thingy because it lacked /.,
-                      but could not open up a backup file\n";
+                      but could not open up a backup file
+                      $ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk\n";
                my $rd;
                foreach $rd (@redolist) {
                  chomp $rd;
@@ -125,7 +125,7 @@ my $home = $ENV{'HOME'} . "/";
                }
              close(REDOLIST);
              rename
-             ("$ARGV[1]/backup/$thingy.bk.bk","$ARGV[1]/backup/$thingy.bk");
+             ("$ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk","$ARGV[3]/$ARGV[1]/backup/$thingy.bk");
              $_ =  "/.";             
             }
           }
