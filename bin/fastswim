@@ -52,12 +52,13 @@ my %version;
 #$#name = 2000;
 #$#ppackage = 2000;
 
-   # This way has been de-pre-c-whatever-ated because it lacks version 
-   # rememberance, and is just kept for testing purposes
-   if ($#ARGV == -1) {
-         print STDERR "swim: fastswim requires option/arguments, see program for instructions\n";
-         exit;
-         chdir("$ARGV[1]");         
+
+# This way has been de-pre-c-whatever-ated because it lacks version 
+# rememberance, and is just kept for testing purposes
+if ($#ARGV == -1) {
+    print STDERR "swim: fastswim requires option/arguments, see program for instructions\n";
+    exit;
+    chdir("$ARGV[1]");         
          #consider readdir 
          @ppackage = <*.list>;
     }
@@ -76,100 +77,105 @@ my %version;
          }        
         close(TRANSFER);
     }
+
     
 
-     # Make a nice md.  I decided on a Hash of Lists, giving all
-     # files/dirs unique name, and then a list of packages which
-     # correspond..because this should be faster than a Hash of Hash
-     # where you'd have to loop through all packages names..find the
-     # files/dir in all packages names which are the same..I'd assume a HL
-     # would be a quicker query, even though the Hash would be enormous.   
-     # Possible things: a tree for faster query.
+# Make a nice md.  I decided on a Hash of Lists, giving all
+# files/dirs unique name, and then a list of packages which
+# correspond..because this should be faster than a Hash of Hash
+# where you'd have to loop through all packages names..find the
+# files/dir in all packages names which are the same..I'd assume a HL
+# would be a quicker query, even though the Hash would be enormous.   
+# Possible things: a tree for faster query.
 
-     # Put everything into an array..every other is package name
-     # Better check for packages which don't have /. in their *.list...
-     # which is rare, but does happen.  Sometimes *.list(s) don't have
-     # all the parent directories, but we won't worry about that.
-     print STDERR "  Making the massive hash\n";
-     $| = 1; my $x = 1;
-     foreach $thingy (sort @ppackage) {
-       open(LIST, "$ARGV[1]/$thingy") or die "Humm, strange";
+# Put everything into an array..every other is package name
+# Better check for packages which don't have /. in their *.list...
+# which is rare, but does happen.  Sometimes *.list(s) don't have
+# all the parent directories, but we won't worry about that.
+print STDERR "  Making the massive hash\n";
+$| = 1; my $x = 1;
+foreach $thingy (sort @ppackage) {
+
+    if (-e "$ARGV[1]/$thingy") { 
+	open(LIST, "$ARGV[1]/$thingy");
         # Because of the version..there are sometimes dots
         $thingy =~ m,(.*)\.list,;
         my $count = 0;
         my @count = <LIST>;
         close(LIST);
-        foreach (@count) {         
-          $x = 1 if $x == 6;
-          print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
-          print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
-          $x++;     
-          chomp $_;
-          # does /. exist?  it should be first.
-          if ($count == 0) {
-            if ($_ !~ m,\/\.,) {
-             my $shifter = $_;
-             my @redolist = @count;
-             push(@count,$shifter);
-             # humm let's rebuild the offending backup list, this
-             # is important for --db.
-             unshift(@redolist,"/."); 
-             open(REDOLIST, ">$ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk")
-             or warn "needed to edit $thingy because it lacked /.,
+
+	foreach (@count) {         
+	    $x = 1 if $x == 6;
+	    print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
+	    print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
+	    $x++;     
+	    chomp $_;
+	    # does /. exist?  it should be first.
+	    if ($count == 0) {
+		if ($_ !~ m,\/\.,) {
+		    my $shifter = $_;
+		    my @redolist = @count;
+		    push(@count,$shifter);
+		    # humm let's rebuild the offending backup list, this
+		    # is important for --db.
+		    unshift(@redolist,"/."); 
+		    open(REDOLIST, ">$ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk")
+			or warn "needed to edit $thingy because it lacked /.,
                       but could not open up a backup file
                       $ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk\n";
-               my $rd;
-               foreach $rd (@redolist) {
-                 chomp $rd;
-                 print REDOLIST "$rd\n";
-               }
-             close(REDOLIST);
-             rename
-             ("$ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk","$ARGV[3]/$ARGV[1]/backup/$thingy.bk");
-             $_ =  "/.";             
-            }
-          }
-           $count = 1;
-           $repeaters{$_}++;
-             if ($repeaters{$_} == 1) {  
-               $temp = 0;
-             }
-             else {
-               $temp = $repeaters{$_} - 1;
-             }              
-             if (defined $version{$1}) {
-              $HL{$_}[$temp] = "$1_$version{$1}";
-             }
+		    my $rd;
+		    foreach $rd (@redolist) {
+			chomp $rd;
+			print REDOLIST "$rd\n";
+		    }
+		    close(REDOLIST);
+		    rename
+			("$ARGV[3]/$ARGV[1]/backup/$thingy.bk.bk","$ARGV[3]/$ARGV[1]/backup/$thingy.bk");
+		    $_ =  "/.";             
+		}
+	    }
+	    $count = 1;
+	    $repeaters{$_}++;
+	    if ($repeaters{$_} == 1) {  
+		$temp = 0;
+	    }
+	    else {
+		$temp = $repeaters{$_} - 1;
+	    }              
+	    if (defined $version{$1}) {
+		$HL{$_}[$temp] = "$1_$version{$1}";
+	    }
         } 
-     }
-     undef @ppackage;
+    }
+}
+undef @ppackage;
     
-      # We will create one file with the 1..and another with >1..
-      # than split..reverse..and order.accordingly..this makes
-      # things much faster.  Remember clean-up routines for kill.
-      print STDERR "  Starting ... writing to $ARGV[2]!\n";
-      # Create the database 
-      open(BIG, ">$ARGV[2]/big.debian") or die;
-      open(LONG, ">$ARGV[2]/long.debian") or die;
-      foreach $thingy (sort keys %HL ) {
-          $x = 1 if $x == 6;
-          print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
-          print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
-          $x++;
-           # Humm, will split or grep be faster?
-            #my $tingy  = "@{ $HL{$thingy} }" . " " .  @{ $HL{$thingy} };
-            my $tingy  = "@{ $HL{$thingy} }";
-           if (@{ $HL{$thingy} } > 1 || @{ $HL{$thingy} } eq "") {    
-             print LONG "$thingy -> $tingy\n";
-           } 
-           elsif (@{ $HL{$thingy} } == 1) {
-              print BIG "$thingy -> $tingy\n";
-           }
-         }
-        #print "Finished\n";
-        close(BIG);
-        close(LONG);
-        #undef %HL;
-        print STDERR "  Cleaning up\n"; 
+# We will create one file with the 1..and another with >1..
+# than split..reverse..and order.accordingly..this makes
+# things much faster.  Remember clean-up routines for kill.
+print STDERR "  Starting ... writing to $ARGV[2]!\n";
+# Create the database 
+open(BIG, ">$ARGV[2]/big.debian") or die "Couldn't find big.debian\n";
+open(LONG, ">$ARGV[2]/long.debian") or die "Couldn't find long.debian\n";
+foreach $thingy (sort keys %HL ) {
+    $x = 1 if $x == 6;
+    print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
+    print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
+    $x++;
+    # Humm, will split or grep be faster?
+    #my $tingy  = "@{ $HL{$thingy} }" . " " .  @{ $HL{$thingy} };
+    my $tingy  = "@{ $HL{$thingy} }";
+    if (@{ $HL{$thingy} } > 1 || @{ $HL{$thingy} } eq "") {    
+	print LONG "$thingy -> $tingy\n";
+    } 
+    elsif (@{ $HL{$thingy} } == 1) {
+	print BIG "$thingy -> $tingy\n";
+    }
+}
+#print "Finished\n";
+close(BIG);
+close(LONG);
+#undef %HL;
+print STDERR "  Cleaning up\n"; 
 
 __END__
