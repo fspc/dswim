@@ -138,7 +138,7 @@ my($result) =
 		"x",              # simulate apt's actions
 		"y",              # automatic yes for -z
 		"z",              # apt install
-		"nz",             # apt download
+		"no-download",    # apt download
 		"source",         # ftp source and package
 		"source_only",    # ftp only source for package
 		"diff",           # just grab diff for source 
@@ -1728,12 +1728,12 @@ Usage: swim [--nopager -n]
        swim {--search ? (--research || --refinesearch) <pattern(s)>} 
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [-xyrz --remove ? <[--no-download]>] [--stdin]
                         [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [-xyrz --remove ? <[--no-download]>] [--stdin]
                         [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
@@ -1745,7 +1745,7 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] [--reinstall] 
+                        [-xyrz --remove ? <[--no-download]>] [--purge] [--reinstall] 
                         [targets | -S ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
@@ -1800,12 +1800,12 @@ Usage: swim [--nopager -n]
        swim {--search ? (--research || --refinesearch) <pattern(s)>} 
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [-xyrz --remove ? <[--no-download]>] [--stdin]
                         [--purge] [--reinstall] [<\\d{1,}>] 
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [-xyrz --remove ? <[--no-download]>] [--stdin]
                         [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
@@ -1817,7 +1817,7 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] [--reinstall] 
+                        [-xyrz --remove ? <[--no-download]>] [--purge] [--reinstall] 
                         [targets | -S  ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
@@ -1921,7 +1921,7 @@ usage:
         -x                 - simulate apt-get installation
         -y                 - answer yes to all apt-get prompts
         -z                 - get and install package using apt-get
-        --nz               - only download package when using apt-get
+        --no-download               - only download package when using apt-get
         --purge            - remove the installed package, and the
                              package's configuration files
         --remove
@@ -1959,7 +1959,7 @@ usage:
         -x                     - simulate apt-get installation
         -y                     - answer yes to all apt-get prompts
         -z                     - get and install package using apt-get
-        --nz                   - only download package when using apt-get
+        --no-download                   - only download package when using apt-get
         --ftp                  - download package 
         --source               - download source package
         --source_only          - only download source package
@@ -2132,13 +2132,13 @@ Usage: swim [--nopager -n]
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
                         [--ftp ? --source | --source_only ? <[--diff]>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [-xyrz --remove ? <[--no-download]>] [--stdin] [--apt2df]
                         [--df2apt] [--purge] [--reinstall] [<\\d{1,}>] 
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
                         [--ftp ? --source | --source_only <[--diff]>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [-xyrz --remove ? <[--no-download]>] [--stdin] [--apt2df]
                         [--df2apt] [--purge] [--reinstall] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
@@ -2150,7 +2150,7 @@ Usage: swim [--nopager -n]
                         [--arch <architecture>] [--dists <distribution>] 
                         [--ftp ? --source | --source_only ? <[--diff]>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] [--reinstall] [--apt2df] 
+                        [-xyrz --remove ? <[--no-download]>] [--purge] [--reinstall] [--apt2df] 
                         [--df2apt] [targets | -S  ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--ftp} [--Contents <DF|directory>] [--Packages <DF|directory>]
@@ -2267,7 +2267,7 @@ usage:
         -x                 - simulate apt-get installation
         -y                 - answer yes to all apt-get prompts
         -z                 - get and install package using apt-get
-        --nz               - only download package when using apt-get
+        --no-download               - only download package when using apt-get
         --ftp              - download package 
         --source           - download source package
         --source_only      - only download source package
@@ -2309,7 +2309,7 @@ usage:
         -x                     - simulate apt-get installation
         -y                     - answer yes to all apt-get prompts
         -z                     - get and install package using apt-get
-        --nz                   - only download package when using apt-get
+        --no-download                   - only download package when using apt-get
         --ftp                  - download package 
         --source               - download source package
         --source_only          - only download source package

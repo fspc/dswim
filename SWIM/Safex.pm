@@ -35,108 +35,132 @@ sub safex {
  my ($commands) = @_;
  my %commands = %$commands;
 
- if ($commands->{"x"} || $commands->{"ftp"} || $commands->{"source"} ||
-     $commands->{"source_only"} || $commands->{"remove"} || $commands->{"r"} ||
-     $commands->{"purge"} || $commands->{"reinstall"}) {
+ if ($commands->{"x"} || 
+     $commands->{"ftp"} ||
+     $commands->{"source"} ||
+     $commands->{"source_only"} || 
+     $commands->{"remove"} || 
+     $commands->{"r"} ||
+     $commands->{"purge"} || 
+     $commands->{"reinstall"}) {
  
   
-   if (!defined @PACKAGES) {
-     if ($commands->{"search"} || $commands->{"ps"} || $commands->{"research"}
-         || $commands->{"refinesearch"}) {
-       @PACKAGES = "NOPACKAGES";
+     if (!defined @PACKAGES) {
+	 if ($commands->{"search"} || 
+	     $commands->{"ps"} || 
+	     $commands->{"research"} || 
+	     $commands->{"refinesearch"}) {
+	     @PACKAGES = "NOPACKAGES";
+	 }
+	 else {
+	     @PACKAGES = @ARGV;
+	 }
+     }
+ 
+     #print "PACKAGES @PACKAGES $argument\n";
+
+     my ($aptor,$arg);
+     if (defined $argument) {
+	 if ($argument =~ /_/) {
+	     $argument =~ m,(.*)_.*,; 
+	     $aptor = $1;
+	 }
+	 else {
+	     if (($argument =~ m,/, && ($commands->{"y"} || 
+					$commands->{"z"} ||
+					$commands->{"ftp"} || 
+					$commands->{"no-download"})) || 
+		 defined $aptor_group ||
+		 $commands->{"ftp"} || 
+		 $commands->{"purge"} || 
+		 $commands->{"remove"} ||
+		 $commands->{"r"}  || 
+		 $commands->{"reinstall"} ) {
+		 if ($PACKAGES[$#PACKAGES] =~ /_/) {
+		     $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
+		     $aptor = $1;
+		 }
+		 else {
+		     $aptor = $PACKAGES[$#PACKAGES];
+		 }
+	     }
+	     else { 
+		 $aptor = $argument;    
+	     }
+	 }
      }
      else {
-        @PACKAGES = @ARGV;
+	 if ($commands->{"y"} || 
+	     $commands->{"z"} || 
+	     $commands->{"ftp"} ||
+	     $commands->{"no-download"} || 
+	     $commands->{"purge"} || 
+	     $commands->{"remove"} ||
+	     $commands->{"r"}  || 
+	     $commands->{"reinstall"}) {
+	     if ($PACKAGES[$#PACKAGES] =~ /_/) {
+		 $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
+		 $aptor = $1;
+	     }
+	     else {
+		 $aptor = $PACKAGES[$#PACKAGES];
+	     }
+	 }
      }
-   }
- 
-   #print "PACKAGES @PACKAGES $argument\n";
+     
+     if ($PACKAGES[$#PACKAGES] =~ m,/,) {
+	 $PACKAGES[$#PACKAGES] =~ m,.*/(.*)$,;
+	 $arg = $1;
+	 foreach (@PACKAGES) {
+	     $_  =~ m,.*/(.*)$,;
+	     shift @PACKAGES;
+	     push(@PACKAGES,$1);
+	 }
+     }
+     else {
+	 if ($PACKAGES[$#PACKAGES] =~ /_/) {
+	     $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
+	     $arg = $1;
+	     foreach (0 .. $#PACKAGES) {
+		 if ($PACKAGES[$_] =~ /_/) {
+		     $PACKAGES[$_]  =~ m,^(.*)_.*$,;
+		     $PACKAGES[$_] = $1; 
+		 }
+		 else {
+		     $PACKAGES[$_] = $PACKAGES[$_];
+		 }
+	     }
+	 }
+	 else {
+	     $arg = $PACKAGES[$#PACKAGES];
+	     foreach (0 .. $#PACKAGES) {
+		 if ($PACKAGES[$_] =~ /_/) {
+		     $PACKAGES[$_]  =~ m,^(.*)_.*$,;
+		     $PACKAGES[$_] = $1; 
+		 }
+		 else {
+		     $PACKAGES[$_] = $PACKAGES[$_];
+		 }
+	     }
+	 }
+     }  
+     
+     $aptor = "DEFINEDONE" if !defined $aptor;
+     if (($aptor eq  $arg) || 
 
-   my ($aptor,$arg);
-   if (defined $argument) {
-    if ($argument =~ /_/) {
-     $argument =~ m,(.*)_.*,; 
-     $aptor = $1;
-    }
-    else {
-      if (($argument =~ m,/, && ($commands->{"y"} || $commands->{"z"} ||
-           $commands->{"ftp"} || $commands->{"nz"})) || defined $aptor_group ||
-           $commands->{"ftp"} || $commands->{"purge"} || $commands->{"remove"} ||
-           $commands->{"r"}  || $commands->{"reinstall"} ) {
-       if ($PACKAGES[$#PACKAGES] =~ /_/) {
-         $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
-         $aptor = $1;
-       }
-       else {
-         $aptor = $PACKAGES[$#PACKAGES];
-       }
-      }
-      else { 
-       $aptor = $argument;    
-      }
-    }
-   }
-   else {
-      if ($commands->{"y"} || $commands->{"z"} || $commands->{"ftp"} ||
-          $commands->{"nz"} || $commands->{"purge"} || $commands->{"remove"} ||
-          $commands->{"r"}  || $commands->{"reinstall"}) {
-       if ($PACKAGES[$#PACKAGES] =~ /_/) {
-         $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
-         $aptor = $1;
-       }
-       else {
-         $aptor = $PACKAGES[$#PACKAGES];
-       }
-      }
-   }
-  
-   if ($PACKAGES[$#PACKAGES] =~ m,/,) {
-    $PACKAGES[$#PACKAGES] =~ m,.*/(.*)$,;
-    $arg = $1;
-    foreach (@PACKAGES) {
-      $_  =~ m,.*/(.*)$,;
-      shift @PACKAGES;
-      push(@PACKAGES,$1);
-    }
-   }
-   else {
-    if ($PACKAGES[$#PACKAGES] =~ /_/) {
-     $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
-     $arg = $1;
-     foreach (0 .. $#PACKAGES) {
-       if ($PACKAGES[$_] =~ /_/) {
-        $PACKAGES[$_]  =~ m,^(.*)_.*$,;
-        $PACKAGES[$_] = $1; 
-       }
-       else {
-        $PACKAGES[$_] = $PACKAGES[$_];
-       }
-     }
-    }
-    else {
-     $arg = $PACKAGES[$#PACKAGES];
-     foreach (0 .. $#PACKAGES) {
-       if ($PACKAGES[$_] =~ /_/) {
-        $PACKAGES[$_]  =~ m,^(.*)_.*$,;
-        $PACKAGES[$_] = $1; 
-       }
-       else {
-        $PACKAGES[$_] = $PACKAGES[$_];
-       }
-     }
-    }
-   }  
+	 ($commands->{"search"} ||
+	  $commands->{"ps"} || 
+	  $commands->{"research"} ||
+	  $commands->{"refinesearch"} || 
+	  $aptor eq "/.") && 
 
-   $aptor = "DEFINEDONE" if !defined $aptor;
-   if (($aptor eq  $arg) || ($commands->{"search"} ||
-        $commands->{"ps"} || $commands->{"research"} ||
-        $commands->{"refinesearch"} || $aptor eq "/.") && 
-        $PACKAGES[0] ne "NOPACKAGES") {
-     xyz(\%commands);
-   }
+	 $PACKAGES[0] ne "NOPACKAGES") {
+
+	 xyz(\%commands);
+     }
  }
-
-
+ 
+ 
 }
 
 
@@ -161,8 +185,12 @@ sub xyz {
   }   
 
   # error correcting  
-  if ($commands->{"ftp"} && ($commands->{"r"} || $commands->{"remove"} ||
-      $commands->{"purge"}  || $commands->{"reinstall"}) ) {
+  if ($commands->{"ftp"} && 
+      ($commands->{"r"} || 
+       $commands->{"remove"} ||
+       $commands->{"purge"}  || 
+       $commands->{"reinstall"}) ) {
+
     print "swim: --ftp cannot be used with ";  
     print "-r " if defined $commands->{"r"};
     print "--remove " if defined $commands->{"remove"};
@@ -171,9 +199,16 @@ sub xyz {
     print "\n";
     exit;
   }
-  if ((($commands->{"r"} || $commands->{"remove"}) && $commands->{"purge"}) ||
-      (($commands->{"r"} || $commands->{"remove"}) && $commands->{"reinstall"})
-      || ($commands->{"reinstall"} && $commands->{"purge"})
+  if ((($commands->{"r"} || 
+	$commands->{"remove"}) && 
+       $commands->{"purge"}) ||
+
+      (($commands->{"r"} || 
+	$commands->{"remove"}) && 
+       $commands->{"reinstall"}) || 
+
+      ($commands->{"reinstall"} && 
+       $commands->{"purge"})
 ) {
     print "swim: ";
     print "-r " if defined $commands->{"r"};
@@ -183,13 +218,18 @@ sub xyz {
     print "cannot be used together\n";
     exit;
   }
-  if (($commands->{"y"} || $commands->{"z"} || $commands->{"x"} ||
-       $commands->{"nz"}) && ($commands->{"ftp"})) {
+  if (($commands->{"y"} || 
+       $commands->{"z"} || 
+       $commands->{"x"} ||
+       $commands->{"no-download"}) && 
+ 
+      ($commands->{"ftp"})) {
+
     print "swim: -";
     print "x" if $commands->{"x"};
     print "y" if $commands->{"y"};
     print "z" if $commands->{"z"};
-    print " --nz" if $commands->{"nz"};
+    print " --no-download" if $commands->{"no-download"};
     print " cannot be used with ";
     #print "--purge " if defined $commands->{"purge"};
     print "--ftp " if defined $commands->{"ftp"};
@@ -200,15 +240,18 @@ sub xyz {
     print "swim: --source and --source_only cannot be used together\n";
     exit;
   }
-  if (($commands->{"source"} || $commands->{"source_only"}) &&
-       !$commands->{"ftp"}) {
+  if (($commands->{"source"} || 
+       $commands->{"source_only"}) &&
+
+      !$commands->{"ftp"}) {
+
     print "swim: --";
     print "source" if $commands->{"source"};
     print "source_only" if $commands->{"source_only"};
     print " cannot be used without --ftp\n";
     exit;
   }  
-  if (($commands->{"y"} || $commands->{"z"} || $commands->{"nz"}) &&
+  if (($commands->{"y"} || $commands->{"z"} || $commands->{"no-download"}) &&
        !$commands->{"x"}) {
     print "swim: requires -x option\n";
     exit;
@@ -232,63 +275,138 @@ sub xyz {
   ###############
   # SAFETY MODE #
   ###############
-  if ((($commands->{"x"} || ($commands->{"x"} && $commands->{"y"})) || 
-      ($commands->{"x"} && ($commands->{"r"} || $commands->{"remove"}) ||
-      ($commands->{"x"} && $commands->{"y"} && ($commands->{"r"} ||
-      $commands->{"remove"})))) && 
-      !($commands->{"z"} || $commands->{"nz"})) {
-    my $arg;
-    my $count = 0;
-    foreach (@PACKAGES) {
-    if ($count == 0) {  
-       $arg = "$_";
-     }
-     else {
-       $arg = $arg . " " . "$_";
-     }  
-      $count++;
-    }
-    #########
-    # STDIN #
-    #########
-    if ($commands->{"stdin"}) {
-     my $term = Term::ReadLine->new("Simple Shell");
-     my @HISTORY = history(\%commands);
-     $term->addhistory(@HISTORY);
-     my @history; push(@history,"$arg");
-     print "swim: type exit to finish --stdin\n";
-     my $termcount = 0;
-     while ($termcount < 1 ) {
-       $_ = $term->readline('swim: ',"$arg");
-       push (@history,$_);
-       $termcount++;
-     } do { $_ = $term->readline('swim: '); 
-            push (@history,$_);
-           } while  $_ ne "exit";
-      $arg = $history[$#history - 1];
-      if ($arg ne $HISTORY[$#HISTORY]) {
-        if ($arg =~ m,^[^\w],) {
-          $arg =~ s,^\s+(\w+),$1,;
-        }
-         history_print($arg,\%commands);
+  if ( (
+
+       $commands->{"x"} || 
+
+	($commands->{"x"} && 
+	 $commands->{"y"}) || 
+
+       ($commands->{"x"} && 
+
+	($commands->{"r"} || 
+	 $commands->{"remove"})) ||
+
+	($commands->{"x"} && 
+	 $commands->{"y"} && 
+	 ($commands->{"r"} ||
+	  $commands->{"remove"}))
+	
+	) && 
+       
+       !($commands->{"z"} || $commands->{"no-download"}) ) {
+
+      my $arg;
+      my $count = 0;
+      foreach (@PACKAGES) {
+	  if ($count == 0) {  
+	      $arg = "$_";
+	  }
+	  else {
+	      $arg = $arg . " " . "$_";
+	  }  
+	  $count++;
       }
-    } 
+      #########
+      # STDIN #
+      #########
+      if ($commands->{"stdin"}) {
+	  my $term = Term::ReadLine->new("Simple Shell");
+	  my @HISTORY = history(\%commands);
+	  $term->addhistory(@HISTORY);
+	  my @history; push(@history,"$arg");
+	  print "swim: type exit to finish --stdin\n";
+	  my $termcount = 0;
+	  while ($termcount < 1 ) {
+	      $_ = $term->readline('swim: ',"$arg");
+	      push (@history,$_);
+	      $termcount++;
+	  } do { $_ = $term->readline('swim: '); 
+		 push (@history,$_);
+	     } while  $_ ne "exit";
+	  $arg = $history[$#history - 1];
+	  if ($arg ne $HISTORY[$#HISTORY]) {
+	      if ($arg =~ m,^[^\w],) {
+		  $arg =~ s,^\s+(\w+),$1,;
+	      }
+	      history_print($arg,\%commands);
+	  }
+      } 
+      
+      if ( $commands->{"r"} || $commands{"remove"} ) {
+	  system "$apt_get remove -qs $arg";
+      }
+      elsif ( $commands->{"purge"} ) {
+	  system "$apt_get --purge remove -qs $arg";
+      }
+      elsif ( $commands->{"reinstall"} ) {
+	  system "$apt_get --reinstall install -qs $arg";
+      }
+      else {
+	  system "$apt_get install -qs $arg";
+      }
+      
+  }
 
-    if ( $commands->{"r"} || $commands{"remove"} ) {
-	system "$apt_get remove -qs $arg";
-    }
-    elsif ( $commands->{"purge"} ) {
-	system "$apt_get --purge remove -qs $arg";
-    }
-    elsif ( $commands->{"reinstall"} ) {
-	system "$apt_get --reinstall install -qs $arg";
-    }
-    else {
-	system "$apt_get install -qs $arg";
-    }
 
+  #############################
+  # SAFETY MODE DOWNLOAD-ONLY #
+  #############################
+  # --download-only and simulate
+  elsif ($commands->{"no-download"} && !$commands->{"z"} ) {
+
+      my $arg;
+      my $count = 0;
+      foreach (@PACKAGES) {
+	  if ($count == 0) {  
+	      $arg = "$_";
+	  }
+	  else {
+	      $arg = $arg . " " . "$_";
+	  }  
+	  $count++;
+      }
+      #########
+      # STDIN #
+      #########
+      if ($commands->{"stdin"}) {
+	  my $term = Term::ReadLine->new("Simple Shell");
+	  my @HISTORY = history(\%commands);
+	  $term->addhistory(@HISTORY);
+	  my @history; push(@history,"$arg");
+	  print "swim: type exit to finish --stdin\n";
+	  my $termcount = 0;
+	  while ($termcount < 1 ) {
+	      $_ = $term->readline('swim: ',"$arg");
+	      push (@history,$_);
+	      $termcount++;
+	  } do { $_ = $term->readline('swim: '); 
+		 push (@history,$_);
+	     } while  $_ ne "exit";
+	  $arg = $history[$#history - 1];
+	  if ($arg ne $HISTORY[$#HISTORY]) {
+	      if ($arg =~ m,^[^\w],) {
+		  $arg =~ s,^\s+(\w+),$1,;
+	      }
+	      history_print($arg,\%commands);
+	  }
+      } 
+      
+      if ( $commands->{"r"} || $commands{"remove"} ) {
+	  system "$apt_get remove -qds $arg";
+      }
+      elsif ( $commands->{"purge"} ) {
+	  system "$apt_get --purge remove -qds $arg";
+      }
+      elsif ( $commands->{"reinstall"} ) {
+	  system "$apt_get --reinstall install -qds $arg";
+      }
+      else {
+	  system "$apt_get install -qds $arg";
+      }
 
   }
+
   #####################
   # INSTALLATION MODE #
   #####################
@@ -337,7 +455,7 @@ sub xyz {
     if (!($commands->{"ftp"} || $commands->{"purge"} || 
 	  $commands->{"reinstall"})) {
      if (!$commands->{"y"}) {
-      if (!$commands->{"nz"}) {
+      if (!$commands->{"no-download"}) {
        !($commands->{"r"} || $commands{"remove"}) ?
          system "$apt_get install $arg" :
          system "$apt_get remove $arg";
@@ -349,7 +467,7 @@ sub xyz {
       } 
      }
      else {
-      if (!$commands->{"nz"}) {
+      if (!$commands->{"no-download"}) {
        !($commands->{"r"} || $commands{"remove"}) ?
          system "$apt_get install -y $arg" :
          system "$apt_get remove -y $arg";
