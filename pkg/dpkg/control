@@ -13,10 +13,10 @@ Recommends: libnet-perl, libterm-readline-gnu-perl | libterm-readline-perl-perl
 Conflicts: swim
 Description: Debian System Wide Information Manager
  DSWIM is a powerful informational tool for Debian's packaging system.  
- Designed with an integral approach it provides much of the same 
- functionality found in several smaller programs and scripts.  This 
- allows users a centralized approach to quering the installation, and
- programmers the liberty of writing smaller and simpler code.  
+ Designed with an integral approach it combines the functionality 
+ found in several other programs and scripts.  This provides users with a 
+ centralized approach to querying the installation, and allows programmers 
+ the liberty of writing smaller and simpler code.  
  .
  Presently, the virtual -n options are not working with the new Debian archive
  hierarchy, so help information doesn't reflect them anymore.  Older versions
