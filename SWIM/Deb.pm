@@ -59,8 +59,8 @@ sub deb_package {
           # SITUATION 0 #
           ###############
 	  if (m,\.\./|^\.\.$,) {
-	   #if ($_ !~ m,/[\w-+]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
-	   if ($_ !~ m,/(\w-+)+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+	   #if ($_ !~ m,/[\w\+-]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+	   if ($_ !~ m,/[\w\+-]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
              my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
              my @pwd =  split(m,/,,$pwd);
              s,\.\./,,g;
@@ -952,8 +952,8 @@ sub menuo {
      my $name = $2;
     while (<MENU>) {
       #print "$_\n";
-      #if (m,^usr\/lib\/menu\/(.*[\w-\+\.]$),) {
-      if (m,^usr\/lib\/menu\/(.*(\w-\+\.)$),) {
+      #if (m,^usr\/lib\/menu\/(.*[\w\+\.-]$),) {
+      if (m,^usr\/lib\/menu\/(.*(\w\+\.-)$),) {
        print "#####menu for $name($1)#####\n";
        system "$dpkg_deb --fsys-tarfile $argument | $tar xO $_";
        print "\n";
@@ -970,8 +970,8 @@ sub menuo {
     open(MENU,"$tmp/fields.deb");
      my $name = $2;
     while (<MENU>) {
-      #if (m,^usr\/lib\/menu\/(.*[\w-\+\.]$),) {
-      if (m,^usr\/lib\/menu\/(.*(\w-\+\.)$),) {
+      #if (m,^usr\/lib\/menu\/(.*[\w\+\.-]$),) {
+      if (m,^usr\/lib\/menu\/(.*(\w\+\.-)$),) {
        print "#####menu for $name($1)#####\n";
        system "$ar -p $argument data.tar.gz | $tar xOz $_";
        print "\n";
