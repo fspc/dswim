@@ -1982,10 +1982,6 @@ usage:
         -y                     - answer yes to all apt-get prompts
         -z                     - get and install package using apt-get
         --download-only        - only download package when using apt-get
-        --ftp                  - download package 
-        --source               - download source package
-        --source_only          - only download source package
-        --diff                 - only download the source package's diff file
         --purge                - remove the installed package, and the
                                  package's configuration files
         --remove
