@@ -191,7 +191,8 @@ $ar = '/usr/bin/ar';
 $apt_get = ();
 $apt_cache = ();
 $sources = '/etc/apt/sources.list';
-$apt_sources = '/var/state/apt/lists';
+#$apt_sources = '/var/state/apt/lists';
+$apt_sources = '/var/lib/apt/lists';
 
 #########
 # PAGER #
