@@ -647,7 +647,7 @@ sub xyz {
 	else {
 	    if (!$commands->{"download-only"}) {
 
-		if ( $commands->{"install"} ) {
+		if ( !$commands->{"source"} ) {
 		    system "$apt_get install -y $arg";
 		}
 		elsif ( $commands->{"source"} ) {
@@ -678,7 +678,7 @@ sub xyz {
 	    }
 	    else {
 
-		if ( $commands->{"install"} ) {
+		if ( !$commands->{"source"} ) {
 		    system "$apt_get install -y -d $arg";
 		}
 		elsif ( $commands->{"source"} ) {
@@ -708,7 +708,7 @@ sub xyz {
 		}
 
 	    }
-	}
+	}x
     }
     #######
     # FTP #
