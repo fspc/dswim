@@ -107,7 +107,7 @@ use Getopt::Long;
 use SWIM::Conf;
 use SWIM::Global;
 use SWIM::Library;
-my $version = "0.4.0";
+my $version = "0.4.1";
 
 # The MAIN 
 # First let's determine what options are being used.
