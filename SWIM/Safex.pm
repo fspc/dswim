@@ -881,6 +881,7 @@ sub history {
       push(@HISTORY,$line); undef $line;
     }
 
+
     return @HISTORY;
  
 } # end sub history
@@ -903,15 +904,14 @@ sub history_print {
    my @HISTORY = <HISTORY>;
    close(HISTORY);
    if ($#HISTORY < $HISTORY - 1) {
-     push(@HISTORY,"$arg\n");
+     push(@HISTORY,"$arg\n") if $arg;
    }
    else {
     shift(@HISTORY);
-    push(@HISTORY,"$arg\n");
+    push(@HISTORY,"$arg\n") if $arg;
    } 
     open(HISTORY,">$swim_history") or exit;
     print HISTORY @HISTORY;
-
  
 } # end sub history_print
 
