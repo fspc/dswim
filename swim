@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#use diagnostics;
+
 require 5.004;
 use strict;
 use Getopt::Long;
@@ -8,32 +8,38 @@ use SWIM::Global;
 use SWIM::Library;
 
 
-################################################################################
-#    Package administration and research tool for Debian                       #
-#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
-#                                                                              #
-#    This program is free software; you can redistribute it and/or modify      #
-#    it under the terms of the GNU General Public License as published by      #
-#    the Free Software Foundation; either version 2 of the License, or         #
-#    (at your option) any later version.                                       #
-#                                                                              #
-#    This program is distributed in the hope that it will be useful,           #
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
-#    GNU General Public License for more details.                              #
-#                                                                              #
-#    You should have received a copy of the GNU General Public License         #
-#    along with this program; if not, write to the Free Software               #
-#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
-################################################################################
+############################################################################
+#
+#    Package administration and research tool for Debian                       
+#
+#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum 
+#
+#                                                                             
+#
+#    This program is free software; you can redistribute it and/or modify 
+#
+#    it under the terms of the GNU General Public License as published by     
+#    the Free Software Foundation; either version 2 of the License, or        
+#    (at your option) any later version.                                       
+#                                                                              
+#    This program is distributed in the hope that it will be useful,         
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             
+#    GNU General Public License for more details.                              
+#                                                                            
+#    You should have received a copy of the GNU General Public License        
+#    along with this program; if not, write to the Free Software              
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
+#    USA
+#
+#############################################################################
 
 
 =pod
 
-Description:  Show World Intelligent Management 
-              Show World Packaging Method or ....
+Description:  System Wide Information System
 
-Swim is a program which adds rpm-like quering capabilities to the Debian
+SWIM is a program which adds rpm-like quering capabilities to the Debian
 system.  Information for an installed Debian system is extracted from the
 /var/lib/dpkg/info* files and the status file, information for an uninstalled
 (not-installed) system is extracted from Packages and Contents files which can
@@ -83,114 +89,116 @@ anyone, find the program to do the job easily.
 
 # The MAIN 
 # First let's determine what options are being used.
- 
+    my $home = $ENV{'HOME'};
+
+
 Getopt::Long::config("bundling","no_auto_abbrev"); # will use pass_through
 
 my($result) = 
-   GetOptions (\%commands,
-                           "query", "q",     # query 
-                           "b",              # build 
-                           "a",              # all packages = /.
-                           "f",              # file query
-                           "dir",            # same as "f", but verifies dir  
-                           "i",              # information
-                           "l",              # file listing
-                           "df",             # file/directory listing w/-l
-                           "v",              # verbose listing
-                           "p",              # package query  
-                           "extract=s",      # extract all files/file from package
-                           "remove", "r",    # remove all, but conf.
-                           "purge",          # remove it all
-                           "apt",            # apt-get
-                           "update",         # using sources.list
-                           "clean",          # remove archives or apt2ftp
-                           "autoclean",      # remove some archives
-                           "upgrade",        # currently installed packages
-                           "dist_upgrade",   # whole dist. upgrade   
-                           "x",              # simulate apt's actions
-                           "y",              # automatic yes for -z
-                           "z",              # apt install
-                           "nz",             # apt download
-                           "source",         # ftp source and package
-                           "source_only",    # ftp only source for package
-                           "diff",           # just grab diff for source 
-                           "stdin",          # read in from stdin
-                           "md5sum",         # show md5sum    
-                           "c",              # configuration files
-                           "d",              # show documentation
-                           "g",              # packages belonging to group (27)
-                           "allgroups",      # show all groups
-                           "n",              # not-installed
-                           "pre_depends",    # required before installation
-                           "depends",        # like requires, def. needed
-                           "recommends",     # packages important to this one
-                           "suggests",       # complimentary packages
-                           "replaces",       # package(s) being replaces
-                           "provides",       # capabilities provided (virtual)
-                           "conflicts",      # package(s) which conflict
-                           "T",              # all characteristics
-                           "shlibs",         # provided shared libraries
-                           "total", "t",     # when there is more than one 
-                           "no",             # no output on searches
-                           "scripts",        # the scripts
-                           "preinst",        # before inst. script
-                           "postinst",       # after inst. script
-                           "prerm",          # before removal script
-                           "postrm",         # after removal script
-                           "menu", "m",      # menu script
-                           "copyright",      # copyright
-                           "changelog",      # changelog.Debian.gz changelog.gz 
-                           "root=s",         # use alternative db & root dir
-                           "db",             # update the database
-                           "initdb",         # make the databases
-                           "rebuilddb",      # remake the database
-                           "lowmem",         # lowmem method
-                           "initndb",        # make not-installed database
-                           "ndb",            # update not-installed database
-                           "report",         # report for --ndb
-                           "check",          # show changes|update cache
-                           "rebuildndb",     # remake not-installed database
-                           "cron",           # intelligent cron
-                           "Contents=s",     # Contents file required
-                           "onec",           # download only 1 Contents
-                           "nue",            # non-US or Exp. in Contents
-                           "main",           # this section and/or 
-                           "contrib",        # this section and/or
-                           "non-free",       # this section and/or
-                           "non-us",         # this section and/or
-                           "arch=s",         # architecture - i386 ...
-                           "dists=s",        # distribution - stable ...
-                           "alt=s",          # alternative base for dist
-                           "dbpath=s",       # override default db location
-                           "split_data=s",   # make things faster          
-                           "rebuildflatdb",  # rebuild flat databases 
-                           "rebuildflatndb", # rebuild n-flat databases
-                           "nopager", "n",   # no pager
-                           "search=s",       # search database for package
-                           "powersearch=s",  # match files, directories, and
-                           "ps=s",           # packages.
-                           "research=s",     # search the results
-                           "refinesearch=s", # refine the existing search
-                           "searchfile",     # search databases
-                           "cs",             # case sensitive search
-                           "S",              # query packages from search
-                           "C", "audit",     # dpkg standard options
-                           "status",         # clues one in about -C  
-                           "status_only",    # n* update
-                           "ramdiskon",      # turn on the thing
-                           "ramdiskoff",     # turn it off 
-                           "ftp",            # ftp client protocol                           
-                           "apt2ftp",        # mv archives to DF
-                           "ftp2apt",        # install DF with apt-get 
-                           "Packages=s",     # Packages file
-                           "Release_only",   # grab Release files only
-                           "version",        # program version
-                           "history",        # swim history
-                           "h",              # ""
-                           "testmenu",       # tmp test for menuindex.deb   
-                           "help"            # it better
-
-              );
+    GetOptions (\%commands,
+	       "query", "q",     # query 
+	       "b",              # build 
+	       "a",              # all packages = /.
+	       "f",              # file query
+	       "dir",            # same as "f", but verifies dir  
+	       "i",              # information
+	       "l",              # file listing
+	       "df",             # file/directory listing w/-l
+	       "v",              # verbose listing
+	       "p",              # package query  
+	       "extract=s",      # extract all files/file from package
+	       "remove", "r",    # remove all, but conf.
+	       "purge",          # remove it all
+	       "apt",            # apt-get
+	       "update",         # using sources.list
+	       "clean",          # remove archives or apt2ftp
+	       "autoclean",      # remove some archives
+	       "upgrade",        # currently installed packages
+	       "dist_upgrade",   # whole dist. upgrade   
+	       "x",              # simulate apt's actions
+	       "y",              # automatic yes for -z
+	       "z",              # apt install
+	       "nz",             # apt download
+	       "source",         # ftp source and package
+	       "source_only",    # ftp only source for package
+	       "diff",           # just grab diff for source 
+	       "stdin",          # read in from stdin
+	       "md5sum",         # show md5sum    
+	       "c",              # configuration files
+	       "d",              # show documentation
+	       "g",              # packages belonging to group (27)
+	       "allgroups",      # show all groups
+	       "n",              # not-installed
+	       "pre_depends",    # required before installation
+	       "depends",        # like requires, def. needed
+	       "recommends",     # packages important to this one
+	       "suggests",       # complimentary packages
+	       "replaces",       # package(s) being replaces
+	       "provides",       # capabilities provided (virtual)
+	       "conflicts",      # package(s) which conflict
+	       "T",              # all characteristics
+	       "shlibs",         # provided shared libraries
+	       "total", "t",     # when there is more than one 
+	       "no",             # no output on searches
+	       "scripts",        # the scripts
+	       "preinst",        # before inst. script
+	       "postinst",       # after inst. script
+	       "prerm",          # before removal script
+	       "postrm",         # after removal script
+	       "menu", "m",      # menu script
+	       "copyright",      # copyright
+	       "changelog",      # changelog.Debian.gz changelog.gz 
+	       "root=s",         # use alternative db & root dir
+	       "db",             # update the database
+	       "initdb",         # make the databases
+	       "rebuilddb",      # remake the database
+	       "lowmem",         # lowmem method
+	       "initndb",        # make not-installed database
+	       "ndb",            # update not-installed database
+	       "report",         # report for --ndb
+	       "check",          # show changes|update cache
+	       "rebuildndb",     # remake not-installed database
+	       "cron",           # intelligent cron
+	       "Contents=s",     # Contents file required
+	       "onec",           # download only 1 Contents
+	       "nue",            # non-US or Exp. in Contents
+	       "main",           # this section and/or 
+	       "contrib",        # this section and/or
+	       "non-free",       # this section and/or
+	       "non-us",         # this section and/or
+	       "arch=s",         # architecture - i386 ...
+	       "dists=s",        # distribution - stable ...
+	       "alt=s",          # alternative base for dist
+	       "dbpath=s",       # override default db location
+	       "split_data=s",   # make things faster          
+	       "rebuildflatdb",  # rebuild flat databases 
+	       "rebuildflatndb", # rebuild n-flat databases
+	       "nopager", "n",   # no pager
+	       "search=s",       # search database for package
+	       "powersearch=s",  # match files, directories, and
+	       "ps=s",           # packages.
+	       "research=s",     # search the results
+	       "refinesearch=s", # refine the existing search
+	       "searchfile",     # search databases
+	       "cs",             # case sensitive search
+	       "S",              # query packages from search
+	       "C", "audit",     # dpkg standard options
+	       "status",         # clues one in about -C  
+	       "status_only",    # n* update
+	       "ramdiskon",      # turn on the thing
+	       "ramdiskoff",     # turn it off 
+	       "ftp",            # ftp client protocol                           
+	       "apt2ftp",        # mv archives to DF
+	       "ftp2apt",        # install DF with apt-get 
+	       "Packages=s",     # Packages file
+	       "Release_only",   # grab Release files only
+	       "version",        # program version
+	       "history",        # swim history
+	       "h",              # ""
+	       "testmenu",       # tmp test for menuindex.deb   
+	       "help"            # it better
+	       
+	       );
 
 
 command();
@@ -201,84 +209,100 @@ command();
 sub command {
 
 
-   # test 
-   if ($commands{"testmenu"}) {
-      menuindex();
-   }
+    # test 
+    if ($commands{"testmenu"}) {
+	menuindex();
+    }
  
-   # Turn on pager for everything, -t value is usefull, since we don't
-   # want the pager working if the output is short.  In situations where -t
-   # isn't prompted for, -t shouldn't be used, pretty beta.
-   # The best way is to read the output into a variable than use the pager.
-   # This can be done simply.
-   # if ($commands{"t"}) {
-   #  open(STDOUT, "|$pager");
-   # }
-
 
     if ($#ARGV == -1 && !defined %commands){
-     if ($Getopt::Long::error != 1) {
-       pager(usage());                                                               
-       exit;                                                                  
+	if ($Getopt::Long::error != 1) {
+	    pager(usage());
+	    exit;
+                                                                  
      } 
     }
     elsif (($commands{"n"} || $commands{"nopager"}) &&
-           $#ARGV == -1 && !($commands{"q"} || $commands{"ps"} ||
-           $commands{"research"} || $commands{"refinesearch"} ||
-           $commands{"powersearch"} || $commands{"search"} ||
-           $commands{"ramdiskon"} || $commands{"ramdiskoff"} ||
-           $commands{"help"})) {
-       print nusage() if !($commands{"history"} || $commands{"h"});
-       exit if !($commands{"history"} || $commands{"h"});
+           $#ARGV == -1 && !($commands{"q"} || 
+			     $commands{"ps"} ||
+			     $commands{"research"} || 
+			     $commands{"refinesearch"} || 
+			     $commands{"powersearch"} || 
+			     $commands{"search"} ||
+			     $commands{"ramdiskon"} || 
+			     $commands{"ramdiskoff"} ||
+			     $commands{"help"})) {
+
+	print nusage() if !($commands{"history"} || $commands{"h"});
+	exit if !($commands{"history"} || $commands{"h"});
+
     }
-    elsif (!($commands{"n"} || $commands{"nopager"}) && $commands{"help"}
-           && $#ARGV == -1 && !($commands{"q"} || $commands{"ps"} ||
-           $commands{"research"} || $commands{"refinesearch"} ||
-           $commands{"powersearch"} || $commands{"search"} ||
-           $commands{"ramdiskon"} || $commands{"ramdiskoff"})) {
-       pager(help()) if !($commands{"history"} || $commands{"h"});
-       exit if !($commands{"history"} || $commands{"h"});
+    elsif (!($commands{"n"} || $commands{"nopager"}) && 
+	   $commands{"help"} && 
+	   $#ARGV == -1 && 
+	   !($commands{"q"} || 
+	     $commands{"ps"} ||
+	     $commands{"research"} || 
+	     $commands{"refinesearch"} ||
+	     $commands{"powersearch"} || 
+	     $commands{"search"} ||
+	     $commands{"ramdiskon"} || 
+	     $commands{"ramdiskoff"})) {
+
+	pager(help()) if !($commands{"history"} || $commands{"h"});
+	exit if !($commands{"history"} || $commands{"h"});
+
     }
-    elsif ((($commands{"n"} || $commands{"nopager"}) && $commands{"help"})
-           && $#ARGV == -1 && !($commands{"q"} || $commands{"ps"} ||
-           $commands{"research"} || $commands{"refinesearch"} ||
-           $commands{"powersearch"} || $commands{"search"} ||
-           $commands{"ramdiskon"} || $commands{"ramdiskoff"})) {
-       print help() if !($commands{"history"} || $commands{"h"});
-       exit if !($commands{"history"} || $commands{"h"});
+    elsif ((($commands{"n"} || $commands{"nopager"}) && 
+	    $commands{"help"})
+           && $#ARGV == -1 && 
+	   !($commands{"q"} || 
+	     $commands{"ps"} ||
+	     $commands{"research"} || 
+	     $commands{"refinesearch"} ||
+	     $commands{"powersearch"} || 
+	     $commands{"search"} ||
+	     $commands{"ramdiskon"} ||
+	     $commands{"ramdiskoff"})) {
+
+	print help() if !($commands{"history"} || $commands{"h"});
+	exit if !($commands{"history"} || $commands{"h"});
+
     }
 
     # version of the program
     if ($commands{"version"}) {
-       print "SWIM version $swim_version\n";      
+	print "SWIM version $swim_version\n";      
     }
 
 
     # Do the the dpkg -C thing, nice no need for a separate approach
     if (($commands{"C"} || $commands{"audit"} || $commands{"status"}) &&
-         defined $dpkg) {         
+	defined $dpkg) {         
+
         system "$dpkg", "-C";     
         exit;
+
     }
 
 
     # apt administration
     if ($commands{"apt"}) {
-      if (defined $apt_get) { 
-        my @amount = keys %commands;         
-         if ($#amount == 0) {
-           print "swim: no options given for --apt\n"; 
-           exit;
-         }
-              require SWIM::Apt;
-              SWIM::Apt->import(qw(apt));
-              apt($apt_get,$sources,\%commands);
-              exit;
-      }
-      else {   
-        print "swim: operation requires apt\n";
-        exit;
-      }
+	if (defined $apt_get) { 
+	    my @amount = keys %commands;         
+	    if ($#amount == 0) {
+		print "swim: no options given for --apt\n"; 
+		exit;
+	    }
+	    require SWIM::Apt;
+	  SWIM::Apt->import(qw(apt));
+	    apt($apt_get,$sources,\%commands);
+	    exit;
+	}
+	else {   
+	    print "swim: operation requires apt\n";
+	    exit;
+	}
     }
 
 
@@ -288,237 +312,277 @@ sub command {
         exit;
     }
     elsif ($commands{"md5sum"} && 
-         !($commands{"l"} || $commands{"d"} || $commands{"c"} ||
-           $commands{"p"}) && ($commands{"q"} || $commands{"query"})) {
+	   !($commands{"l"} || $commands{"d"} || $commands{"c"} ||
+	     $commands{"p"}) && ($commands{"q"} || $commands{"query"})) {
         print "swim: --md5sum of queries must be used with -l, -d, -c, or -p\n";
         exit;
     }
    
 
-  # Some error testing for major mode.  Will handle all.
-  if (($commands{"initdb"} && $commands{"rebuilddb"}) ||
-      ($commands{"initdb"} && $commands{"db"}) ||
-      ($commands{"db"} && $commands{"rebuilddb"}) ||
-      ($commands{"initdb"} && $commands{"db"}) ||
-      ($commands{"initdb"} && $commands{"rebuilddb"} && $commands{"db"})) {
-       print "swim: only one major mode may be specified\n";
-       exit;
-  }
+    # Some error testing for major mode.  Will handle all.
+    if (($commands{"initdb"} && $commands{"rebuilddb"}) ||
+	($commands{"initdb"} && $commands{"db"}) ||
+	($commands{"db"} && $commands{"rebuilddb"}) ||
+	($commands{"initdb"} && $commands{"db"}) ||
+	($commands{"initdb"} && $commands{"rebuilddb"} && $commands{"db"})) {
+	print "swim: only one major mode may be specified\n";
+	exit;
+    }
 
-  # this will handle options with arguments
-  if ($Getopt::Long::error == 1 || $commands{"root"} || $commands{"dbpath"}) {
-    # If two options are used
-    if ($Getopt::Long::error == 1) {
-     if ($commands{"dbpath"} && !$commands{"root"}) {  
-             exit;
-     } 
-     elsif (!$commands{"dbpath"} && $commands{"root"}) {  
-             exit;
-     } 
-    } 
+    # this will handle options with arguments
+    if ($Getopt::Long::error == 1 || $commands{"root"} || 
+	$commands{"dbpath"}) {
+	# If two options are used
+	if ($Getopt::Long::error == 1) {
+	    if ($commands{"dbpath"} && !$commands{"root"}) {  
+		exit;
+	    } 
+	    elsif (!$commands{"dbpath"} && $commands{"root"}) {  
+		exit;
+	    } 
+	} 
    
     # Check whether a different filesystem is being used with --root
-    my($arch, $dist) = which_archdist(\%commands);
-    if ($commands{"root"} && !$commands{"dbpath"}) {
-        if ($commands{"q"} || $commands{"query"} || $commands{"search"} || 
-            $commands{"refinesearch"} || $commands{"research"} ||
-            $commands{"powersearch"} || $commands{"ps"} ||
-            $commands{"ramdiskon"} || $commands{"history"} || 
-            $commands{"h"}) {
-          if ($commands{"root"} =~ m,^\/.*,) {
-            $parent = $commands{"root"};
-            my $root;
-            if (!($commands{"n"} || $commands{"initndb"} ||
-                  $commands{"rebuildndb"} || $commands{"p"} ||
-                  $commands{"ndb"})) {
-             $root = "$parent$base/packages.deb";
-            }
-            else {
-             $root = "$parent$base/npackages$arch$dist.deb";
-            }
-            if (!-e $root && !-f $root) { 
-              print "failed to open $root\n\n";
-              exit;
-            } 
-           } 
-          elsif ($commands{"root"} ne "") {
-           print "swim: arguments to --root must begin with a /\n";
-           exit;
-          }
-        }
-        else {
-         if ($commands{"initdb"} || $commands{"rebuilddb"} ||
-             $commands{"db"} || $commands{"initndb"} || $commands{"ndb"} ||
-             $commands{"rebuildndb"} || $commands{"rebuildflatdb"} ||
-             $commands{"rebuildflatndb"}) {
-           if ($commands{"root"} =~ m,^\/.*,) {
-            $parent = $commands{"root"};
-            my $root = "$parent$base";
-             if (!-e $root && !-f $root) { 
-               print "failed to open $root\n\n";
-               exit;
-             } 
-            } 
-           elsif ($commands{"root"} ne "") {
-            print "swim: arguments to --root must begin with a /\n";
-            exit;
-           }
-          }
-         else { 
-          print "swim: --root may only be specified during querying, and database rebuilds\n";
-          exit;
-         }
-        }
-    }   
-    # check whether a different database location is being used with --dbpath.
-    elsif ($commands{"dbpath"} && !$commands{"root"}) {
-        if ($commands{"q"} || $commands{"query"} || $commands{"search"} ||
-            $commands{"refinesearch"} || $commands{"research"} ||
-            $commands{"powersearch"} || $commands{"ps"} ||
-            $commands{"ramdiskon"} || $commands{"history"} ||
-            $commands{"h"}) {
-          if ($commands{"dbpath"} =~ m,^\/.*,) {
-           my $dbpath;
-           $library = $commands{"dbpath"};
-           if (!($commands{"n"} || $commands{"initndb"} ||
-                 $commands{"rebuildndb"} ||
-                 $commands{"p"} || $commands{"ndb"})) {
-             $dbpath = "$library/packages.deb";
-           }
-           else {
-             $dbpath =  "$library/npackages$arch$dist.deb";
-           }
-            if (!-e $dbpath && !-f $dbpath) {
-              print "failed to open $dbpath\n\n";
-              exit;
-            } 
-          } 
-          elsif ($commands{"dbpath"} ne "") {
-           print "swim: arguments to --dbpath must begin with a /\n";
-           exit;
-          }
-        }
-        else {
-          if ($commands{"dbpath"} !~ m,^\/,) {
-             print "swim: arguments to --dbpath must begin with a /\n";
-          }
-          else {
-          if ($commands{"initdb"} || $commands{"rebuilddb"} ||
-              $commands{"db"} || $commands{"rebuildndb"} || 
-              $commands{"initndb"} || $commands{"rebuildflatdb"}
-              || $commands{"ndb"} || $commands{"rebuildflatndb"}) {
-           if ($commands{"dbpath"} =~ m,^\/.*,) {
-            $library = $commands{"dbpath"};
-            my $dbpath = "$library";
-             if (!-e $dbpath && !-f $dbpath) {
-               print "failed to open $dbpath\n\n";
-               exit;
-             } 
-           }  
-           elsif ($commands{"dbpath"} ne "") {
-            print "swim: arguments to --dbpath must begin with a /\n";
-            exit;
-           }
-         }
-         else { 
-             print "swim: --dbpath given for operation that does not use a database\n";
-             exit;
-         }
-          } 
-        }
-    }
-    # check whether a different database location is being used with --dbpath 
-    # and --root / are being used, dbpath takes priority but uses --root as
-    # the base.
-    elsif ($commands{"dbpath"} && $commands{"root"}) {
-        if ($commands{"q"} || $commands{"query"} || $commands{"search"} ||
-            $commands{"refinesearch"} || $commands{"research"} ||
-            $commands{"powersearch"} || $commands{"ps"} ||
-            $commands{"ramdiskon"} || $commands{"history"} ||
-            $commands{"h"}) {
-          if ($commands{"dbpath"} =~ m,^\/.*, &&
-              $commands{"root"} =~ m,^\/.*,) {
-           $parent = $commands{"root"};
-           $library = $commands{"dbpath"};
-	   my $root = "$parent$library";
-           my $dbpath;
-           if (!($commands{"n"} || $commands{"initndb"} ||
-                 $commands{"rebuildndb"} || $commands{"p"} ||
-                  $commands{"ndb"})) {
-              $dbpath = "$parent$library/packages.deb";
-           }
-           else {
-              $dbpath = "$parent$library/npackages$arch$dist.deb";
-           }
-            if (!-e $dbpath && !-f $dbpath) {
-              print "failed to open $dbpath\n\n";
-              exit;
-            } 
-            if (!-e $root && !-f $root) {
-              print "failed to open $root\n\n";
-              exit;
-            } 
-          } 
-          elsif ($commands{"dbpath"} ne "") {
-           print "swim: arguments to --dbpath must begin with a /\n";
-           exit;
-          }
-        }
-        else {
-          if ($commands{"dbpath"} !~ m,^\/,) {
-             print "swim: arguments to --dbpath must begin with a /\n";
-             exit;
-          }        
-          if ($commands{"initdb"} || $commands{"rebuilddb"} ||
-              $commands{"db"} || $commands{"initndb"} || $commands{"ndb"} ||
-              $commands{"rebuildndb"} || $commands{"rebuildflatdb"} ||
-              $commands{"rebuildflatndb"}) {
-            if ($commands{"dbpath"} =~ m,^\/.*, &&
-                $commands{"root"} =~ m,^\/.*,) {
-             $parent = $commands{"root"};
-             $library = $commands{"dbpath"};
-	     my $root = "$parent$library";
-             my $dbpath = "$parent$library";
-              if (!-e $dbpath && !-f $dbpath) {
-                print "failed to open $dbpath\n\n";
-                exit;
-              } 
-              if (!-e $root && !-f $root) {
-                print "failed to open $root\n\n";
-                exit;
-              } 
-            } 
-            elsif ($commands{"dbpath"} ne "") {
-             print "swim: arguments to --dbpath must begin with a /\n";
-             exit;
-           }
-          }
-          else { 
-            print "\nswim: --dbpath given for operation that does not use a database\n";
-            exit;
-         } 
-       }
-    }
-    # final monster ... but, really only as a trap. 
-    elsif ($commands{"root"}) {
-      exit;
-    }
-    elsif ($commands{"dbpath"}) {
-      exit;
-    }
-  } # end if (Getopt
+	my($arch, $dist) = which_archdist(\%commands);
+	if ($commands{"root"} && 
+	    !$commands{"dbpath"}) {
+	    if ($commands{"q"} || 
+		$commands{"query"} || 
+		$commands{"search"} || 
+		$commands{"refinesearch"} || 
+		$commands{"research"} ||
+		$commands{"powersearch"} || 
+		$commands{"ps"} ||
+		$commands{"ramdiskon"} || 
+		$commands{"history"} || 
+		$commands{"h"}) {
+		if ($commands{"root"} =~ m,^\/.*,) {
+		    $parent = $commands{"root"};
+		    my $root;
+		    if (!($commands{"n"} || 
+			  $commands{"initndb"} ||
+			  $commands{"rebuildndb"} || 
+			  $commands{"p"} ||
+			  $commands{"ndb"})) {
+			$root = "$parent$base/packages.deb";
+		    }
+		    else {
+			$root = "$parent$base/npackages$arch$dist.deb";
+		    }
+		    if (!-e $root && !-f $root) { 
+			print "failed to open $root\n\n";
+			exit;
+		    } 
+		} 
+		elsif ($commands{"root"} ne "") {
+		    print "swim: arguments to --root must begin with a /\n";
+		    exit;
+		}
+	    }
+	    else {
+		if ($commands{"initdb"} || 
+		    $commands{"rebuilddb"} ||
+		    $commands{"db"} || 
+		    $commands{"initndb"} || 
+		    $commands{"ndb"} ||
+		    $commands{"rebuildndb"} || 
+		    $commands{"rebuildflatdb"} ||
+		    $commands{"rebuildflatndb"}) {
+		    if ($commands{"root"} =~ m,^\/.*,) {
+			$parent = $commands{"root"};
+			my $root = "$parent$base";
+			if (!-e $root && !-f $root) { 
+			    print "failed to open $root\n\n";
+			    exit;
+			} 
+		    } 
+		    elsif ($commands{"root"} ne "") {
+			print "swim: arguments to --root must begin with a /\n";
+			exit;
+		    }
+		}
+		else { 
+		    print "swim: --root may only be specified during querying, and database rebuilds\n";
+		    exit;
+		}
+	    }
+	}   
+	# check whether a different database location is being used with --dbpath.
+	elsif ($commands{"dbpath"} && 
+	       !$commands{"root"}) {
+	    if ($commands{"q"} || 
+		$commands{"query"} || 
+		$commands{"search"} ||
+		$commands{"refinesearch"} || 
+		$commands{"research"} ||
+		$commands{"powersearch"} || 
+		$commands{"ps"} ||
+		$commands{"ramdiskon"} || 
+		$commands{"history"} ||
+		$commands{"h"}) {
+		if ($commands{"dbpath"} =~ m,^\/.*,) {
+		    my $dbpath;
+		    $library = $commands{"dbpath"};
+		    if (!($commands{"n"} || 
+			  $commands{"initndb"} ||
+			  $commands{"rebuildndb"} ||
+			  $commands{"p"} || 
+			  $commands{"ndb"})) {
+			$dbpath = "$library/packages.deb";
+		    }
+		    else {
+			$dbpath =  "$library/npackages$arch$dist.deb";
+		    }
+		    if (!-e $dbpath && !-f $dbpath) {
+			print "failed to open $dbpath\n\n";
+			exit;
+		    } 
+		} 
+		elsif ($commands{"dbpath"} ne "") {
+		    print "swim: arguments to --dbpath must begin with a /\n";
+		    exit;
+		}
+	    }
+	    else {
+		if ($commands{"dbpath"} !~ m,^\/,) {
+		    print "swim: arguments to --dbpath must begin with a /\n";
+		}
+		else {
+		    if ($commands{"initdb"} || 
+			$commands{"rebuilddb"} ||
+			$commands{"db"} || 
+			$commands{"rebuildndb"} || 
+			$commands{"initndb"} || 
+			$commands{"rebuildflatdb"} || 
+			$commands{"ndb"} || 
+			$commands{"rebuildflatndb"}) {
+			if ($commands{"dbpath"} =~ m,^\/.*,) {
+			    $library = $commands{"dbpath"};
+			    my $dbpath = "$library";
+			    if (!-e $dbpath && !-f $dbpath) {
+				print "failed to open $dbpath\n\n";
+				exit;
+			    } 
+			}  
+			elsif ($commands{"dbpath"} ne "") {
+			    print "swim: arguments to --dbpath must begin with a /\n";
+			    exit;
+			}
+		    }
+		    else { 
+			print "swim: --dbpath given for operation that does not use a database\n";
+			exit;
+		    }
+		} 
+	    }
+	}
+	# check whether a different database location is being used with
+	# --dbpath 
+	# and --root / are being used, dbpath takes priority but uses --root as
+	# the base.
+	elsif ($commands{"dbpath"} && $commands{"root"}) {
+	    if ($commands{"q"} || 
+		$commands{"query"} || 
+		$commands{"search"} ||
+		$commands{"refinesearch"} || 
+		$commands{"research"} ||
+		$commands{"powersearch"} || 
+		$commands{"ps"} ||
+		$commands{"ramdiskon"} || 
+		$commands{"history"} ||
+		$commands{"h"}) {
+		if ($commands{"dbpath"} =~ m,^\/.*, &&
+		    $commands{"root"} =~ m,^\/.*,) {
+		    $parent = $commands{"root"};
+		    $library = $commands{"dbpath"};
+		    my $root = "$parent$library";
+		    my $dbpath;
+		    if (!($commands{"n"} || 
+			  $commands{"initndb"} ||
+			  $commands{"rebuildndb"} || 
+			  $commands{"p"} ||
+			  $commands{"ndb"})) {
+			$dbpath = "$parent$library/packages.deb";
+		    }
+		    else {
+			$dbpath = "$parent$library/npackages$arch$dist.deb";
+		    }
+		    if (!-e $dbpath && !-f $dbpath) {
+			print "failed to open $dbpath\n\n";
+			exit;
+		    } 
+		    if (!-e $root && !-f $root) {
+			print "failed to open $root\n\n";
+			exit;
+		    } 
+		} 
+		elsif ($commands{"dbpath"} ne "") {
+		    print "swim: arguments to --dbpath must begin with a /\n";
+		    exit;
+		}
+	    }
+	    else {
+		if ($commands{"dbpath"} !~ m,^\/,) {
+		    print "swim: arguments to --dbpath must begin with a /\n";
+		    exit;
+		}        
+		if ($commands{"initdb"} || 
+		    $commands{"rebuilddb"} ||
+		    $commands{"db"} || 
+		    $commands{"initndb"} || 
+		    $commands{"ndb"} ||
+		    $commands{"rebuildndb"} || 
+		    $commands{"rebuildflatdb"} ||
+		    $commands{"rebuildflatndb"}) {
+		    if ($commands{"dbpath"} =~ m,^\/.*, &&
+			$commands{"root"} =~ m,^\/.*,) {
+			$parent = $commands{"root"};
+			$library = $commands{"dbpath"};
+			my $root = "$parent$library";
+			my $dbpath = "$parent$library";
+			if (!-e $dbpath && !-f $dbpath) {
+			    print "failed to open $dbpath\n\n";
+			    exit;
+			} 
+			if (!-e $root && !-f $root) {
+			    print "failed to open $root\n\n";
+			    exit;
+			} 
+		    } 
+		    elsif ($commands{"dbpath"} ne "") {
+			print "swim: arguments to --dbpath must begin with a /\n";
+			exit;
+		    }
+		}
+		else { 
+		    print "\nswim: --dbpath given for operation that does not use a database\n";
+		    exit;
+		} 
+	    }
+	}
+	# final monster ... but, really only as a trap. 
+	elsif ($commands{"root"}) {
+	    exit;
+	}
+	elsif ($commands{"dbpath"}) {
+	    exit;
+	}
+    } # end if (Getopt
 
 
-   # need Package(s) and Contents file(s) --ftp
-   if ($commands{"ftp"} && !($commands{"q"} ||
-       $commands{"search"} || $commands{"powersearch"} ||
-       $commands{"ps"} || $commands{"research"} || 
-       $commands{"refinesearch"})) {
-       require SWIM::Apt;
-       SWIM::Apt->import(qw(ftp));
-       ftp(\%commands);
-       exit;
-   }
+    # need Package(s) and Contents file(s) --ftp
+    if ($commands{"ftp"} && 
+	!($commands{"q"} ||
+	  $commands{"search"} || 
+	  $commands{"powersearch"} ||
+	  $commands{"ps"} || 
+	  $commands{"research"} || 
+	  $commands{"refinesearch"})) {
+	require SWIM::Apt;
+      SWIM::Apt->import(qw(ftp));
+	ftp(\%commands);
+	exit;
+    }
 
 
    # make things a lot faster
