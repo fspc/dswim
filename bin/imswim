@@ -1,0 +1,99 @@
+#!/usr/bin/perl -w
+#use diagnostics;
+require 5.004;
+use strict;
+
+################################################################################
+#    Package administration and research tool for Debian                       #
+#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
+#                                                                              #
+#    This program is free software; you can redistribute it and/or modify      #
+#    it under the terms of the GNU General Public License as published by      #
+#    the Free Software Foundation; either version 2 of the License, or         #
+#    (at your option) any later version.                                       #
+#                                                                              #
+#    This program is distributed in the hope that it will be useful,           #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+#    GNU General Public License for more details.                              #
+#                                                                              #
+#    You should have received a copy of the GNU General Public License         #
+#    along with this program; if not, write to the Free Software               #
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
+################################################################################
+
+
+=pod
+
+This allows computers with a small amount of memory or overloaded system
+to succeed in making the databases for SWIM::DB_Init.  Instead of using
+transfer.deb to grab everything into memory and then creating the
+long.debian and big.debian files right out of memory for processing by
+SWIM::MD, it works like longswim by creating one large file to the disk
+(this can use lots of memory, but can swap easily)  then it uses slowswim
+to create long.debian and big.debian using a minimal memory method, then
+it finishes using SWIM::MD. 
+
+To test supply these arguments - info dir, temporary dir "imswim
+/var/lib/dpkg/info /tmp" and create a transfer.deb file
+beforehand in the temporary dir which has the packagename_version one to a
+line. 
+
+=cut
+
+
+   if ($#ARGV == -1) {                                                          
+     print "swim: imswim requires arguments, see program for instructions\n";                                                                      
+         exit;                                                                  
+   }                                                                           
+   else {
+     $| = 1; my $x = 1;
+     open(FILEDIR, ">$ARGV[1]/filedir.deb") 
+     or warn "could not create filedir.deb\n";
+     open(TRANSFER, "$ARGV[1]/transfer.deb") or warn "needs transfer.deb"; 
+      while (<TRANSFER>) {
+       chomp;
+       my @the = split(/_/, $_);
+       open (LIST, "$ARGV[0]/$the[0].list") 
+       or warn "could not file *list";
+        chomp;
+        # better check if /. is missing in any of the *list
+        my $count = 0;                                                          
+        my @count = <LIST>;  
+        close(LIST);                                                            
+        foreach (@count) {                                                      
+          $x = 1 if $x == 6;
+          print "|\r" if $x == 1 || $x == 4; print "/\r" if $x == 2;
+          print "-\r" if $x == 3 || $x == 6; print "\\\r" if $x == 5;
+          $x++;
+          chomp $_;                                                             
+          # does /. exist?  it should be first.                                 
+          if ($count == 0) {                                                    
+            if ($_ !~ m,\/\.,) {                                                
+             my $shifter = $_;                                                  
+             my @redolist = @count;                                             
+             push(@count,$shifter);                                             
+             # humm let's rebuild the offending backup list, this               
+             # is important for --db.                                           
+             unshift(@redolist,"/.");                                           
+             open(REDOLIST, ">$ARGV[0]/backup/$the[0].list.bk.bk")        
+             or warn "needed to edit $the[0].list because it lacked /.,              
+                      but could not open up a backup file\n";                   
+               my $rd;                                                          
+               foreach $rd (@redolist) {                                        
+                 chomp $rd;                                                     
+                 print REDOLIST "$rd\n";                                        
+               }                                                                
+             close(REDOLIST);                                                   
+             rename("$ARGV[0]/backup/$the[0].list.bk.bk",
+                    "$ARGV[0]/backup/$the[0].list.bk");    
+             $_ =  "/.";                                                        
+            }                                                                   
+          }                                                                     
+         $count = 1;      
+         print FILEDIR "$_ -> $the[0]_$the[1]\n";
+        } # foreach @count
+      } # while TRANSFER
+     close(TRANSFER);
+     close(FILEDIR); 
+  } # else

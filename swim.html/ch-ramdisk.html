@@ -1,0 +1,82 @@
+<html><head>
+<title>swim - RAMDISK
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 12<br>
+RAMDISK
+
+</h1>
+
+<pre>usage: swim --ramdiskon
+       swim --ramdiskoff
+
+options: [-n] [--searchfile] [--arch &lt;architecture&gt;] 
+         [--dists &lt;distribution&gt;] [--dbpath] [--root]
+ 
+         no options for --ramdiskoff
+</pre>
+<P>
+<hr>
+<h2><A name="s12.1">
+12.1 OVERVIEW
+
+</A></h2>
+
+A ramdisk can be mounted below the default path or the specified path for
+the databases in the dramdisk directory. The ramdisk is used to speed up
+powersearchs and/or file/dir listings for packages from the not-installed
+system. Also, this is useful if a computer system is heavily loaded with
+other processes using the memory, and the ramdisk tends to persist even
+after being unmounted. Modern kernels usually are built with support for
+ramdisks. If these options do not work the kernel will need to be compiled
+to support ramdisks by answering yes to RAM disk support. Perhaps the best
+<em>README</em> showing how to configure and compile a kernel comes with
+the <em>kernel sources</em> in the main directory.
+<P>
+
+<strong>--ramdiskon</strong> allows a ramdisk to be created and mounted. 
+If called with <strong>-n</strong> (not-installed databases) 
+<em>ncontents-arch-dists.deb.gz</em> will automatically be written to the
+mounted ramdisk. This provides faster file/dir listing capabilities when
+using <strong>-l</strong>, <strong>--df</strong>, or <strong>-d</strong>
+when querying the not-installed system. Faster powersearch capabilities
+are available through the option <strong>--searchfile</strong>. If the
+search databases are not already compressed, they will now be compressed,
+this usually only needs to be done once or until the databases are updated
+or rebuilt again. The search databases will then be written to the mounted
+ramdisk. An installed system only writes the search databases to the
+mounted ramdisk, so always use --searchfile when specifying installed
+system databases. 
+<P>
+
+<strong>--ramdiskoff</strong> is used to unmount the ramdisk. The
+not-installed databases and the installed databases can not be
+simultaneously provided by a mounted ramdisk, use
+<strong>--ramdiskoff</strong> first, then <strong>--ramdiskon</strong> to
+install the other databases of choice.  This also pertains to different
+distributions and/or architectures. 
+<P>
+
+
+See the section ``<A href="ch-query.html#s-specdata">SPECIFYING THE DATABASES TO USE
+, section 9.2</A>'' for
+options <strong>--arch</strong>, <strong>-dists</strong>. 
+<P>
+
+See the section ``<A href="ch-query.html#s-dblocus">DATABASE LOCATIONS
+, section 9.11</A>'' for options
+<strong>--dbpath</strong> and <strong>--root</strong>. 
+
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch13.html">next</A>; <A href="ch-search.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

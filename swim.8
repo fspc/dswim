@@ -1,0 +1,1558 @@
+.rn '' }`
+''' $RCSfile$$Revision$$Date$
+'''
+''' $Log$
+'''
+.de Sh
+.br
+.if t .Sp
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.de Ip
+.br
+.ie \\n(.$>=3 .ne \\$3
+.el .ne 3
+.IP "\\$1" \\$2
+..
+.de Vb
+.ft CW
+.nf
+.ne \\$1
+..
+.de Ve
+.ft R
+
+.fi
+..
+'''
+'''
+'''     Set up \*(-- to give an unbreakable dash;
+'''     string Tr holds user defined translation string.
+'''     Bell System Logo is used as a dummy character.
+'''
+.tr \(*W-|\(bv\*(Tr
+.ie n \{\
+.ds -- \(*W-
+.ds PI pi
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+'''   \*(M", \*(S", \*(N" and \*(T" are the equivalent of
+'''   \*(L" and \*(R", except that they are used on ".xx" lines,
+'''   such as .IP and .SH, which do another additional levels of
+'''   double-quote interpretation
+.ds M" """
+.ds S" """
+.ds N" """""
+.ds T" """""
+.ds L' '
+.ds R' '
+.ds M' '
+.ds S' '
+.ds N' '
+.ds T' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds M" ``
+.ds S" ''
+.ds N" ``
+.ds T" ''
+.ds L' `
+.ds R' '
+.ds M' `
+.ds S' '
+.ds N' `
+.ds T' '
+.ds PI \(*p
+'br\}
+.\"	If the F register is turned on, we'll generate
+.\"	index entries out stderr for the following things:
+.\"		TH	Title 
+.\"		SH	Header
+.\"		Sh	Subsection 
+.\"		Ip	Item
+.\"		X<>	Xref  (embedded
+.\"	Of course, you have to process the output yourself
+.\"	in some meaninful fashion.
+.if \nF \{
+.de IX
+.tm Index:\\$1\t\\n%\t"\\$2"
+..
+.nr % 0
+.rr F
+.\}
+.TH swim 8 " " "15/Jun/99" " "
+.UC
+.if n .hy 0
+.if n .na
+.ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
+.de CQ          \" put $1 in typewriter font
+.ft CW
+'if n "\c
+'if t \\&\\$1\c
+'if n \\&\\$1\c
+'if n \&"
+\\&\\$2 \\$3 \\$4 \\$5 \\$6 \\$7
+'.ft R
+..
+.\" @(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2
+.	\" AM - accent mark definitions
+.bd B 3
+.	\" fudge factors for nroff and troff
+.if n \{\
+.	ds #H 0
+.	ds #V .8m
+.	ds #F .3m
+.	ds #[ \f1
+.	ds #] \fP
+.\}
+.if t \{\
+.	ds #H ((1u-(\\\\n(.fu%2u))*.13m)
+.	ds #V .6m
+.	ds #F 0
+.	ds #[ \&
+.	ds #] \&
+.\}
+.	\" simple accents for nroff and troff
+.if n \{\
+.	ds ' \&
+.	ds ` \&
+.	ds ^ \&
+.	ds , \&
+.	ds ~ ~
+.	ds ? ?
+.	ds ! !
+.	ds /
+.	ds q
+.\}
+.if t \{\
+.	ds ' \\k:\h'-(\\n(.wu*8/10-\*(#H)'\'\h"|\\n:u"
+.	ds ` \\k:\h'-(\\n(.wu*8/10-\*(#H)'\`\h'|\\n:u'
+.	ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'^\h'|\\n:u'
+.	ds , \\k:\h'-(\\n(.wu*8/10)',\h'|\\n:u'
+.	ds ~ \\k:\h'-(\\n(.wu-\*(#H-.1m)'~\h'|\\n:u'
+.	ds ? \s-2c\h'-\w'c'u*7/10'\u\h'\*(#H'\zi\d\s+2\h'\w'c'u*8/10'
+.	ds ! \s-2\(or\s+2\h'-\w'\(or'u'\v'-.8m'.\v'.8m'
+.	ds / \\k:\h'-(\\n(.wu*8/10-\*(#H)'\z\(sl\h'|\\n:u'
+.	ds q o\h'-\w'o'u*8/10'\s-4\v'.4m'\z\(*i\v'-.4m'\s+4\h'\w'o'u*8/10'
+.\}
+.	\" troff and (daisy-wheel) nroff accents
+.ds : \\k:\h'-(\\n(.wu*8/10-\*(#H+.1m+\*(#F)'\v'-\*(#V'\z.\h'.2m+\*(#F'.\h'|\\n:u'\v'\*(#V'
+.ds 8 \h'\*(#H'\(*b\h'-\*(#H'
+.ds v \\k:\h'-(\\n(.wu*9/10-\*(#H)'\v'-\*(#V'\*(#[\s-4v\s0\v'\*(#V'\h'|\\n:u'\*(#]
+.ds _ \\k:\h'-(\\n(.wu*9/10-\*(#H+(\*(#F*2/3))'\v'-.4m'\z\(hy\v'.4m'\h'|\\n:u'
+.ds . \\k:\h'-(\\n(.wu*8/10)'\v'\*(#V*4/10'\z.\v'-\*(#V*4/10'\h'|\\n:u'
+.ds 3 \*(#[\v'.2m'\s-2\&3\s0\v'-.2m'\*(#]
+.ds o \\k:\h'-(\\n(.wu+\w'\(de'u-\*(#H)/2u'\v'-.3n'\*(#[\z\(de\v'.3n'\h'|\\n:u'\*(#]
+.ds d- \h'\*(#H'\(pd\h'-\w'~'u'\v'-.25m'\f2\(hy\fP\v'.25m'\h'-\*(#H'
+.ds D- D\\k:\h'-\w'D'u'\v'-.11m'\z\(hy\v'.11m'\h'|\\n:u'
+.ds th \*(#[\v'.3m'\s+1I\s-1\v'-.3m'\h'-(\w'I'u*2/3)'\s-1o\s+1\*(#]
+.ds Th \*(#[\s+2I\s-2\h'-\w'I'u*3/5'\v'-.3m'o\v'.3m'\*(#]
+.ds ae a\h'-(\w'a'u*4/10)'e
+.ds Ae A\h'-(\w'A'u*4/10)'E
+.ds oe o\h'-(\w'o'u*4/10)'e
+.ds Oe O\h'-(\w'O'u*4/10)'E
+.	\" corrections for vroff
+.if v .ds ~ \\k:\h'-(\\n(.wu*9/10-\*(#H)'\s-2\u~\d\s+2\h'|\\n:u'
+.if v .ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'\v'-.4m'^\v'.4m'\h'|\\n:u'
+.	\" for low resolution devices (crt and lpr)
+.if \n(.H>23 .if \n(.V>19 \
+\{\
+.	ds : e
+.	ds 8 ss
+.	ds v \h'-1'\o'\(aa\(ga'
+.	ds _ \h'-1'^
+.	ds . \h'-1'.
+.	ds 3 3
+.	ds o a
+.	ds d- d\h'-1'\(ga
+.	ds D- D\h'-1'\(hy
+.	ds th \o'bp'
+.	ds Th \o'LP'
+.	ds ae ae
+.	ds Ae AE
+.	ds oe oe
+.	ds Oe OE
+.\}
+.rm #[ #] #H #V #F C
+.SH "NAME"
+swim \- package administration and research tool for Debian packages
+.SH "SYNOPSIS"
+swim [options]
+.SH "DESCRIPTION"
+\fBswim\fR is a powerful \fIpackage administration\fR and \fIresearch tool\fR for
+both an \fIinstalled Debian distribution\fR, and/or \fInot-installed virtual
+Debian distribution(s)\fR allowing querying of software packages with a
+variety of package information options, and powerful searches. Virtual
+options which include ftp, installation, and package removal capabilities
+can be seamlessly combined with querying or searches. \fBswim\fR can be used
+on computer systems which either have, or do not have a Debian
+distribution installed. 
+.SH "COMMAND LINE OPTION SYNTAX"
+When you press ``\fBswim\fR <\fBenter\fR>`` you will see a listing of command
+line options in a particular syntax. This is to help you understand under
+what context to use the options. When you enter the options on the command
+line, the brackets, parentheses, braces, diamonds, and question marks are
+not actually used.
+.PP
+\fBMajor Mode Option\fR
+.PP
+All command line options for \fBswim\fR always start with a
+\fBmajor mode option\fR, except for ``swim
+<enter>`` which will show the whole listing of
+options. A major mode option is surrounded in braces
+\fB{ major mode option }\fR. In the case of
+{--search} there are the alternative major mode
+options {--refinesearch} and
+{--research}, but because --search needs
+to be used first before either of these two options,
+--refinesearch and --research are
+surrounded in parentheses (). 
+.PP
+Note: Through the other chapters of this manual \fB{}\fR is
+assumed for the \fBmajor modes\fR in the
+\fBusage:\fR section shown at the beginning of every chapter. 
+.PP
+Let's take a closer look at this situation:
+.PP
+.Vb 1
+\& {--search ? (--research || --refinesearch) <pattern(s)>}
+.Ve
+`\fB||\fR\*(R' or `\fB|\fR\*(R' are used to indicate `\fBor\fR\*(R', `\fB?\fR\*(R' indicates
+`\fBoptional\fR\*(R', <diamond> indicates an \fBargument\fR (a required argument \-
+see Arguments below), (parenthesis) means `if used, must be used after the
+previous required option was used\*(R'. Note: for readability \f(CW--research\fR
+and \f(CW--refinesearch\fR are not surrounded in \f(CW{}\fR. 
+.PP
+\fBNormal Options\fR
+.PP
+Options to the major mode options are enclosed in brackets \fB[ option to
+major mode ]\fR.  \f(CWswim [-n]\fR <\f(CWenter\fR>; (assume enter from here on out),
+for instance, will show all the command line options without using the
+pager. The pager which swim uses can be set in \fIswimrc\fR (see
+\fIswimrc(8)\fR).  ``\f(CWswim {--help} [-n]\fR'\*(R' will provide brief explanations
+of all of swim's options without using the pager. In this case the major
+mode option \fB{--help}\fR, and the option \fB[\-n]\fR were used. 
+.PP
+\fBDashes\fR
+.PP
+Options which have a single dash can be combined with other single dashed
+options \fB(\-qaint)\fR. Double dashed options need to be entered by
+themselves \fB(--help --nopager)\fR, many double dashed options have an
+alternative single dash option \fB(\-n for --nopager)\fR. The meaning of
+options is related to the major mode they are being used with. \fB[\-n]\fR
+means no pager when called with \fB{--help}\fR, but it's a reference to the
+not-installed databases when used with \fB{\-q --query}\fR, fortunately most
+options do not have double meanings. 
+.PP
+\fBArguments\fR
+.PP
+Many options require an argument. Arguments are enclose in diamonds 
+<\fBargument\fR>. An argument to an option may also be optional in which case
+a question mark ``\fB?\fR'\*(R' will be placed between the option and the
+argument.  \fB[\-l ?\fR <\fB[--df]\fR>\fB]\fR illustrates such a situation.  \fB[\-l]\fR
+shows a file listings, and optionally the option \fB[--df]\fR can be use with
+\fB[\-l]\fR to show an expanded listing. 
+.PP
+\fB[--dbpath\fR <\fBdir\fR>\fB]\fR requires an argument, this time the argument
+would not be another option, but rather it is a directory. 
+.PP
+Rule: When an option is an argument to another option it can be written
+anywhere, but when a non-option is an argument <\fBdir\fR>; \fB(notice no
+brackets)\fR it has to be placed directly after the option.  Sometimes,
+there may be alternative arguments divided with ``\fB|\fR'\*(R'. 
+<\fBargument1|argument2\fR>;  means use argument1 or argument2, but not both. 
+.PP
+Based on what we now know, let's compare this situation to the
+\fB{--search}\fR situation shown above: 
+.PP
+.Vb 1
+\& [--ftp ? --source | --source_only ? <[--diff]>]
+.Ve
+In this case \fB--source\fR or alternatively
+\fB--source_only\fR can be optionally used along with
+\fB--ftp\fR because they aren't in parentheses
+\fB()\fR (also notice: | was used instead of ||, but means the
+same thing ``or'').  \fB--diff\fR can optionally be provided as
+an argument to either \fB--source\fR or
+\fB--source_only\fR. For readability --source and --source_only
+weren't enclosed in brackets.
+.PP
+\fBGlobal Arguments\fR
+.PP
+A \fBglobal argument\fR can be typed anywhere on the command
+line, and can be an option or text. If global arguments
+exist they are placed last after the list of normal
+options that can be used with a major mode
+option. 
+.PP
+[targets | \-S] and [targets|APT|DF] are
+examples.  {\-q}, {--initndb}, and
+{--rebuildndb} all use global arguments.  
+.PP
+\fBMinor Mode Options\fR
+.PP
+{\-q --query} will generally use zero or more
+minor mode options [\-afpgn --dir], with
+one exception (see QUERYING). 
+.SH "VERSION"
+usage: \fBswim --version\fR
+.PP
+This shows the version for the swim program.
+.SH "HISTORY"
+usage: \fBswim --history\fR
+       \fBswim \-h\fR
+.PP
+options:  \fB[--arch\fR <\fBarchitecture\fR>\fB] [--dists\fR <\fBdistribution\fR>\fB]\fR
+          \fB[--n] [--dbpath\fR <\fBdir\fR>\fB] [--root\fR <\fBdir\fR>\fB]\fR  
+.PP
+This shows a shell-like history of searches and the most recent --stdin
+edit. History is numbered with the most recent action being 1, and the
+earlier actions being of a higher number until the maximum amount of lines
+set in the HISTORY variable in \fIswimrc\fR\|(5). A separate history is kept for
+each architecture-distribution.
+.SH "MAKING INSTALLED SYSTEM DATABASES"
+.Sh "Initial database making, and Rebuilding for an Installed system."
+usage: \fBswim --initdb\fR
+       \fBswim --rebuilddb\fR
+.PP
+Options:  \fB[--dbpath\fR <\fBdir\fR>\fB] [--root\fR <\fBdir\fR>\fB] [--lowmem]\fR
+          \fB[--split_data\fR <\fBlines\fR>\fB]\fR 
+.PP
+An \fIinstalled Debian distribution\fR is one in which packages are installed
+using \fBdpkg\fR or some front-end to \fBdpkg\fR like \fBapt\fR or \fBdselect\fR;
+\fBswim\fR supports installation through \fBapt\fR.  These major modes are for a
+computer with an \fIinstalled Debian distribution\fR and make the databases
+which allow querying and searching capabilities for the installed
+distribution. 
+.PP
+\fB--initdb\fR is run when the databases do not exist yet, \fB--rebuilddb\fR is
+run if the databases have become corrupt, or you want to rebuild the
+databases instead of updating them. 
+.PP
+\fB--dbpath\fR can be specified as an alternative location for where the
+databases will be made.  The default location is \*(L"\fI/var/lib/dpkg\fR\*(R".  An
+argument like \*(L"\fI/otherstuff\fR\*(R" could be provided, and then the databases
+would be made here instead.
+.PP
+\fB--root\fR allows a database to be made for a Debian distribution installed
+on a different partition.  If the distribution is mounted on
+\fI/New_Debian\fR, \*(L"\fI/New_Debian\fR\*(R" would be the argument to root.  The
+databases would be made for the Debian distribution installed on the
+\*(L"\fI/New_Debian\fR\*(R" partition. 
+.PP
+\fB--dbpath\fR and \fB--root\fR can be used together.  Given the previous two
+examples, the databases would be made on \*(L"\fI/New_Debian/otherstuff\fR\*(R",
+assuming \*(L"\fI/New_Debian/otherstuff\fR\*(R" actually existed.
+.PP
+\fB--lowmem\fR uses a method which uses a small amount of memory to make the
+databases.  By default \fB--initdb\fR and \fB--rebuilddb\fR use a method which
+fully takes advantage of memory, this is a good thing, because it means
+the databases are made in a quicker manner.  On a computer with a K6-200
+\s-1CPU\s0, 64MB of memory, and 1500 installed packages, the databases can be
+made in 4.5 minutes using the default method, and 11 minutes using the low
+memory method. The high memory method is the default because in general
+the size of a distribution is related to how much resources a computer
+has, and probably a large installation is unusual.  If you get an \*(L"out of
+memory\*(R"  when you use the default method, or if your system is overloaded
+to begin with, the \fB--lowmem method\fR is the prefered way. 
+.PP
+\fB--split_data\fR determines the size of the files in the temporary
+directory used to contruct the database.  The default is 25000 lines per
+file.  If you are using the \fB--lowmem method\fR you may want to provide a
+different argument to \fB--split_data\fR, like \*(L"\fB--split_data 10000\fR\*(R".  This
+is a subject of experimentation.
+.Sh "\s-1UPDATING\s0"
+usage: \fBswim --db\fR
+.PP
+options: \fB[--dbpath\fR <\fBdir\fR>\fB] [--root\fR <\fBdir\fR>\fB] [--check]\fR
+.PP
+\fB--db\fR allows you to update the databases by hand when packages have been
+removed, added, or changed.  swim will automatically run \fB--db\fR under
+certain conditions.  
+.PP
+\fB--check\fR prints out the changes to \s-1STDERR\s0, and the total to \s-1STDOUT\s0
+without proceeding with the update. 
+.PP
+See \fB--initdb\fR for options \fB--dbpath\fR and \fB--root\fR. 
+.Sh "\s-1REBUILDING\s0 \s-1THE\s0 \s-1SEARCH\s0"
+usage:  \fBswim --rebuildflatdb\fR
+.PP
+options: \fB[--dbpath\fR <\fBdir\fR>\fB] [--root\fR <\fBdir\fR>\fB]\fR
+.PP
+swim makes the flat databases \fIsearchindex.deb\fR and \fIdirindex.deb\fR for
+doing \fIpowersearches\fR.  Instead of rebuilding these databases everytime
+\fB--db\fR is run, new information is just appended to these databases, and
+old information is kept.  Generally, this is not a problem because only
+files and directories which the other databases actually know something
+about will be refered to.  But in a situation where a file has changed
+into a directory, the \fIpowersearch\fR may not work properly, because the
+old file name remains in \fIsearchindex.deb\fR, and the new directory name is
+now in \fIdirindex.deb\fR directory.  In general, it takes a lot of changes
+to the installed system before it is really becomes necessary to rebuild
+the flat databases.  This process takes less than a minute on a K6-200
+with 1500 packages. 
+.PP
+See \fB--initdb\fR for options \fB--dbpath\fR and \fB--root\fR. 
+.Sh "\s-1FILES\s0"
+Databases which are made:
+.PP
+.Vb 6
+\& packages.deb
+\& fileindex.deb
+\& statusindex.deb
+\& groupindex.deb
+\& searchindex.deb
+\& dirindex.deb
+.Ve
+.SH "IMPORTANT DEBIAN DATABASES FOR NOT\-INSTALLED DATABASES"
+.Sh "A. downloading the important databases with --ftp."
+usage: \fBswim --ftp\fR
+.PP
+options: \fB--Contents\fR <\fB\s-1DF\s0|directory\fR> 
+         \fB--Packages\fR <\fB\s-1DF\s0|directory\fR> 
+         \fB[--dists\fR <\fBdistribution\fR>\fB] [--arch\fR <\fBarchitecture\fR>\fB]\fR
+         \fB[--onec] [--Release_only]\fR
+.Sh "\s-1OVERVIEW\s0"
+\fBswim\fR provides a method so that all information about an existing Debian
+distribution is quickly accessible through databases.  Debian already
+provides flat file databases for all its distributions.  One database
+called \*(L"\fIContents-(architecture)\fR\*(R" provides a complete listing of all the
+files associated with each package, the other much more important database
+called \*(L"\fIPackages\fR\*(R" provides everything from the Package's description,
+to all the dependencies for that package.  The Packages database is a
+crucial database for other important Debian administrative tools like
+\fBdpkg\fR and \fBapt\fR. 
+.Sh "\s-1DISTRIBUTION\s0 \s-1DEFINED\s0"
+Debian Distributions choose a name which reflect the development state of
+that distribution.  The distribution named \*(L"\fIunstable\fR\*(R" is where the
+majority of the development processing occurs, after \fIunstable\fR has
+reached a certain level of maturity, it's copied over to a new
+distribution called \*(L"\fIfrozen\fR\*(R" which is tested extensively before
+becoming the new \*(L"\fIstable\fR\*(R"  distribution.  The \fIfrozen distribution\fR
+retains the \fIRelease version number\fR of the \fIunstable distribution\fR, and
+the \fIunstable distribution\fR receives a new \fIRelease version number\fR. 
+Eventually, \fIfrozen\fR becomes \fIstable\fR, and at this point both \fIfrozen\fR,
+and the older \fIstable distribution\fR are removed.  Code names are
+associated with the \fIRelease Version number\fR given for each of the
+distributions.  This is much better for mirroring Debian sites. 
+.PP
+\fBswim\fR was designed to ignore these code names, and instead shows the
+user the \fIRelease version number\fR associated with the distribution.  Swim
+users must always use the real distribution name, or swim will not work
+properly.  This is a nice feature because it allows user to make decisions
+related to the management of their databases, and makes research much more
+easier. 
+.PP
+The other Debian distribution which swim recognizes is \fIexperimental\fR. 
+This distribution \fIdoes not have any Release version number\fR, and
+contains packages which are considered risky because of their development
+level. 
+.Sh "\s-1SECTIONS\s0"
+Each Debian distribution has sections related to the relationship of each
+of the packages to the \fIDebian's Policy Manual\fR.  In \*(L"\fImain\fR\*(R" there are
+packages which have a correct relationship with these Policies.  Packages
+in \*(L"\fIcontrib\fR\*(R" comply with the \fI\s-1DFSG\s0\fR (\fIDebian Free Software
+Guidelines\fR found in the \fIDebian Policy Manual\fR) but have various
+limitations like requiring a package which is found in non-free, or is not
+in the Debian archive.  Packages in \*(L"\fInon-free\fR\*(R" do not comply with the
+\fI\s-1DFSG\s0\fR but are electronically distributable across international borders. 
+The \*(L"\fInon-us\fR\*(R" section is found outside of the United States and exists
+for packages which have export restrictions.
+.Sh "\s-1ARCHITECTURES\s0"
+Distributions also have architecture specific sections since not all
+packages compiled for one architecture can run on all other
+archictectures, however, there are a large percentage of packages which do
+run on all architectures.  The architectures are \fIalpha\fR, \fIarm\fR,
+\fIi386\fR, \fIm68k\fR, \fIpowerpc\fR, \fIsparc\fR, and more recently \fIhurd-i386\fR
+which represents packages for the hurd \s-1GNU\s0 kernel for the i386
+architecture. 
+.Sh "\s-1SWIMZ\s0.\s-1LIST\s0"
+\fB--ftp\fR uses a file called \fIswimz.list\fR which has the same type of
+format (see format below) as the \fIsources.list(5)\fR which \fBapt\fR uses. 
+There are some differences.  The \fBfirst difference\fR mentioned above
+requires that the distribution names never should be the code names for
+the \fIRelease version\fR.  \fBSecondly\fR, \fBapt\fR only retrieves databases
+specific to one archictecture, normally the one you are running \fBapt\fR on. 
+With \fBswim\fR though you can fetch databases for any, or every architecture
+by adding the architecture to \*(L"deb\*(R" with a hyphen (deb-hurd-i386).  If deb
+has no architecture appended it is assumed that the architecture you want
+is the same as the system you are running \fBswim\fR on.  \fBThirdly\fR, at this
+time \fBswim\fR only supports the ftp method.  \fBFourthly\fR, you can change
+\fIswimz.list\fR as often as you want without worrying about databases being
+removed so that that the \fIswimz.list\fR and the downloaded databases match. 
+This would occur with \fBapt's\fR \fIsources.list(5)\fR if you removed a site. 
+\fBFifthly\fR, databases are kept in a compressed state.  \fBSixthly\fR, because
+the list is used for both Contents and Packages, more flexibility is
+provided by only allowing the default distribution/archictecture or
+distribution/architecture provided on the commandline to be downloaded.
+.PP
+For \fBapt\fR users:  If you are using \fBapt\fR, and \fBswim\fR together it is a
+good strategy to use the real distribution name in the \fIsources list(8)\fR,
+and to have an exact copy of the \fIsources.list(5)\fR ftp sites in the
+\fIswimz.list\fR.  Packages databases specific to the architecture \fBapt\fR is
+using can be retrieved using \fBswim --apt --update\fR (this also will keep
+track of the Release version), and then \fBswim\fR can be used to fetch the
+architecture specific \fIContents database\fR as shown below.  It should also
+be of interest to note that Packages downloaded by either swim or apt can
+be used interchangeably by using \*(L'cp \-a\*(R' and \*(L'gzip \-d\*(R' or \*(L'gzip \-9\*(R'. 
+.PP
+Here is a brief outline of the format required by \fIswimz.list\fR.  
+.PP
+\fBdeb uri distribution [section ...  ]\fR
+.PP
+\fBdeb\fR \- represents a standard Debian distribution.  And is simply written
+as deb or with the architecture appended (\fBdeb\fR or \fBdeb-alpha\fR).
+.PP
+\fBuri\fR \- Universal Resource Identifier is exactly how you would enter an
+address into a web browser.  This address is the base of a Debian
+distribution, generally this is right before the directory called
+\*(L"\fIdists\fR\*(R". So if \fIdists\fR is found in \fI/stuff/pub/debian/dists\fR, and the
+site is \fBsomewhere.com\fR then the uri would be
+\fIftp://somewhere.com/stuff/pub/debian\fR. 
+.PP
+\fBdistribution\fR \- This can be \fIunstable\fR, \fIfrozen\fR, \fIstable\fR,
+\fIexperimental\fR. Distribution can also be a path which must end with a
+slash like \fIunstable/binary-i386/\fR. This is used when there is no section
+as in the experimental distribution or in sites which do not have symlinks
+to the non-us section.  No section would be mentioned in this situation. 
+ 
+\fBsection\fR \- \fImain\fR, \fIcontrib\fR, \fInon-free\fR, \fInon-\s-1US\s0\fR (write it this
+way). 
+.Sh "\s-1SWIMZ\s0.\s-1LIST\s0 \s-1EXAMPLES\s0"
+Examples (each on one line):
+.PP
+\fBdeb-alpha ftp://somewhere.com/stuff/pub/debian unstable main contrib
+non-\s-1US\s0\fR
+.PP
+This will fetch the alpha databases from somewhere.com for the unstable
+distribution for the main, contrib and non-\s-1US\s0 sections.
+.PP
+Note: In these next two examples you can not append any architecture to
+deb with a hyphen. 
+.PP
+\fBdeb ftp://somewhere.com/stuff/pub/debian project/experimental/\fR
+.PP
+This will fetch the experimental database, but there is 
+not a Contents-(architecture) database for this distribution.  Notice that
+it ends with a slash.
+.PP
+\fBdeb ftp://somewhere.com/stuff/pub/debian-non-\s-1US\s0 stable/binary-i386/\fR
+.PP
+This will fetch the i386 databases for the stable distribution for non-us,
+.Sh "\s-1FTP\s0 \s-1OR\s0 \s-1APT\s0?"
+How you use major mode \fB--ftp\fR depends on your goals.  Even if you are
+using \fBapt\fR, you may be interested in keeping tabs on different
+architectures.  In this case you would have to download the \fIPackages
+databases\fR specific to these architectures.  If you are only interested in
+the architecture which \fBapt\fR is interested in, then you only need to use
+\fB--ftp\fR to fetch the \fIContents database(s)\fR.  But, because it isn't a
+requirement to set up a virtual filesystem, you are not required to fetch
+the Contents database.  The \fBadvantages\fR of fetching the Contents
+database is determined by the method you choose to make the database (see
+\f(CW--initndb\fR).  These advantages include the ability to \fIview a listing
+of the files and directories\fR associated with a package, the ability to
+\fIquery files and directories\fR to find out which packages relate to them,
+and the ability to perform a \fIpowersearch\fR on all the files and
+directories to find the associated packages. 
+.Sh "\s-1OPTIONS\s0"
+\fBRemember:\fR  If you want to download a different 
+distribution/architecture other than the default specified in your
+configuration file, you must specify this on the commandline.
+.PP
+\fB--Packages\fR determines where you want the Packages database as well as
+the Release data put when they are downloaded.  The \fB\s-1DF\s0 argument\fR implies
+that the databases will be put in your default directory (see \fIswimrc\fR\|(8)).
+These databases can later be located by the major modes \fB--initndb and
+--rebuildndb\fR just by using \fB\s-1DF\s0\fR as an argument.  Alternatively, these
+databases can be put in any directory you choose by providing a
+\fBdirectory as an argument\fR.
+.PP
+\fB--Contents\fR determines where you want the \fIContent-(architecture)\fR
+\fIdatabase\fR\|(s) put.  (see --Packages).
+.PP
+\fB--onec\fR will download only one Contents-arch per
+distribution/architecture specified on the commandline or by default.
+.PP
+\fB--Release_only\fR will download only the Release data for the
+\fIswimz.list\fR or particular \fIPackage(s)\fR mentioned on the command line. 
+.PP
+\fB--dists\fR will only find the distribution which corresponds to the
+argument provided this option. 
+.PP
+\fB--arch\fR will only find the architecture which corresponds
+to the argument provided this option.  The different architecture needs to
+be specified in swimz.list with a hyphen and the architecture appended to   
+deb (deb-(arch)).
+.Sh "B. downloading the important databases with apt, and maintenance options."
+usage: \fBswim --apt\fR 
+.PP
+options: \fB[--update] [--clean] [--autoclean] [--check]\fR
+.PP
+Please read \*(L"\fBA. downloading the important databases with --ftp\fR\*(R" for
+more information. 
+.PP
+\fB--update\fR calls \fBapt\fR to download the Packages databases.
+.PP
+\fB--clean\fR is a call to an \fBapt\fR option to remove any packages stored in
+\fBapt's\fR storage area for downloaded packages.  The default for this
+storage area is \fI/var/cache/apt/arhives\fR
+.PP
+\fB--autoclean\fR will only clean out packages which are not
+found in apt's cache.
+   
+.PP
+\fB--check\fR tests and updates apt's cache.
+.SH "MAKING NOT\-INSTALLED DATABASES"
+usage:  \fBswim --initndb\fR
+        \fBswim --ndb\fR
+        \fBswim --rebuildndb\fR
+.PP
+options: \fB[--Contents\fR <\fBtarget|FDBtarget|DF|FDBDF\fR>\fB]\fR
+         \fB[--main] [--contrib] [--non-free] [--non-us]\fR
+         \fB[--arch\fR <\fBarchitecture\fR>\fB]\fR \fB[--dists\fR <\fBdistribution\fR>\fB]\fR 
+         \fB[--dbpath\fR <\fBdir\fR>\fB] [--root\fR <\fBdir\fR>\fB] [--alt]\fR
+         \fB[--split_data\fR <\fBlines\fR>\fB] [\-v] [--cron]\fR 
+         \fB[targets|APT|DF]\fR
+.Sh "\s-1OVERVIEW\s0"
+The \fBnot-installed database\fR provides swim with many capabilities like
+the searching, and querying of packages which do not actually exist on the
+live filesystem, as well as the ability to seamlessly install packages
+while searching or quering, or the ability to fetch the packages source
+code. The \fIvirtual filesystem\fR is optional, but it is highly recommended.
+These two major mode options set up these databases, after determining the
+level of interaction which you want. 
+.PP
+Whenever \fBswim\fR makes databases it thinks only in terms of one
+distribution and one architecture.  This keeps things logical.  \fBswim\fR
+does have the ability to take Packages files with multiple architectures,
+and distributions, and to extract information for one distribution and one
+archictecture to make its databases.  This could provide interesting
+information from dumps from \fBapt\fR (\f(CWapt-cache dumpavail\fR). 
+.PP
+\fB--initndb\fR creates the initial not-installed databases for a particular
+architecture and distribution, and \fB--rebuildndb\fR remakes the
+not-installed databases for that same architecure and distribution. If not
+otherwise specified \fBswim\fR \fIwill use the values\fR it finds in \fIswimrc\fR
+to determine what architecture and distribution you want to use to make
+\fBswim's\fR databases.  Otherwise... 
+.Sh "\s-1OPTIONS\s0"
+\fB--arch\fR allows an argument to override the \fBarchitecture\fR found in
+\fIswimrc\fR.
+.PP
+\fB--dists\fR allows an argument to override the \fBdistribution\fR found in
+\fIswimrc\fR.
+.PP
+\fB--alt\fR is used for a distribution with a Debian archival
+structure, but which has a different name.  This allows for alternative
+distributions.
+.PP
+When \fB\s-1APT\s0\fR or \fB\s-1DF\s0\fR are provided as arguments (see below), by default the
+\fIPackages\fR which pertain to the sections found in \fIswimrc\fR will be
+shown.  If you only want certain sections you may specify them on the
+command line.  If you are not using \fB\s-1APT\s0\fR or \fB\s-1DF\s0\fR, it is a good idea to
+make sure that either the sections found in \fIswimrc\fR or the sections you
+put on the command line match the \fIPackages\fR you a targetting because
+this is much more effecient. 
+.PP
+\fB--main\fR will override the sections found in \fIswimrc\fR, and will use this
+section. 
+.PP
+\fB--contrib\fR will override the sections found in \fIswimrc\fR, and will use
+this section
+.PP
+\fB--non-free\fR will override the sections found in \fIswimrc\fR, and will use
+this section
+.PP
+\fB--non-us\fR will override the sections found in \fIswimrc\fR, and will use
+this section
+.PP
+Global arguments \fBtargets|\s-1APT\s0|\s-1DF\s0\fR must be used with either of these two
+major modes to find the \fIPackages\fR databases.  targets can be a full path
+to one or a set of \fIPackages\fR.  \fB\s-1APT\s0\fR will use the \fIPackages\fR found in
+\fI/var/state/apt/lists\fR, and \fB\s-1DF\s0\fR will use the Packages found in the
+default directory for \fBswim\fR (see \f(CW--ftp\fR).  If you use either \fB\s-1APT\s0\fR or
+\fB\s-1DF\s0\fR you will be given an \fBinterface\fR which allows you to choose one
+\fIPackages\fR database for each section you would like to use from the
+various sites.  This \fBinterface\fR shows the \fBsite\fR, \fBdate\fR, \fBsize\fR and
+\fBRelease version\fR for each \fIPackages\fR. 
+.PP
+\fB--cron\fR allows you to override the \fBinterface\fR produced when \fB\s-1APT\s0\fR or
+\fB\s-1DF\s0\fR is provided as an argument.  This is useful if you want to automate
+the database making process.  \fB--cron\fR will choose the newest
+\fIdatabase\fR\|(s), if cron notices that the Release version has changed, cron
+will not proceed, but will provide a warning instead.  This allows you to
+make the appropriate changes and choices. 
+.PP
+\fB--Contents\fR can be give one of four arguments:  
+.PP
+\fB1).\fR If you have a \fIContents-(architecture)\fR database in a target
+location you know about you may provide a path to the location.  The
+\fIContents\fR database can be compressed. 
+.PP
+\fB2).\fR If you prepend the path with the letters \fB\s-1FDB\s0\fR (meaning flat
+database)  when the databases for swim are made, instead of using the
+Contents database to make:
+.PP
+.Vb 3
+\& nfileindex-arch-dists.deb
+\& nsearchindex-arch-dists.deb 
+\& ndirindex-arch-dists.deb
+.Ve
+only the \fIncontentsindex-arch-dists.deb.gz\fR database will be made which
+allows the ability to view file/dir listing for not-installed packages,
+but does not provide the virtual file system or powersearch capabilities
+which the other databases would have provided.  
+.PP
+\fB3).\fR The argument \fB\s-1DF\s0\fR may be used if you have used \fB--ftp\fR with the
+\fB\s-1DF\s0\fR argument to the option \fB--Contents\fR (see \f(CW--ftp\fR).  In this case
+it is assumed you are also using global arguments \fB\s-1DF\s0\fR or \fB\s-1APT\s0\fR for the
+Packages databases. This will give you an \fBinterface\fR (if --cron isn't
+used) allowing you to choose one \fIContents\fR database for the particular
+distribution you want to make the databases for. 
+.PP
+\fB4).\fR \fB\s-1FDB\s0\fR does the same exact thing with \fB\s-1DF\s0\fR as it does with the
+before mentioned \fBFDBtarget\fR, and provides the \fBinterface\fR. 
+.PP
+\fB\-v\fR will only work if you have dpkg installed.  It allows swim to verify
+\fBswim's\fR own built-in version comparison function with \fBdpkg's version
+comparison function\fR.  This is good for debugging purposes, and produces a
+report called \fI.version_compare\fR in the same location that \fBswim's\fR
+databases are made. 
+.PP
+\fB--split_data\fR is only advantageous if \fB--Contents\fR is being used.  See
+\fB--initdb\fR for more information about the \fB--split_data\fR option.
+.PP
+See \f(CW--initdb\fR for options \f(CW--dbpath\fR and \f(CW--root\fR.
+.Sh "\s-1UPDATING\s0"
+\fB--ndb\fR has the same options as --initndb and --rebuildndb except for
+--split_data.  It also has a new option \fB--nue\fR which will never have to
+be used unless the experimental distribution or non-us section are found
+in Contents (which presently isn't the case).  \fB--check\fR prints out the
+changes to \s-1STDERR\s0, and the total to \s-1STDOUT\s0 without proceeding with the
+update.  \fB--status_only\fR can be used after a new package has been
+installed to update the status, after which \-qni and \-qi will correlate
+properly.
+.Sh "\s-1REBUILDING\s0 \s-1THE\s0 \s-1SEARCH\s0 "
+\fB--rebuildflatndb\fR serves the same purpose that --rebuildflatdb serves.
+.Sh "\s-1FILES\s0"
+Databases and reports which are made (arch = architecture dists =
+distribution): 
+.PP
+.Vb 8
+\& npackages-arch-dists.deb
+\& nfileindex-arch-dists.deb requires --Contents
+\& nstatusindex-arch-dists.deb
+\& ngroupindex-arch-dists.deb
+\& nsearchindex-arch-dists.deb
+\& ndirindex-arch-dists.deb
+\& ncontenstsindex-arch-dists.deb.gz requires --Contents
+\& .packagesdiff-arch-dists.deb requires --Contents
+.Ve
+.SH "PREPARING YOUR INSTALLATION FOR APT"
+usage: \fBswim --audit\fR 
+       \fBswim --status\fR
+       \fBswim \-C\fR
+.PP
+If you are using \fBapt\fR with \fBswim\fR, and this is the first time you are
+using it with your installation, check your live installation with this
+major mode.  This is a call to \fBdpkg \-C (--audit)\fR, and will show any
+packages which are not properly configured or installed.  If you get any
+output, make corrections. The goal is to get absolutely no output
+whatsoever because it is under these conditions that apt will work
+properly.  See the \fB--purge\fR, \fB\-r\fR, \fB--remove\fR options for \fB\-q\fR to
+remove the offending packages. You may have to remove the package by hand
+under unusual situations like when it is not just dependencies (see \f(CW-T\fR)
+between packages keeping the package from being removed perhaps due to a
+broken script (see \f(CW--scripts\fR). In an extreme case you could manually
+remove the entry for this package from the \fI/var/lib/dpkg/status\fR
+database, and hunt down and remove all the files associated with the
+package with \fBswim's \-l\fR option.  When you are done if you still want
+some of the packages you removed, use \fBapt\fR to reinstall them with
+\fBswim's \-xyz\fR option. Also, \fBapt\fR provides its own built-in method to
+clean up your system, and will provide instructions, but you still may
+have to do some of the cleaning yourself as discussed above. 
+.SH "QUERYING THE INSTALLED AND NOT\-INSTALLED DATABASES"
+usage: \fBswim \-q [\-fpgn --dir] [targets | \-S]\fR
+       \fBswim --query [\-fpgn --dir] [targets | \-S]\fR
+       \fBswim \-qa || swim --query \-a\fR 
+.PP
+options: \fB[--total \-t] [\-i] [\-l ?\fR <\fB[--df]\fR>\fB] [\-d] [\-c]\fR
+         \fB[--scripts] [--preinst] [--postinst] [--prerm]\fR 
+         \fB[--postrm] [\-v] [--dbpath\fR <\fBdir\fR>\fB] [--menu \-m]\fR 
+         \fB[--shlibs] [\-T] [--pre_depends] [--depends\fR 
+         \fB[--recommends] [--suggests] [--conflicts]\fR 
+         \fB[--replaces] [--provides] [--md5sum]]\fR 
+         \fB[--copyright] [--changelog] [--allgroups]\fR 
+         \fB[--arch\fR <\fBarchitecture\fR>\fB] [--dists\fR <\fBdistribution\fR>\fB]\fR 
+         \fB[--ftp ? --source | --source_only ?\fR <\fB[--diff]\fR>\fB]\fR 
+         \fB[--stdin] [--extract\fR <\fBALL|archive|PWD!archive\fR>\fB]\fR
+         \fB[\-xyrz --remove\fR <\fB[--nz]\fR>\fB] [--purge] [--apt2df]\fR 
+         \fB[--df2apt] [--root\fR <\fBdir\fR>\fB]\fR
+.PP
+global arguments: \fB[targets | \-S ?\fR <\fB\ed{1,}\fR>\fB]\fR
+.PP
+Quering almost always involves using \fB\-q or --query\fR with zero or one or
+a combination of the \fBminor mode options\fR (package specification
+options), and one or more (only one for \f(CW-g\fR) targets specific to the
+minor mode, or the results of a search (\f(CW-S\fR). [\f(CW-S\fR can be provided a
+numerical argument pertaining to the past history.]  This can be combined
+with one or more options.  The one exception is \*(L"\fBswim \-q --allgroups\fR\*(R". 
+.PP
+\fB--query or \-q\fR can be used by itself or with \fB\-n\fR to query known
+package names or package names with versions.  \*(L"\fBswim \-q test1
+test2_0.3-1\fR\*(R"  would produce the output: 
+.PP
+.Vb 2
+\& test1_1.0-2
+\& test2_0.3-1
+.Ve
+.Sh "\s-1MINOR\s0 \s-1MODES\s0"
+\fB\-n\fR is the minor mode option to access the \fInot-installed system\fR, it
+can be combined with the minor mode options \fB\-a\fR, \fB\-g\fR, \fB\-f\fR, or it can
+be used by itself.
+.PP
+\fB\-a\fR allows \fIevery package\fR on an installed or not-installed (\fB\-n\fR) 
+system to be queried.  \*(L"\fBswim \-qan\fR\*(R" will show all the package names with
+versions for the not-installed system
+.PP
+\fB\-f\fR allows \fIfiles or directories\fR to be queried, when used without any
+options the package name with version is shown.  \fB--dir\fR will only query
+directories, this is useful if you are not sure whether what you are
+quering is a directory or a file.  When a directory is queried, swim shows
+all packages which exist below the queried directory.  \*(L"\fBswim \-qf /\fR\*(R" is
+exactly the same as \*(L"\fBswim \-qa\fR\*(R".  Hint:  \*(L"\fBswim \-qf .\fR\*(R" and \*(L"\fBswim \-qf
+*\fR\*(R" are quite different, the first shows all packages which exist below
+the current directory, and the second will show the package which each
+file in the current directory comes from. 
+ 
+\fB\-g\fR will query a \fIgroup\fR (also called a section, see \f(CW-i\fR)) of
+packages. Groups represent subjects which packages with similiar
+characteristics are catagorized by.  To view all the groups found in an
+installed or not-installed system use \*(L"\fBswim \-q --allgroups\fR\*(R" or \*(L"\fBswim
+\-qn --allgroups\fR\*(R".  \*(L"\fBswim \-qg hamradio\fR\*(R" or \*(L"\fBswim \-qng hamradio\fR\*(R"
+shows all the package names for the hamradio group. 
+.PP
+\fB\-p\fR is used to query a \fIDebian package\fR, these packages are
+distinguished by their \*(L"deb\*(R" ending, but swim can tell whether a file is a
+debian package even without the ending.  Called without any options the
+package name with version will be shown. 
+.Sh "\s-1SPECIFYING\s0 \s-1THE\s0 \s-1DATABASES\s0 \s-1TO\s0 \s-1USE\s0"
+\fB--dists\fR will use the databases for the argument given, otherwise the 
+databases pertaining to the value found in swimrc will be used.
+.PP
+\fB--arch\fR will use the databases for the argument given, otherwise the
+databases pertaining to the value found in swimrc will be used.
+.PP
+Example: \fBswim \-qat --arch hurd-i386 --dists unstable\fR
+.PP
+Assuming these databases exist this will show all packages and their
+versions for the unstable distribution and architecture hurd-i386 even if
+the values in \fIswimrc\fR are i386 and stable.
+.PP
+see \f(CW--ftp\fR and \f(CW--initndb\fR for more information about the databases.
+.Sh "\s-1OPTIONS\s0"
+\fB--total or \-t\fR are \fIused to override the output suppressor\fR.  The
+output suppressor will not show output if a certain number of packages is
+exceeded, instead it will show the number of packages you are querying. 
+This is useful for two reasons, first, knowing the number of packages you
+are quering can be very informative, second, it gives you a chance to add
+to the command line a pipe to a pager, ex: \*(L"\fBswim \-qat | less\fR\*(R".  You can
+set the number that the output suppressor works at as high or low as you
+want in the \fIswimrc(8)\fR file.  By design the \fB\-t\fR option will have to be
+used if the \fB\-i\fR option is used and more than one package is being
+queried.  This option can also be used to alter the output of the script
+related options (see \f(CW--script\fR).
+.PP
+\fB\-i\fR provides \fIinformation\fR about each package being queried.  The
+format differs slightly for the installed packages versus the
+not-installed packages.  See \s-1FORMAT\s0: 
+.PP
+\fB\-l\fR provides a listing of the files associated with a package.  If the
+option \fB--df\fR is provided as an argument, all the directories associated
+with package will be shown.  It is important to remember that many
+packages provide directories which become important to them after they are
+installed, so the option \fB--df\fR often provides necessary information
+which \fB\-l\fR called by itself would have not. 
+.PP
+\fB\-d\fR shows the documentation which the package provides found in
+\fI/usr/doc/*\fR, \fI/usr/man/*\fR, \fI/usr/info/*\fR.  Other documentation which
+the package may provide in a non-standard location will not be shown. 
+\fB\-d\fR takes precedence over \fB\-l\fR, so if \fB\-l\fR is used on the command line
+with \fB\-d\fR, only the output for \fB\-d\fR will be shown. 
+.PP
+\fB\-v\fR is a special option which works only with the minor mode \fB\-p\fR.  It
+can be used with \fB\-l\fR, \fB--df\fR, \fB\-d\fR, to show the packages files and/or
+directories in long format (\f(CWls -l\fR). 
+.PP
+\fB\-c\fR will show the configuration files packages use.  If the package does
+not have a configuration file then nothing will be shown. The output will
+show the file and its path indented one space with the \fB\s-1MD5\s0 checksum\fR. 
+This will not work with \fB\-n\fR. 
+.PP
+\fB--scripts\fR shows all scripts associated with a package with the name of
+the script presented before each script in this way
+\fB#####scriptname######\fR.  If the scripts are called individually by using
+the script options \fB--preinst\fR, \fB--postinst\fR, \fB--prerm\fR, or \fB--postrm\fR
+no title is shown, this is nice for writing to a file.  If \fB\-t\fR is used
+with the individual script options a title will be shown, this makes sense
+because normally only individual packages would be queried to write a
+script to a file, and \fB\-t\fR wouldn't be used in this situation.  Scripts
+are the soul of Debianized packages allowing packages to be installed,
+configured, and removed seamlessly and cleanly under all kinds of
+conditions.  These options do no work with \fB\-n\fR. 
+.PP
+\fB--menu or \-m\fR is used to view menufiles which belong to various
+packages. If the package does not have a menufile nothing will be shown. 
+This option can be useful in troubleshooting a menu entry which does not
+seem to work, or in finding out where the menu entry is.  \fIJoost
+Witteveen's Debian menu system\fR is a centralized program which interacts
+with all kinds of menus.  \fIPlease read the documentation\fR \*(L"\fBswim \-qd
+menu\fR\*(R" which comes with the menu package to find out more.  This will not
+work with \fB\-n\fR.
+.PP
+\fB--shlibs\fR shows a list of shared libraries certain packages supply.  The
+\fIDebian Packaging Manual\fR (packaging-manual) provides detailed
+information about the format of a shlibs file.  This will not work with
+\fB\-n\fR.
+.PP
+\fB--copyright\fR does a case insensitive search for copy or license in the
+\fI/usr/doc/packagename\fR directory.  This should show how the package
+relates to \fIDebian's Policy Manual\fR. 
+.PP
+\fB--changelog\fR searches for any files in \fI/usr/doc/packagename\fR which
+look like changelogs.  Debian packages always have a \fIMaintainer's\fR
+changelog for the package.  There may be a separate changelog kept by the
+author of the program. 
+.Sh "\s-1PACKAGE\s0 \s-1RELATIONSHIPS\s0"
+\fB\-T\fR shows all the package relationships of packages.  Individual package
+relationships can be viewed using \fB--pre_depends\fR, \fB--depends\fR,
+\fB--recommends\fR, \fB--suggests\fR, \fB--replaces\fR, \fB--conflicts\fR or
+\fB--provides\fR. Package relationships are the spirit of Debian packages,
+here is a quick overview briefly reiterating what can be found in the
+\fIDebian Packaging Manual\fR.  \fIPackage Maintainers\fR set these
+relationships in control file fields of the same name. 
+.Sh "Dependencies "
+\fIPre-depends\fR \- means that the pre-depended package or packages must be
+installed before the queried package can be installed.  Most packages
+which have pre-dependencies are usually essential and required packages.
+.PP
+\fIDepends\fR \- declares an absolute dependency to another package or
+packages either \fIreal or virtual\fR.  The queried package cannot function
+without this other package.
+.PP
+\fIRecommends\fR \- declares a strong, but not absolute dependency to another
+package or packages either \fIreal or virtual\fR.  You would usually find the
+recommended package together with the queried package in a normal
+installation. 
+.PP
+\fISuggests\fR \- can be one or more packages either \fIreal or virtual\fR which
+would be useful to the queried package, but are not necessary. 
+.Sh "Alternative Packages"
+\fIConflicts\fR \- is a package or packages either \fIreal or virtual\fR
+which would cause problems with the queried package, and would not be
+allowed to be installed while the queried package was installed.
+.Sh "Overwriting files and Replacing Packages "
+\fIReplaces\fR \- allows the queried package to replace another package or
+packages by overwriting their files, after which the previous package
+would be considered to have disappeared. Essentially this allows the
+queried package to take over the package or packages.  In a situation
+where there was a Conflict between the queried package and these packages
+this field would help determine which packages should be removed.
+.Sh "Virtual Packages "
+\fIProvides\fR \- declares a virtual package which may be mentioned in
+\fIDepends\fR, \fIRecommends\fR, \fISuggests\fR, or \fIConflicts\fR.  \fIVirtual
+packages\fR allow one or more packages to share the same name of another
+package, which means if the queried package has a reference to a virtual
+package in one of the before mentioned package relationship fields, then
+whatever packages provide the virtual package are also being listed. 
+ 
+\fB--md5sum\fR checks \fB\s-1MD5\s0 checksums\fR.  It can be used with \fB\-l\fR, \fB\-d\fR,
+\fB\-c\fR, or \fB\-p\fR. If there are checksums available the md5sum result will
+be either \fB\s-1OK\s0\fR, \fB\s-1FAILED\s0\fR, or \fB\s-1MISSING\s0\fR.  \fB\s-1MISSING\s0\fR means that although
+a checksum exists, the file can not be found.  The result is put after the
+file and its path and the \fB\s-1MD5\s0 checksum\fR or the package name and version
+and the \fB\s-1MD5\s0 checksum\fR. 
+.Sh "\s-1FORMAT\s0"
+\fB1). Installed system\fR
+.PP
+.Vb 8
+\& Package: name                        Status: hold ok installed
+\& Version: 1.1-1                       Essential: no
+\& Section: namers                      Priority: extra
+\& Installed-Size: 10                   Source: generatename (2.0-1)
+\& Maintainer: name <name@name.org>
+\& Description: hostname maker
+\&  A nice way to figure out a hostname nobody
+\&  else has.
+.Ve
+\fB2) Not-installed system\fR
+.PP
+.Vb 10
+\& Package: name                        Status: r> hold ok installed (1.1-1)
+\& Version: 1.1-2                       Essential: no
+\& Section: names                       Priority: extra
+\& Installed-Size: 11                   Source: generatename (2.0-1)
+\& Size: 43000                          Architecture: i386
+\& Distribution: experimental
+\& Maintainer: name <name@name.org>
+\& Description: hostname maker
+\&  A nice way to figure out a hostname nobody
+\&  else has.
+.Ve
+There are several things to point out. The difference between the two
+outputs relates to the addition of the Distribution, Size, and
+Architecture fields for the not-installed query.  Installed-Size is how
+many kilobytes the package will occupy when it is unpacked, whereas Size
+is the size in bytes of the package.  
+.Sh "\s-1STATUS\s0 \s-1FIELD\s0 "
+The Status field provides the installation status of the package, this
+holds true for the not-installed query as well.  In a sense, the
+not-installed database isn't always not-installed.  If the not-installed
+package is actually already installed, and the version numbers are exactly
+the same, then the status will be the same for either query.  If the
+not-installed package is not installed then the status will be
+\*(L"not-installed\*(R".  In cases where the not-installed package is already
+installed, swim uses it's comparison function to figure out whether it is
+a newer of older package which is installed.  In the above example, swim
+realizes the same package is installed, and only the debian-revision has
+changed, hence the only difference is that the revision number is greater
+\*(L"r>\*(R" for the not-installed package.  When only the debian-revision has
+changed it can safely be assumed that the author (creator, programmer) of
+the same program has not made any changes to the same program, but the
+Debian maintainer has made a change to an aspect of the package like a
+change in the script the package uses to properly install.  You may have
+also noticed that the status field shows the version number of the
+installed package enclosed in parenthesis.
+.Sh "\s-1SOURCE\s0 \s-1FIELD\s0"
+The Source field is present in these examples, but the Source field will
+not always be present for packages.  In cases where the name of the source
+package is the same as the the name found in the Package field, and the
+version number of the source package is also the same as found in the
+Version field, then there will be no Source field.  In the above examples
+there is a Source field.  In this case name was probably one of many
+packages generated from the source package called generatename.  In this
+particular example generatename also has its own unique version number
+2.0-1 enclosed in parentheses, if no version number had been mentioned
+then the source package would have the same version number as found in the
+Version field. 
+.Sh "\s-1SECTION\s0 \s-1AND\s0 \s-1PRIORITY\s0 "
+Section shows the subject which a package is categorized with (see \f(CW-g\fR). 
+Priority shows how important the package is to have installed.  In the
+case of the not-installed databases the information for these fields is
+almost always available from the Packages databases, but this is not
+always the case for Debian packages.  For packages which do no provide
+this information swim will do its best to fill in the blanks from
+information found in the installed and not-installed databases.  If proper
+information can not be found it will be indicated as \*(L"unavailable\*(R" or
+\*(L"unknown.\*(R" Unavailable would indicate that information about the package
+exists, but it is from a different version (includes debian-revision), and
+no information exists for this version.  Unknown means no similiar package
+exists, and there is absolutely no information about this package in the
+databases. 
+.Sh "\s-1DEBIAN\s0 \s-1PACKAGE\s0 \s-1OUTPUT\s0"
+When a Debian package is queried using the \fB\-p\fR option you will get
+output like the first example shows, the status field is also calculated. 
+.Sh "\s-1VIRTUAL\s0 \s-1OPTIONS\s0"
+.Sh "\s-1FTP\s0 "
+For ftp capabilities swim uses the \fIswimz.list\fR to determine which sites
+it will check for the requested packages.  The first site which fills the
+request will be used, otherwise \fBswim\fR will go through all the sites
+avoiding repeats, and if no sites can fill the request, \fBswim\fR will
+either quit or proceed on to check for another request. 
+.PP
+\fB--ftp\fR allows the queried package, its source package, or just the
+source package diff to be downloaded while being queried.  This is refered
+to as virtual downloading because the quering and the downloading are
+seamless as though the package already exists locally.  This has to be
+used with the option \fB\-n\fR because packages which which are not part of
+the not-installed database are considered to already have been downloaded. 
+Packages which are already installed can be downloaded or their source
+retrieved by setting up a database which corresponds to these packages; if
+the installed packages belong to the stable distribution, set-up the
+not-installed stable databases. 
+.PP
+Packages or source code are placed in an area below the default directory
+mirroring the remote directory they were downloaded from after their size
+and modification times are checked for correct values.  This area is
+called the \fB\s-1DF\s0\fR directory, and although this directory mirrors remote
+directories, it is not an exact mirror, but specific to the requirements
+of swim because code names for Release versions are not taken into
+account.  For real mirroring capabilities there exist many excellent
+programs.  If a package has a \fB\s-1MD5\s0 checksum\fR, \fB--md5sum\fR will
+automatically be run and the value shown.  Regardless of whether or not
+the md5sum check is \fB\s-1OK\s0\fR or not, the package will still be put in the
+\fB\s-1DF\s0\fR directory to allow the package to be looked at, so watch the output
+from \fB--ftp\fR to check for \fB\s-1FAILED\s0 md5sums\fR. 
+.PP
+Packages or source code packages will not be downloaded again if they are
+found in the \fB\s-1DF\s0\fR directory unless their \fIupstream-version\fR has changed
+in the not-installed database, if the packages are not in the \s-1DF\s0 directory
+and the remote \fIupstream-version\fR is different than the not-installed
+\fIupstream-version\fR then the packages will not be downloaded until the
+not-installed database is updated or rebuilt to reflect the version
+change. Changes in the package's \fIupstream-version\fR indicates that the
+\fIauthor\fR\|(s) of the program have made changes to the computer code for the
+program contained in the package or the source code package.  On the other
+hand, swim will check for a \fIdebian-revision\fR change at the remote site
+if the package can not immediately be found.  If the package's
+\fIdebian-revision\fR has changed and the package does not exist locally in
+the \fB\s-1DF\s0\fR directory, it will be downloaded.  This is a nice feature,
+especially for the unstable distribution, because it tends to extend the
+time needed before the not-installed database has to be updated or rebuilt
+to match the changes at remote sites. 
+.PP
+\fB--source\fR is used with \fB--ftp\fR to download the source code package. 
+\fB--source_only\fR will download the source code package without the deb
+package.  \fISource packages consist of three files\fR.  The \fIsource control
+file\fR which ends in \*(L"dsc\*(R", the \fIoriginal source archive\fR which is a
+compressed tar file, and the \fIunified context diff\fR showing the changes
+necessary to make the original source into Debian source.  The diff can be
+downloaded by itself if \fB--diff\fR is provided as an argument to \fB--source
+or --source_only\fR. 
+.PP
+For \fBapt\fR users: \fBapt\fR allows packages to be downloaded, but if more
+than one package is required for the package relationships to be proper,
+\fBapt\fR will download all these packages.  \fB--ftp\fR allows specific
+packages to be downloaded, packages from other architectures, and source
+packages to be downloaded, here lies the advantage of this option over
+using \fB\-xyz --nz\fR (see below).  If a particular package has been
+dowloaded into the \fB\s-1DF\s0\fR directory and it is needed by \fBapt\fR for
+installation, simply copy or move the package from the \fB\s-1DF\s0\fR directory to
+\fI/var/cache/apt/archives\fR before running \fBapt\fR, and the package will not
+be downloaded by \fBapt\fR again; future versions of \fBswim\fR will have an
+option to automatically accomplish this (see \f(CW--df2apt\fR). 
+.Sh "\s-1APT\s0"
+apt-\fIget\fR\|(8) is a nice package relationship checker from the \fBapt\fR package
+which figures out what needs to be done to properly install a package or
+packages when one or more package names are provided to it.  \fBapt-get\fR
+will get all packages which are needed using a variety of methods, and
+then \fBapt-get\fR interacts with \fBdpkg\fR in a way which allows for a
+successful installation. 
+.PP
+\fB\-xyrz, --remove and --nz\fR can be used if \fBapt-get\fR from the \fBapt\fR
+package is installed.  These options allow for what is refered to as
+virtual installation/removal.  It is prudent to always test what will
+happen by using the \fB\-x\fR option alone before actually proceeding with the
+installation with the \fB\-z\fR option.  \fB\-x\fR will actually simulate what
+would happen in an installation, showing which and how many packages will
+be changed, which and how many new packages will need to be installed,
+which and how many packages will need to be removed, any conflicts, and
+what needs to be configured.  \fB\-y\fR will automatically answer yes to any
+prompts \fBapt-get\fR may produce allowing \fBapt-get\fR to run
+non-interactively.  \fB\-z\fR as mentioned before actually proceeds with the
+installation using \fBdpkg\fR after the \fBapt-get\fR gets the packages.  You
+can append a minus sign to a package name to cause it to be removed.
+\fB--nz\fR when used as an optional argument with \fB\-xz or \-xyz\fR will only
+download the packages into \fI/var/cache/apt/archives\fR or into whatever
+directory you configured for holding archives for \fBapt\fR. 
+.PP
+\fB\s-1IMPORTANT\s0\fR:  \fBapt\fR makes it so easy to make changes to your
+installation that it is highly recommended to do your research with swim
+first.  This can be done by checking package relationships, file/dir
+listings, comparing the not-installed package to an installed package if
+such exists, checking \fB--md5sum\fR and \fB\-c\fR for the installed package, and
+checking the Source field by running a \fB--search\fR (see below) to check to
+see how the source package has been split into binary packages for the
+not-installed package versus an installed package if such exists. 
+Ofcourse, there are many other things you could look at, and you can
+always do your research after the fact.  Presently \fB--db\fR is run only by
+hand, so you can check the old state after an installation if you have not
+already run \fB--db\fR, yourself.
+.Sh "\s-1REMOVING\s0 \s-1AN\s0 \s-1INSTALLED\s0 \s-1PACKAGE\s0 "
+\fB--purge\fR uses \fBdpkg\fR to remove an installed package or packages and the
+configuration files as shown with \*(L"\fBswim \-qc packagename\fR\*(R". 
+.PP
+\fB\-r or --remove\fR removes an installed package or packages with \fBapt\fR,
+but not the configuration files as shown with \*(L"\fBswim \-qc packagename\fR\*(R". 
+You may also append a plus sign to a package name to cause it to be
+installed.  This option is used with \-x or \-\fIx\fR\|(y)z. 
+.Sh "\s-1STDIN\s0 "
+\fB--stdin\fR works with either \fB--ftp\fR, \fB\-x\fR, \fB\-xyz\fR, \fB\-xz\fR, \fB--purge\fR,
+\fB\-r\fR, or \fB--remove\fR. 
+.PP
+\fB--stdin\fR provides the \fIreadline capabilities\fR commonly found in shells
+allowing you to edit what is on the command line. You can edit the command
+line, press enter and then recall the history, and make more changes, or
+\fItype in exit to process the changed or unchanged command line\fR. To find
+out more about what readline commands your shell supports please read the
+man pages which apply to your shell.  Information for the bash shell can
+be found in \fIbash\fR\|(1) under the title \*(L"\fBReadline Command Names\fR\*(R".
+.PP
+Example: \*(L"\fBswim \-qgnx --stdin hamradio\fR\*(R" will list all the packages from
+the not-installed hamradio group on the command line, this list can be
+edited then submitted to \fBapt-get\fR for a simulated installation.  Another
+instance of \fBswim\fR can be run at the same time, perhaps \*(L"\fBswim \-qinTg
+hamradio\fR\*(R" to help in making editing decisions for \fB--stdin\fR. 
+.Sh "\s-1PACKAGE\s0 \s-1MANIPULATION\s0"
+\fB--extract\fR only works with the \fBminor mode \-p\fR to extract parts or all
+of a Debian package.  If the \fBargument \s-1ALL\s0\fR is provided then \fIeverything
+found in the package will be extracted\fR below the current directory in the
+exact directories found in the package.  A particular \fIfile may be
+extracted in its exact location\fR below the current directory by \fIentering
+the exact path for the file\fR as shown by \*(L"\fBswim \-qpl\fR\*(R" or \*(L"\fBswim \-qpd\fR\*(R"
+as the argument.  Alternativily, a \fIfile may be extracted in the current
+directory\fR regardless of its proper location by \fIprepending \s-1PWD\s0\e! before
+the path\fR shown by \*(L"\fBswim \-qpl\fR\*(R" or \*(L"\fBswim \-qpd\fR\*(R".  Notice the backslash
+before the exclamation point, this is because shells consider ! a special
+character, so it has to be backslashed so that the shell knows that it is
+not such a special character.  Example: \*(L"\fBswim \-qpi --extract
+\s-1PWD\s0\e!usr/bin/name --scripts name_1.1-2.deb\fR\*(R" will extract the binary name
+in the current directory from the name package, show information for the
+name package, and show any scripts for the name package.
+.Sh "\s-1DATABASE\s0 \s-1LOCATIONS\s0"
+\fB--dbpath\fR can be specified as an alternative location for where the
+databases would be found.  The default location is \*(L"\fI/var/lib/dpkg\fR\*(R".  An
+argument like \*(L"\fI/otherstuff\fR\*(R" can be provided, and then the databases
+would be found here instead.
+.PP
+\fB--root\fR allows a database to be found for a Debian distribution
+installed on a different partition.  If the distribution is mounted on
+\fI/New_Debian\fR, \*(L"\fI/New_Debian\fR\*(R" would be the argument to root.  The
+databases would be found for the Debian distribution installed on the
+\*(L"\fI/New_Debian\fR\*(R" partition.
+.PP
+\fB--dbpath and --root\fR can be used together.  Given the previous two
+examples, the databases would be found on \*(L"\fI/New_Debian/otherstuff\fR\*(R",
+assuming \*(L"\fI/New_Debian/otherstuff\fR\*(R" actually existed.
+.SH "UPGRADING WITH APT"
+usage: \fBswim --apt\fR
+.PP
+options: \fB[\-xyz] [--upgrade] [--dist_upgrade]\fR
+.PP
+\fBapt-get\fR provides powerful methods to change an installion. When these
+methods are called using \fB--apt\fR, \fBswim\fR will not allow you to proceed
+until you are absolutely sure this is what you want to do.  Before using
+these methods do a \*(L"\fBswim --apt --update\fR\*(R" so that \fBapt-get\fR knows the
+newest versions of available packages.  This major mode requires a
+combination of \fB\-x\fR, \fB\-xz\fR or \fB\-xyz\fR to be used along with either
+\fB--upgrade\fR or \fB--dist_upgrade\fR.  \fB\-x\fR used alone will simulate what
+would happen if \fB\-xz or \-xyz\fR were used (also see \f(CW-xyz\fR above). 
+.PP
+\fB--upgrade\fR is somewhat similiar to doing \*(L"\fBswim \-qatxz\fR\*(R" except that it
+is a more intelligent method because \fBapt\fR does some behind the scene
+calculations in regards to package relationships, in fact the \*(L"\fBswim
+\-qatxz\fR\*(R" approach will provide totally different results, or maybe these
+were the results you really wanted. \*(L"\fBswim --apt --upgrade \-xz\fR\*(R" is the
+prefered, proper, and built-in way provided by \fBapt-get\fR to install the
+newest versions for all packages installed on your system.  This method
+will not install any newer versions of packages which would change the
+install status of other packages.  Note: It is not recommended to combine
+the query option \fB\-a\fR with \fB\-xz or \-xyz\fR, but combining the query option
+\fB\-a\fR just with \fB\-x\fR can be educational. 
+.PP
+\fB--dist_upgrade\fR combines an \fB--upgrade\fR with the installation of
+packages which are not installed.  This method carefully examines
+dependencies, and resolves conflicts, and given these factors it will
+upgrade the most important packages before considering the installation of
+less important packages.  Less important packages will be installed only
+if there are not any conflicts. 
+.SH "SEARCHING"
+usage: \fBswim --search ? (--research || --refinesearch)\fR 
+       \fBswim --powersearch ? (--research || --refinesearch)\fR 
+       \fBswim --ps ? (--research || --refinesearch)\fR 
+       <\fBpattern(s)\fR>
+        
+options: \fB[\-g] [\-n] [--dbpath\fR <\fBdir\fR>\fB] [--root\fR <\fBdir\fR>\fB]\fR
+         \fB[--arch\fR <\fBarchitecture\fR>\fB] [--dists\fR <\fBdistribution\fR>\fB]\fR
+         \fB[--ftp ? --source | --source_only --diff]\fR 
+         \fB[\-xyrz --remove ?\fR <\fB[--nz]\fR>\fB] [--stdin] [--apt2df]\fR 
+         \fB[--no] [--df2apt] [--purge] [\fR\fB\ed{1,}\fR\fB]\fR 
+ 
+         \fB[--dir]\fR and no \fB[\-g]\fR for \fB--powersearch or --ps\fR
+.Sh "\s-1OVERVIEW\s0"
+\fBswim\fR provides two major types of searches.  A search with \fB--search\fR
+\fIsearches package information\fR, and a search with \fB--powersearch or
+--ps\fR \fIsearches package information, and all files and/or directories
+associated with each package\fR.  
+.PP
+The results of either of these searches can be \fInarrowed down\fR by running
+a test search with \fB--research\fR (this step can be skipped) and/or setting
+the results in stone with \fB--refinesearch\fR.  \fB--search\fR can be
+\fInarrowed down\fR initially by specifying a particular \fIgroup\fR, and
+\fB--powersearch\fR can be \fIexpanded\fR initially by specifying that
+\fIdirectories\fR be searched as well as files. Both searches can \fIuse the
+same virtual options\fR which the major mode \fB\-q or --query\fR use.
+Generally, it is preferable to run a search, and then to provide the
+results of a search (\fBusing \-S\fR) as an argument to \fB\-q or --query\fR; this
+allows the results of a search to be queried.  Every time a search is run
+the results are appended to the history, past searches can be refined or
+researched by providing the numerical argument pertaining to the history.
+\ed{1,} is simply Perl notation meaning a number with one of more digits. 
+.PP
+\fIPerl regexps\fR (see \fIperlre\fR\|(1p)) can be used to define the pattern
+(string) provided as an argument to a search.  Do not surround a pattern
+in slashes, a slash is only used after all patterns and before the
+\fImodifiers i and/or m\fR (swim supports these two modifiers).  To search
+for more than one pattern, patterns are separated with \fIbars (|)\fR. 
+Patterns may include \fIquatifiers, and metacharacters\fR, also found in
+\fIegrep\fR\|(1). 
+.PP
+If a search finds any packages which match the search, the package
+information will be displayed as the package is found.  The package will
+only be shown once regardless of how many times it is found while the
+search progresses. When the search is over the number of packages found is
+shown. 
+.PP
+\fB--search\fR provides a search of package information.  This is similiar to
+grepping \*(L"\fBswim \-qait\fR\*(R" or \*(L"\fBswim \-qaint\fR\*(R", but it is significantly
+faster. A search can be performed on a particular group by using \fB\-g\fR
+with a group as an argument
+.PP
+\fB--powersearch\fR is somewhat similiar to \*(L"\fBdpkg --search\fR\*(R" which searches
+all files and directories on an installed system, but it combines
+\fB--search\fR with the file and/or directory search, and can also be
+performed on a not-installed system. A \fIpowersearch\fR is significantly
+faster than the search which \fBdpkg\fR provides (even more so when \*(L"\f(CWswim
+--ramdiskon --searchfile\fR\*(R" is used)  and even more importantly provides a
+logical output of the search (like \*(L"\f(CWswim -qi packagename\fR").  By default
+a search of all directories is not performed because usually this is
+redundant except in rare cases.  To enable a search of all directories use
+the \fB--dir\fR option.
+.Sh "\s-1NARROWING\s0 A \s-1PREVIOUS\s0 \s-1SEARCH\s0"
+\fB--research\fR allows the results of a previous search to be researched
+without making the new results permanent. 
+.PP
+\fB--refinesearch\fR allows the results of a previous search to be researched
+while making the new results permanent.
+.PP
+\fB\ed{1,}\fR is a numerical argument to refine or research a   
+past search from the history.
+.Sh "\s-1MINOR\s0 \s-1MODES\s0"
+\fB\-n\fR allows the not-installed databases to be searched.  These databases
+will not exist if the not-installed databases were made with the \s-1FDB\s0
+argument (see \f(CW--initndb\fR).
+.PP
+\fB\-g\fR (see \f(CW--search\fR)
+.Sh "\s-1OTHER\s0 \s-1OPTIONS\s0"
+\fB--no\fR prevents normal output from a search, but does show how many
+packages were found.
+.PP
+See the section \*(L"\fB\s-1SPECIFYING\s0 \s-1THE\s0 \s-1DATABASES\s0 \s-1TO\s0 \s-1USE\s0\fR\*(R" for options
+\fB--arch\fR, \fB\-dists\fR.
+.PP
+See the section \*(L"\fB\s-1VIRTUAL\s0 \s-1OPTIONS\s0\fR\*(R" for options \fB--ftp\fR,
+\fB--source\fR, \fB--source_only\fR, \fB--diff\fR, \fB\-xyz\fR, \fB--nz\fR, \fB--stdin\fR,
+\fB--purge\fR, \fB--remove\fR, \fB\-r\fR. 
+.PP
+See the section \*(L"\fB\s-1DATABASE\s0 \s-1LOCATIONS\s0\fR\*(R" for options \fB--dbpath\fR
+and \fB--root\fR.
+.Sh "\s-1EXAMPLES\s0"
+\fBswim \-gn hamradio --search \*(L"radio network/i\*(R" --dbpath /test --arch alpha\fR
+.PP
+will search the alpha architecture not-installed system databases in the
+/test directory for all package information from the hamradio group using
+the case insensitive pattern \*(L"radio network\*(R".
+.PP
+\fBswim --powersearch dpkg \-xn\fR
+.PP
+will search the not-installed system databases for all package information
+and all files using the case sensitive pattern dpkg, after which apt-get
+will run a simulation of what would happen if it got and installed these
+packages.
+.SH "RAMDISK"
+usage: \fBswim --ramdiskon\fR
+       \fBswim --ramdiskoff\fR
+.PP
+options: \fB[\-n] [--searchfile] [--arch\fR <\fBarchitecture\fR>\fB]\fR 
+         \fB[--dists\fR <\fBdistribution\fR>\fB] [--dbpath] [--root]\fR
+ 
+         no options for \fB--ramdiskoff\fR
+.Sh "\s-1OVERVIEW\s0"
+A ramdisk can be mounted below the default path or the specified path for
+the databases in the dramdisk directory.  The ramdisk is used to speed up
+powersearchs and/or file/dir listings for packages from the not-installed
+system.  Also, this is useful if a computer system is heavily loaded with
+other processes using the memory, and the ramdisk tends to persist even
+after being unmounted. Modern kernels usually are built with support for
+ramdisks. If these options do not work the kernel will need to be compiled
+to support ramdisks by answering yes to \s-1RAM\s0 disk support.  Perhaps the
+best \fI\s-1README\s0\fR showing how to configure and compile a kernel comes with
+the \fIkernel sources\fR in the main directory.
+.PP
+\fB--ramdiskon\fR allows a ramdisk to be created and mounted.  If called with
+\fB\-n\fR (not-installed databases) \fIncontents-arch-dists.deb.gz\fR will
+automatically be written to the mounted ramdisk.  This provides faster
+file/dir listing capabilities when using \fB\-l\fR, \fB--df\fR, or \fB\-d\fR when
+querying the not-installed system.  Faster powersearch capabilities are
+available through the option \fB--searchfile\fR.  If the search databases are
+not already compressed, they will now be compressed, this usually only
+needs to be done once or until the databases are updated or rebuilt again. 
+The search databases will then be written to the mounted ramdisk.  An
+installed system only writes the search databases to the mounted ramdisk,
+so always use --searchfile when specifying installed system databases.
+.PP
+\fB--ramdiskoff\fR is used to unmount the ramdisk.  The not-installed
+databases and the installed databases can not be simultaneously provided
+by a mounted ramdisk, use \fB--ramdiskoff\fR first, then \fB--ramdiskon\fR to
+install the other databases of choice.  This also pertains to different
+distributions and/or architectures.
+.PP
+See the section \*(L"\fB\s-1SPECIFYING\s0 \s-1THE\s0 \s-1DATABASES\s0 \s-1TO\s0 \s-1USE\s0\fR\*(R" for options
+\fB--arch\fR, \fB\-dists\fR.
+.PP
+See the section \*(L"\fB\s-1DATABASE\s0 \s-1LOCATIONS\s0\fR\*(R" for options \fB--dbpath\fR
+and \fB--root\fR.
+.SH "FILES"
+.PP
+.Vb 1
+\& Configuration files: 
+.Ve
+.Vb 2
+\& swimz.list
+\& swimrc
+.Ve
+.SH "SEE ALSO"
+\fIswimrc\fR\|(5), apt-\fIget\fR\|(8), sources.\fIlist\fR\|(5), \fIdpkg\fR\|(8)
+.SH "BUGS"
+Send directly to mttrader@access.mountain.net
+.SH "AUTHOR"
+Jonathan D. Rosenbaum <mttrader@access.mountain.net>
+.SH "COPYRIGHT"
+Copyright (c) 1999 Jonathan Rosenbaum. All rights reserved. This program
+is free software; you can redistribute it and/or modify it under the GPL. 
+
+.rn }` ''
+.IX Title "swim 8"
+.IX Name "swim - package administration and research tool for Debian packages"
+
+.IX Header "NAME"
+
+.IX Header "SYNOPSIS"
+
+.IX Header "DESCRIPTION"
+
+.IX Header "COMMAND LINE OPTION SYNTAX"
+
+.IX Header "VERSION"
+
+.IX Header "HISTORY"
+
+.IX Header "MAKING INSTALLED SYSTEM DATABASES"
+
+.IX Subsection "Initial database making, and Rebuilding for an Installed system."
+
+.IX Subsection "\s-1UPDATING\s0"
+
+.IX Subsection "\s-1REBUILDING\s0 \s-1THE\s0 \s-1SEARCH\s0"
+
+.IX Subsection "\s-1FILES\s0"
+
+.IX Header "IMPORTANT DEBIAN DATABASES FOR NOT\-INSTALLED DATABASES"
+
+.IX Subsection "A. downloading the important databases with --ftp."
+
+.IX Subsection "\s-1OVERVIEW\s0"
+
+.IX Subsection "\s-1DISTRIBUTION\s0 \s-1DEFINED\s0"
+
+.IX Subsection "\s-1SECTIONS\s0"
+
+.IX Subsection "\s-1ARCHITECTURES\s0"
+
+.IX Subsection "\s-1SWIMZ\s0.\s-1LIST\s0"
+
+.IX Subsection "\s-1SWIMZ\s0.\s-1LIST\s0 \s-1EXAMPLES\s0"
+
+.IX Subsection "\s-1FTP\s0 \s-1OR\s0 \s-1APT\s0?"
+
+.IX Subsection "\s-1OPTIONS\s0"
+
+.IX Subsection "B. downloading the important databases with apt, and maintenance options."
+
+.IX Header "MAKING NOT\-INSTALLED DATABASES"
+
+.IX Subsection "\s-1OVERVIEW\s0"
+
+.IX Subsection "\s-1OPTIONS\s0"
+
+.IX Subsection "\s-1UPDATING\s0"
+
+.IX Subsection "\s-1REBUILDING\s0 \s-1THE\s0 \s-1SEARCH\s0 "
+
+.IX Subsection "\s-1FILES\s0"
+
+.IX Header "PREPARING YOUR INSTALLATION FOR APT"
+
+.IX Header "QUERYING THE INSTALLED AND NOT\-INSTALLED DATABASES"
+
+.IX Subsection "\s-1MINOR\s0 \s-1MODES\s0"
+
+.IX Subsection "\s-1SPECIFYING\s0 \s-1THE\s0 \s-1DATABASES\s0 \s-1TO\s0 \s-1USE\s0"
+
+.IX Subsection "\s-1OPTIONS\s0"
+
+.IX Subsection "\s-1PACKAGE\s0 \s-1RELATIONSHIPS\s0"
+
+.IX Subsection "Dependencies "
+
+.IX Subsection "Alternative Packages"
+
+.IX Subsection "Overwriting files and Replacing Packages "
+
+.IX Subsection "Virtual Packages "
+
+.IX Subsection "\s-1FORMAT\s0"
+
+.IX Subsection "\s-1STATUS\s0 \s-1FIELD\s0 "
+
+.IX Subsection "\s-1SOURCE\s0 \s-1FIELD\s0"
+
+.IX Subsection "\s-1SECTION\s0 \s-1AND\s0 \s-1PRIORITY\s0 "
+
+.IX Subsection "\s-1DEBIAN\s0 \s-1PACKAGE\s0 \s-1OUTPUT\s0"
+
+.IX Subsection "\s-1VIRTUAL\s0 \s-1OPTIONS\s0"
+
+.IX Subsection "\s-1FTP\s0 "
+
+.IX Subsection "\s-1APT\s0"
+
+.IX Subsection "\s-1REMOVING\s0 \s-1AN\s0 \s-1INSTALLED\s0 \s-1PACKAGE\s0 "
+
+.IX Subsection "\s-1STDIN\s0 "
+
+.IX Subsection "\s-1PACKAGE\s0 \s-1MANIPULATION\s0"
+
+.IX Subsection "\s-1DATABASE\s0 \s-1LOCATIONS\s0"
+
+.IX Header "UPGRADING WITH APT"
+
+.IX Header "SEARCHING"
+
+.IX Subsection "\s-1OVERVIEW\s0"
+
+.IX Subsection "\s-1NARROWING\s0 A \s-1PREVIOUS\s0 \s-1SEARCH\s0"
+
+.IX Subsection "\s-1MINOR\s0 \s-1MODES\s0"
+
+.IX Subsection "\s-1OTHER\s0 \s-1OPTIONS\s0"
+
+.IX Subsection "\s-1EXAMPLES\s0"
+
+.IX Header "RAMDISK"
+
+.IX Subsection "\s-1OVERVIEW\s0"
+
+.IX Header "FILES"
+
+.IX Header "SEE ALSO"
+
+.IX Header "BUGS"
+
+.IX Header "AUTHOR"
+
+.IX Header "COPYRIGHT"
+

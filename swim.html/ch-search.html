@@ -1,0 +1,191 @@
+<html><head>
+<title>swim - SEARCHING
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 11<br>
+SEARCHING
+
+</h1>
+
+<pre>usage: swim --search ? (--research || --refinesearch) &lt;pattern(s)&gt;
+       swim --powersearch ? (--research || --refinesearch) &lt;pattern(s)&gt; 
+       swim --ps ? (--research || --refinesearch) &lt;pattern(s)&gt; 
+
+options: [-g] [-n] [--dbpath &lt;dir&gt;] [--root &lt;dir&gt;] [--no]
+         [--arch &lt;architecture&gt;] [--dists &lt;distribution&gt;
+         [--ftp ? --source | --source_only &lt;[--diff]&gt;] 
+         [-xyrz --remove ? &lt;[--nz]&gt;] [--stdin] [--apt2df]
+         [--no] [--df2apt] [--purge] [&lt;\d{1,}&gt;]
+ 
+         [--dir] and no [-g]for --powersearch or --ps
+</pre>
+
+<P>
+<hr>
+<h2><A name="s11.1">
+11.1 OVERVIEW
+
+</A></h2>
+ 
+
+<strong>swim</strong> provides two major types of searches. A search with
+<strong>--search</strong> <em>searches package information</em> (see <A href="ch-query.html#s-format">FORMAT
+, section 9.5</A>), and a search with <strong>--powersearch or --ps</strong>
+<em>searches package information, and all files and/or directories
+associated with each package</em>. 
+<P>
+
+The results of either of these searches can be <em>narrowed down</em> by
+running a test search with <strong>--research</strong> (this step can be
+skipped) and/or setting the results in stone with
+<strong>--refinesearch</strong>. <strong>--search</strong> can be
+<em>narrowed down</em> initially by specifying a particular
+<em>group</em>, and <strong>--powersearch</strong> can be
+<em>expanded</em> initially by specifying that <em>directories</em> be
+searched as well as files. Both searches can <em>use the same virtual
+options</em> which the major mode <strong>-q or --query</strong> use. 
+Generally, it is preferable to run a search, and then to provide the
+results of a search (<strong>using -S</strong>) as an argument to
+<strong>-q or --query</strong>; this allows the results of a search to be
+queried. Every time a search is run the results are appended to the
+history, past searches can be refined or researched by providing the
+numerical argument pertaining to the history. \d{1,} is simply Perl
+notation meaning a number with one of more digits.
+
+<P>
+
+<em>Perl regexps</em> (see <code>perlre(1p))</code> can be used to define the
+pattern (string)  provided as an argument to a search. Do not surround a
+pattern in slashes, a slash is only used after all patterns and before the
+<em>modifiers i and/or m</em> (swim supports these two modifiers). To
+search for more than one pattern, patterns are separated with <em>bars
+(|)</em>. Patterns may include <em>quatifiers, and metacharacters</em>,
+also found in <code>egrep(1).</code>
+<P>
+
+If a search finds any packages which match the search, the package
+information will be displayed as the package is found. The package will
+only be shown once regardless of how many times it is found while the
+search progresses. When the search is over the number of packages found is
+shown. 
+<P>
+
+<strong>--search</strong> provides a search of package information. This
+is similiar to grepping ``<strong>swim -qait</strong>'' or ``<strong>swim
+-qaint</strong>'', but it is significantly faster. A search can be
+performed on a particular group by using <strong>-g</strong> with a group
+as an argument
+<P>
+
+<strong>--powersearch</strong> is somewhat similiar to ``<strong>dpkg
+--search</strong>'' which searches all files and directories on an
+installed system, but it combines <strong>--search</strong> with the file
+and/or directory search, and can also be performed on a not-installed
+system. A <em>powersearch</em> is significantly faster than the search
+which <strong>dpkg</strong> provides (even more so when ``<code>swim
+--ramdiskon --searchfile</code>'' is used) and even more importantly
+provides a logical output of the search (like ``<code>swim -qi
+packagename</code>''). By default a search of all directories is not
+performed because usually this is redundant except in rare cases. To
+enable a search of all directories use the <strong>--dir</strong> option. 
+<hr>
+<h2><A name="s11.2">
+11.2 NARROWING A PREVIOUS SEARCH
+
+</A></h2>
+
+<strong>--research</strong> allows the results of a previous search to be
+researched without making the new results permanent.
+<P>
+
+<strong>--refinesearch</strong> allows the results of a previous search to
+be researched while making the
+new results permanent.
+<P>
+
+<strong>\d{1,}</strong> is a numerical argument to refine or research a
+past search from the history.
+<hr>
+<h2><A name="s11.3">
+11.3 MINOR MODES
+
+</A></h2>
+
+<strong>-n</strong> allows the not-installed databases to be searched. 
+These databases will not exist if the not-installed databases were made
+with the FDB argument (see <code>--initndb</code>). 
+<P>
+
+<strong>-g</strong> (see -g above and <A href="ch-query.html#s-mm">MINOR MODES
+, section 9.1</A>).
+<hr>
+<h2><A name="s11.4">
+11.4 OTHER OPTIONS
+
+</A></h2>
+
+<strong>--no</strong> prevents normal output from a search, but does show
+how many packages were found. 
+<P>
+
+See the section ``<A href="ch-query.html#s-specdata">SPECIFYING THE DATABASES TO USE
+, section 9.2</A>'' for options
+<strong>--arch</strong>, <strong>-dists</strong>.
+<P>
+
+See the section ``<A href="ch-query.html#s-vrftp">FTP - VIRTUAL OPTIONS
+, section 9.6</A>'' for
+<strong>--ftp</strong>, <strong>--source</strong>,
+<strong>--source_only</strong>, <strong>--diff</strong>,
+<P>
+
+See the section ``<A href="ch-query.html#s-vrapt">APT - VIRTUAL OPTIONS
+, section 9.7</A>'' for
+<strong>-xyz</strong>, <strong>--nz</strong>, <strong>--stdin</strong>,
+<P>
+
+See the section ``<A href="ch-query.html#s-vrrm">REMOVING AN INSTALLED PACKAGE - VIRTUAL OPTIONS 
+, section 9.8</A>'' for
+<strong>--purge</strong>, <strong>--remove</strong>, <strong>-r</strong>.
+
+<P>
+
+See the section ``<A href="ch-query.html#s-dblocus">DATABASE LOCATIONS
+, section 9.11</A>'' for options
+<strong>--dbpath</strong> and <strong>--root</strong>.
+
+<hr>
+<h2><A name="s11.5">
+11.5 EXAMPLES
+
+</A></h2>
+
+<strong>swim -gn hamradio --search &quot;radio network/i&quot; --dbpath
+/test --arch alpha</strong>
+<P>
+
+will search the alpha architecture not-installed system databases in the
+/test directory for all package information from the hamradio group using
+the case insensitive pattern ``radio network''.
+<P>
+
+<strong>swim --powersearch dpkg -xn</strong>
+<P>
+
+will search the not-installed system databases for all package information
+and all files using the case sensitive pattern dpkg, after which apt-get
+will run a simulation of what would happen if it got and installed these
+packages.
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-ramdisk.html">next</A>; <A href="ch10.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

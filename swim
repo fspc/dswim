@@ -1,0 +1,1991 @@
+#!/usr/bin/perl -w
+#use diagnostics;
+require 5.004;
+use strict;
+use Getopt::Long;
+use SWIM::Conf;
+use SWIM::Global;
+use SWIM::Library;
+
+
+################################################################################
+#    Package administration and research tool for Debian                       #
+#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
+#                                                                              #
+#    This program is free software; you can redistribute it and/or modify      #
+#    it under the terms of the GNU General Public License as published by      #
+#    the Free Software Foundation; either version 2 of the License, or         #
+#    (at your option) any later version.                                       #
+#                                                                              #
+#    This program is distributed in the hope that it will be useful,           #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+#    GNU General Public License for more details.                              #
+#                                                                              #
+#    You should have received a copy of the GNU General Public License         #
+#    along with this program; if not, write to the Free Software               #
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
+################################################################################
+
+
+=pod
+
+Description:  Show World Intelligent Management 
+              Show World Packaging Method or ....
+
+Swim is a program which adds rpm-like quering capabilities to the Debian
+system.  Information for an installed Debian system is extracted from the
+/var/lib/dpkg/info* files and the status file, information for an uninstalled
+(not-installed) system is extracted from Packages and Contents files which can
+be conveniently downloaded with a built-in ftp client.  Although there are many
+similarities which will feel comfortable to experienced rpm users, there are
+also major differences between swim and rpm.  Besides file queries, directory
+queries will show all packages associated with the directories in relation to
+the root directory.  There is a simple and powerful search option to find
+packages who's descriptions match the keyword, this can be combined with a very
+fast search of all files and directories.  If there are several packages to be
+presented by a query, swim tells how many, and then the -t option can be used
+to view the packages; the default output is easy to understand because packages
+are labeled.  Swim provides a perfect interface to apt-get.  This interface is
+perfected by the ability to manage many different types of databases: 
+databases for the real installed system, and databases for virtually (not real)
+installed systems, the archictecture(s)  and distribution(s) are your choice. 
+Virtual installation capabilities combined with searching, quering, and
+readline editing provide an extrememly powerful upgrading experience. Swim
+provides people the ability to make a customized distribution for
+redistribution or for personal use.  Non-Debian systems can use swim without
+dpkg to compare Debian packages to non-Debian packages as well as downloading
+source or even binaries for installation if everything checks out (a good way
+to troubleshoot alien). Portablility shows the whole world an intelligent
+package management system (with DOS in the picture).  Troubleshooting is
+greatly simplified for missing files, the integrated Debian menu system, and
+many other things.  You can double check the md5sums of both packages and
+files; the statuses of both *deb packages, and not-installed packages are given
+in relation to your installed system, and missing blanks are filled in. 
+Versatility..swim has a lot of this like it's DF (default directory) structure
+which makes managing databases, packages, and even creating a customized
+distribution a cinch. 
+
+
+Plan:
+
+Eventually add information about every executable and significant
+program every source ball has, and provide sophisticated searching
+capabilities.  This information will come from the ThE_* Project
+database, and will be able to be used by other packaging systems or
+programs.  Swim will have editing capabilities, and will be linked via 
+cgi to html files.  And that's just the beginning, the possiblities
+are enormous!  Goal: Guru knowledge about an Open Source system for
+anyone, find the program to do the job easily.  
+
+=cut
+
+
+# The MAIN 
+# First let's determine what options are being used.
+ 
+Getopt::Long::config("bundling","no_auto_abbrev"); # will use pass_through
+
+my($result) = 
+   GetOptions (\%commands,
+                           "query", "q",     # query 
+                           "b",              # build 
+                           "a",              # all packages = /.
+                           "f",              # file query
+                           "dir",            # same as "f", but verifies dir  
+                           "i",              # information
+                           "l",              # file listing
+                           "df",             # file/directory listing w/-l
+                           "v",              # verbose listing
+                           "p",              # package query  
+                           "extract=s",      # extract all files/file from package
+                           "remove", "r",    # remove all, but conf.
+                           "purge",          # remove it all
+                           "apt",            # apt-get
+                           "update",         # using sources.list
+                           "clean",          # remove archives or apt2ftp
+                           "autoclean",      # remove some archives
+                           "upgrade",        # currently installed packages
+                           "dist_upgrade",   # whole dist. upgrade   
+                           "x",              # simulate apt's actions
+                           "y",              # automatic yes for -z
+                           "z",              # apt install
+                           "nz",             # apt download
+                           "source",         # ftp source and package
+                           "source_only",    # ftp only source for package
+                           "diff",           # just grab diff for source 
+                           "stdin",          # read in from stdin
+                           "md5sum",         # show md5sum    
+                           "c",              # configuration files
+                           "d",              # show documentation
+                           "g",              # packages belonging to group (27)
+                           "allgroups",      # show all groups
+                           "n",              # not-installed
+                           "pre_depends",    # required before installation
+                           "depends",        # like requires, def. needed
+                           "recommends",     # packages important to this one
+                           "suggests",       # complimentary packages
+                           "replaces",       # package(s) being replaces
+                           "provides",       # capabilities provided (virtual)
+                           "conflicts",      # package(s) which conflict
+                           "T",              # all characteristics
+                           "shlibs",         # provided shared libraries
+                           "total", "t",     # when there is more than one 
+                           "no",             # no output on searches
+                           "scripts",        # the scripts
+                           "preinst",        # before inst. script
+                           "postinst",       # after inst. script
+                           "prerm",          # before removal script
+                           "postrm",         # after removal script
+                           "menu", "m",      # menu script
+                           "copyright",      # copyright
+                           "changelog",      # changelog.Debian.gz changelog.gz 
+                           "root=s",         # use alternative db & root dir
+                           "db",             # update the database
+                           "initdb",         # make the databases
+                           "rebuilddb",      # remake the database
+                           "lowmem",         # lowmem method
+                           "initndb",        # make not-installed database
+                           "ndb",            # update not-installed database
+                           "report",         # report for --ndb
+                           "check",          # show changes|update cache
+                           "rebuildndb",     # remake not-installed database
+                           "cron",           # intelligent cron
+                           "Contents=s",     # Contents file required
+                           "onec",           # download only 1 Contents
+                           "nue",            # non-US or Exp. in Contents
+                           "main",           # this section and/or 
+                           "contrib",        # this section and/or
+                           "non-free",       # this section and/or
+                           "non-us",         # this section and/or
+                           "arch=s",         # architecture - i386 ...
+                           "dists=s",        # distribution - stable ...
+                           "alt=s",          # alternative base for dist
+                           "dbpath=s",       # override default db location
+                           "split_data=s",   # make things faster          
+                           "rebuildflatdb",  # rebuild flat databases 
+                           "rebuildflatndb", # rebuild n-flat databases
+                           "nopager", "n",   # no pager
+                           "search=s",       # search database for package
+                           "powersearch=s",  # match files, directories, and
+                           "ps=s",           # packages.
+                           "research=s",     # search the results
+                           "refinesearch=s", # refine the existing search
+                           "searchfile",     # search databases
+                           "cs",             # case sensitive search
+                           "S",              # query packages from search
+                           "C", "audit",     # dpkg standard options
+                           "status",         # clues one in about -C  
+                           "status_only",    # n* update
+                           "ramdiskon",      # turn on the thing
+                           "ramdiskoff",     # turn it off 
+                           "ftp",            # ftp client protocol                           
+                           "apt2ftp",        # mv archives to DF
+                           "ftp2apt",        # install DF with apt-get 
+                           "Packages=s",     # Packages file
+                           "Release_only",   # grab Release files only
+                           "version",        # program version
+                           "history",        # swim history
+                           "h",              # ""
+                           "testmenu",       # tmp test for menuindex.deb   
+                           "help"            # it better
+
+              );
+
+
+command();
+
+
+# The module sub-monsters
+
+sub command {
+
+
+   # test 
+   if ($commands{"testmenu"}) {
+      menuindex();
+   }
+ 
+   # Turn on pager for everything, -t value is usefull, since we don't
+   # want the pager working if the output is short.  In situations where -t
+   # isn't prompted for, -t shouldn't be used, pretty beta.
+   # The best way is to read the output into a variable than use the pager.
+   # This can be done simply.
+   # if ($commands{"t"}) {
+   #  open(STDOUT, "|$pager");
+   # }
+
+
+    if ($#ARGV == -1 && !defined %commands){
+     if ($Getopt::Long::error != 1) {
+       pager(usage());                                                               
+       exit;                                                                  
+     } 
+    }
+    elsif (($commands{"n"} || $commands{"nopager"}) &&
+           $#ARGV == -1 && !($commands{"q"} || $commands{"ps"} ||
+           $commands{"research"} || $commands{"refinesearch"} ||
+           $commands{"powersearch"} || $commands{"search"} ||
+           $commands{"ramdiskon"} || $commands{"ramdiskoff"} ||
+           $commands{"help"})) {
+       print nusage() if !($commands{"history"} || $commands{"h"});
+       exit if !($commands{"history"} || $commands{"h"});
+    }
+    elsif (!($commands{"n"} || $commands{"nopager"}) && $commands{"help"}
+           && $#ARGV == -1 && !($commands{"q"} || $commands{"ps"} ||
+           $commands{"research"} || $commands{"refinesearch"} ||
+           $commands{"powersearch"} || $commands{"search"} ||
+           $commands{"ramdiskon"} || $commands{"ramdiskoff"})) {
+       pager(help()) if !($commands{"history"} || $commands{"h"});
+       exit if !($commands{"history"} || $commands{"h"});
+    }
+    elsif ((($commands{"n"} || $commands{"nopager"}) && $commands{"help"})
+           && $#ARGV == -1 && !($commands{"q"} || $commands{"ps"} ||
+           $commands{"research"} || $commands{"refinesearch"} ||
+           $commands{"powersearch"} || $commands{"search"} ||
+           $commands{"ramdiskon"} || $commands{"ramdiskoff"})) {
+       print help() if !($commands{"history"} || $commands{"h"});
+       exit if !($commands{"history"} || $commands{"h"});
+    }
+
+    # version of the program
+    if ($commands{"version"}) {
+       print "SWIM version $swim_version\n";      
+    }
+
+
+    # Do the the dpkg -C thing, nice no need for a separate approach
+    if (($commands{"C"} || $commands{"audit"} || $commands{"status"}) &&
+         defined $dpkg) {         
+        system "$dpkg", "-C";     
+        exit;
+    }
+
+
+    # apt administration
+    if ($commands{"apt"}) {
+      if (defined $apt_get) { 
+        my @amount = keys %commands;         
+         if ($#amount == 0) {
+           print "swim: no options given for --apt\n"; 
+           exit;
+         }
+              require SWIM::Apt;
+              SWIM::Apt->import(qw(apt));
+              apt($apt_get,$sources,\%commands);
+              exit;
+      }
+      else {   
+        print "swim: operation requires apt\n";
+        exit;
+      }
+    }
+
+
+    # error testing for --md5sum
+    if ($commands{"md5sum"} && !($commands{"q"} || $commands{"query"})) {
+        print "swim: --md5sum may only be used during queries\n";
+        exit;
+    }
+    elsif ($commands{"md5sum"} && 
+         !($commands{"l"} || $commands{"d"} || $commands{"c"} ||
+           $commands{"p"}) && ($commands{"q"} || $commands{"query"})) {
+        print "swim: --md5sum of queries must be used with -l, -d, -c, or -p\n";
+        exit;
+    }
+   
+
+  # Some error testing for major mode.  Will handle all.
+  if (($commands{"initdb"} && $commands{"rebuilddb"}) ||
+      ($commands{"initdb"} && $commands{"db"}) ||
+      ($commands{"db"} && $commands{"rebuilddb"}) ||
+      ($commands{"initdb"} && $commands{"db"}) ||
+      ($commands{"initdb"} && $commands{"rebuilddb"} && $commands{"db"})) {
+       print "swim: only one major mode may be specified\n";
+       exit;
+  }
+
+  # this will handle options with arguments
+  if ($Getopt::Long::error == 1 || $commands{"root"} || $commands{"dbpath"}) {
+    # If two options are used
+    if ($Getopt::Long::error == 1) {
+     if ($commands{"dbpath"} && !$commands{"root"}) {  
+             exit;
+     } 
+     elsif (!$commands{"dbpath"} && $commands{"root"}) {  
+             exit;
+     } 
+    } 
+   
+    # Check whether a different filesystem is being used with --root
+    my($arch, $dist) = which_archdist(\%commands);
+    if ($commands{"root"} && !$commands{"dbpath"}) {
+        if ($commands{"q"} || $commands{"query"} || $commands{"search"} || 
+            $commands{"refinesearch"} || $commands{"research"} ||
+            $commands{"powersearch"} || $commands{"ps"} ||
+            $commands{"ramdiskon"} || $commands{"history"} || 
+            $commands{"h"}) {
+          if ($commands{"root"} =~ m,^\/.*,) {
+            $parent = $commands{"root"};
+            my $root;
+            if (!($commands{"n"} || $commands{"initndb"} ||
+                  $commands{"rebuildndb"} || $commands{"p"} ||
+                  $commands{"ndb"})) {
+             $root = "$parent$base/packages.deb";
+            }
+            else {
+             $root = "$parent$base/npackages$arch$dist.deb";
+            }
+            if (!-e $root && !-f $root) { 
+              print "failed to open $root\n\n";
+              exit;
+            } 
+           } 
+          elsif ($commands{"root"} ne "") {
+           print "swim: arguments to --root must begin with a /\n";
+           exit;
+          }
+        }
+        else {
+         if ($commands{"initdb"} || $commands{"rebuilddb"} ||
+             $commands{"db"} || $commands{"initndb"} || $commands{"ndb"} ||
+             $commands{"rebuildndb"} || $commands{"rebuildflatdb"} ||
+             $commands{"rebuildflatndb"}) {
+           if ($commands{"root"} =~ m,^\/.*,) {
+            $parent = $commands{"root"};
+            my $root = "$parent$base";
+             if (!-e $root && !-f $root) { 
+               print "failed to open $root\n\n";
+               exit;
+             } 
+            } 
+           elsif ($commands{"root"} ne "") {
+            print "swim: arguments to --root must begin with a /\n";
+            exit;
+           }
+          }
+         else { 
+          print "swim: --root may only be specified during querying, and database rebuilds\n";
+          exit;
+         }
+        }
+    }   
+    # check whether a different database location is being used with --dbpath.
+    elsif ($commands{"dbpath"} && !$commands{"root"}) {
+        if ($commands{"q"} || $commands{"query"} || $commands{"search"} ||
+            $commands{"refinesearch"} || $commands{"research"} ||
+            $commands{"powersearch"} || $commands{"ps"} ||
+            $commands{"ramdiskon"} || $commands{"history"} ||
+            $commands{"h"}) {
+          if ($commands{"dbpath"} =~ m,^\/.*,) {
+           my $dbpath;
+           $library = $commands{"dbpath"};
+           if (!($commands{"n"} || $commands{"initndb"} ||
+                 $commands{"rebuildndb"} ||
+                 $commands{"p"} || $commands{"ndb"})) {
+             $dbpath = "$library/packages.deb";
+           }
+           else {
+             $dbpath =  "$library/npackages$arch$dist.deb";
+           }
+            if (!-e $dbpath && !-f $dbpath) {
+              print "failed to open $dbpath\n\n";
+              exit;
+            } 
+          } 
+          elsif ($commands{"dbpath"} ne "") {
+           print "swim: arguments to --dbpath must begin with a /\n";
+           exit;
+          }
+        }
+        else {
+          if ($commands{"dbpath"} !~ m,^\/,) {
+             print "swim: arguments to --dbpath must begin with a /\n";
+          }
+          else {
+          if ($commands{"initdb"} || $commands{"rebuilddb"} ||
+              $commands{"db"} || $commands{"rebuildndb"} || 
+              $commands{"initndb"} || $commands{"rebuildflatdb"}
+              || $commands{"ndb"} || $commands{"rebuildflatndb"}) {
+           if ($commands{"dbpath"} =~ m,^\/.*,) {
+            $library = $commands{"dbpath"};
+            my $dbpath = "$library";
+             if (!-e $dbpath && !-f $dbpath) {
+               print "failed to open $dbpath\n\n";
+               exit;
+             } 
+           }  
+           elsif ($commands{"dbpath"} ne "") {
+            print "swim: arguments to --dbpath must begin with a /\n";
+            exit;
+           }
+         }
+         else { 
+             print "swim: --dbpath given for operation that does not use a database\n";
+             exit;
+         }
+          } 
+        }
+    }
+    # check whether a different database location is being used with --dbpath 
+    # and --root / are being used, dbpath takes priority but uses --root as
+    # the base.
+    elsif ($commands{"dbpath"} && $commands{"root"}) {
+        if ($commands{"q"} || $commands{"query"} || $commands{"search"} ||
+            $commands{"refinesearch"} || $commands{"research"} ||
+            $commands{"powersearch"} || $commands{"ps"} ||
+            $commands{"ramdiskon"} || $commands{"history"} ||
+            $commands{"h"}) {
+          if ($commands{"dbpath"} =~ m,^\/.*, &&
+              $commands{"root"} =~ m,^\/.*,) {
+           $parent = $commands{"root"};
+           $library = $commands{"dbpath"};
+	   my $root = "$parent$library";
+           my $dbpath;
+           if (!($commands{"n"} || $commands{"initndb"} ||
+                 $commands{"rebuildndb"} || $commands{"p"} ||
+                  $commands{"ndb"})) {
+              $dbpath = "$parent$library/packages.deb";
+           }
+           else {
+              $dbpath = "$parent$library/npackages$arch$dist.deb";
+           }
+            if (!-e $dbpath && !-f $dbpath) {
+              print "failed to open $dbpath\n\n";
+              exit;
+            } 
+            if (!-e $root && !-f $root) {
+              print "failed to open $root\n\n";
+              exit;
+            } 
+          } 
+          elsif ($commands{"dbpath"} ne "") {
+           print "swim: arguments to --dbpath must begin with a /\n";
+           exit;
+          }
+        }
+        else {
+          if ($commands{"dbpath"} !~ m,^\/,) {
+             print "swim: arguments to --dbpath must begin with a /\n";
+             exit;
+          }        
+          if ($commands{"initdb"} || $commands{"rebuilddb"} ||
+              $commands{"db"} || $commands{"initndb"} || $commands{"ndb"} ||
+              $commands{"rebuildndb"} || $commands{"rebuildflatdb"} ||
+              $commands{"rebuildflatndb"}) {
+            if ($commands{"dbpath"} =~ m,^\/.*, &&
+                $commands{"root"} =~ m,^\/.*,) {
+             $parent = $commands{"root"};
+             $library = $commands{"dbpath"};
+	     my $root = "$parent$library";
+             my $dbpath = "$parent$library";
+              if (!-e $dbpath && !-f $dbpath) {
+                print "failed to open $dbpath\n\n";
+                exit;
+              } 
+              if (!-e $root && !-f $root) {
+                print "failed to open $root\n\n";
+                exit;
+              } 
+            } 
+            elsif ($commands{"dbpath"} ne "") {
+             print "swim: arguments to --dbpath must begin with a /\n";
+             exit;
+           }
+          }
+          else { 
+            print "\nswim: --dbpath given for operation that does not use a database\n";
+            exit;
+         } 
+       }
+    }
+    # final monster ... but, really only as a trap. 
+    elsif ($commands{"root"}) {
+      exit;
+    }
+    elsif ($commands{"dbpath"}) {
+      exit;
+    }
+  } # end if (Getopt
+
+
+   # need Package(s) and Contents file(s) --ftp
+   if ($commands{"ftp"} && !($commands{"q"} ||
+       $commands{"search"} || $commands{"powersearch"} ||
+       $commands{"ps"} || $commands{"research"} || 
+       $commands{"refinesearch"})) {
+       require SWIM::Apt;
+       SWIM::Apt->import(qw(ftp));
+       ftp(\%commands);
+       exit;
+   }
+
+
+   # make things a lot faster
+   if ($commands{"ramdiskon"} || $commands{"ramdiskoff"}) {
+      require SWIM::Ramdisk;
+      SWIM::Ramdisk->import(qw(ramdisk));
+      ramdisk(\%commands);
+   }
+
+   # swim history
+   if ($commands{"history"} || $commands{"h"}) {
+     my($arch,$dist) = which_archdist(\%commands);
+     my($place) = finddb(\%commands);
+     my $swim_history; 
+    if ($commands{"n"}) {
+     $swim_history = "$place/.nswim$arch$dist" . "_history";
+    }
+    else {
+     $swim_history = "$place/.swim" . "_history";
+    }
+    open(HISTORY,"$swim_history") or exit;
+    my @HISTORY = <HISTORY>; my $h; $h = $#HISTORY + 1;
+    foreach (@HISTORY) {
+      printf "%5d  %s",$h, $_; $h--;
+    }
+    exit;
+   }
+
+   # The packages found by --search or --research become @ARGV
+   my ($arch,$dist) = which_archdist(\%commands);
+   my($place) = finddb(\%commands);
+   my $search_mem;
+   if ($commands{"n"}) {
+    $search_mem = "$place/.nswim$arch$dist" . "_history";
+   }
+   else {
+    $search_mem = "$place/.swim" . "_history";
+   }
+
+   my $arg;
+   if ($commands{"S"} || $commands{"research"} ||
+       $commands{"refinesearch"}) {
+      if ($#ARGV == 0) { 
+       if ($ARGV[0] =~  /^\d{1,}$/ && $ARGV[0] ne 0) { 
+        $arg = $ARGV[0]; undef @ARGV;
+       }
+       else {
+        $ARGV[0] =~ /^0$/ 
+        ? print "swim: only one numeric argument (not 0) for -S allowed\n"
+        : print "swim: only one numeric argument for -S allowed\n";
+        exit; 
+       }
+      }
+      elsif ($#ARGV > 0) {
+       print "swim: only one numeric argument for -S allowed\n"; exit;
+      }
+      elsif ($#ARGV == -1) {
+       $arg = 1; 
+      }
+     open(GREPER, "$search_mem") || exit;
+     my @LINES = reverse <GREPER>;
+     if (defined $LINES[$arg - 1]) {
+      @ARGV = split(/\s/,$LINES[$arg - 1]);
+     }
+     close(GREPER);
+   }
+
+    # let's do a search/research
+    if (((($commands{"search"}  && 
+        ($commands{"research"} || $commands{"refinesearch"})) ||
+        ($commands{"research"} && 
+        ($commands{"search"} || $commands{"refinesearch"})) ||
+        ($commands{"refinesearch"} && 
+        ($commands{"search"} || $commands{"research"}))) ||
+
+        ((($commands{"powersearch"} || $commands{"ps"}) && 
+        ($commands{"research"} || $commands{"refinesearch"})) ||
+        ($commands{"research"} && 
+        ($commands{"powersearch"} || $commands{"ps"} || 
+         $commands{"refinesearch"})) ||  
+        ($commands{"refinesearch"} &&
+        ($commands{"powersearch"} || $commands{"research"} ||
+         $commands{"ps"}))) ||
+
+        (($commands{"powersearch"} || $commands{"ps"}) &&
+          $commands{"search"}))) {
+          print "swim: only one type of search permitted at one time\n";
+          exit;
+    }
+    if ($commands{"search"}) {
+        require SWIM::Search;
+        SWIM::Search->import(qw(search));
+        search($search_mem,\%commands);
+        require SWIM::Safex;
+        SWIM::Safex->import(qw(safex));
+        safex(\%commands);
+        exit;
+    }
+    if ($commands{"research"}) {
+        require SWIM::Search;
+        SWIM::Search->import(qw(search));
+        search($search_mem,\%commands,$arg,\@ARGV);
+        require SWIM::Safex;
+        SWIM::Safex->import(qw(safex));
+        safex(\%commands);
+        exit;
+    }
+    if ($commands{"refinesearch"}) {
+        require SWIM::Search;
+        SWIM::Search->import(qw(search));
+        search($search_mem,\%commands,$arg,\@ARGV);
+        require SWIM::Safex;
+        SWIM::Safex->import(qw(safex));
+        safex(\%commands);
+        exit;
+    } 
+    if ($commands{"powersearch"} || $commands{"ps"}) {
+        require SWIM::Search;
+        SWIM::Search->import(qw(search));
+        search($search_mem,\%commands);
+        require SWIM::Safex;
+        SWIM::Safex->import(qw(safex));
+        safex(\%commands);
+        exit;
+    } 
+
+
+
+    # Make new databases or rebuild existing databases from scratch
+    if ($commands{"initdb"}) {
+        require SWIM::DB_Init;
+        SWIM::DB_Init->import(qw(database));
+        database(\%commands);
+    }
+    elsif ($commands{"rebuilddb"}) {
+        require SWIM::DB_Init;
+        SWIM::DB_Init->import(qw(database));
+        database(\%commands);
+    }
+    elsif ($commands{"db"}) {
+        require SWIM::DB;
+        SWIM::DB->import(qw(db));
+        db(\%commands);
+    }
+    elsif ($commands{"rebuildflatdb"}) {
+        require SWIM::DB;
+        SWIM::DB->import(qw(rebuildflatdb));
+        rebuildflatdb(\%commands);
+    }
+    elsif ($commands{"rebuildflatndb"}) {
+        require SWIM::NDB;
+        SWIM::NDB->import(qw(rebuildflatndb));
+        rebuildflatndb(\%commands);
+    }
+
+    # parts above need to be edited to for --dbpath, --root and major mode
+    # whether --Contents will be required is still under consideration
+    elsif ($commands{"initndb"}) {
+        require SWIM::NDB_Init;
+        SWIM::NDB_Init->import(qw(initndb));
+        initndb(\%commands);
+    }
+    elsif ($commands{"rebuildndb"}) {
+        require SWIM::NDB_Init;
+        SWIM::NDB_Init->import(qw(initndb));
+        initndb(\%commands);
+    }
+    elsif ($commands{"ndb"}) {
+        require SWIM::NDB_Init;   
+        SWIM::NDB_Init->import(qw(initndb));
+        initndb(\%commands);
+    }    
+
+
+  # *deb packages -p querys can be handled separately because they a particular to 
+  # *debs.
+  if ($commands{"p"}) {
+   if ($commands{"f"} || $commands{"dir"} || $commands{"allgroups"} ||
+        $commands{"a"} || $commands{"g"}) {
+      # check for some errors
+      print "swim: one type of query/verify may be performed at a time\n";
+      exit;
+    }
+    require SWIM::Deb;
+    SWIM::Deb->import(qw(deb_package));
+    deb_package(\%commands);
+    exit;
+   }
+
+  # error testing for extract
+  if ($commands{"extract"}) {
+      if (!$commands{"p"}) {
+        print "swim: use major mode -p with --extract\n";
+      }
+  }
+
+
+  # print out a nice tabular list of all the groups (Section:) on the
+  # system.
+  if ($commands{"allgroups"}) {
+   if ($commands{"f"} || $commands{"dir"} ||
+        $commands{"a"} || $commands{"g"} || $commands{"p"}) {
+      # check for some errors
+      print "swim: one type of query/verify may be performed at a time\n";
+      exit;
+    }
+    require SWIM::Groups;
+    SWIM::Groups->import(qw(allgroups));
+    allgroups(\%commands);
+   }
+
+#@@@
+
+
+  #Is this about a file or files?
+  if ($commands{"f"} || $commands{"dir"}) {
+   $| = 1; 
+
+   # check for some errors
+   if ($commands{"a"} || $commands{"g"}) {
+     print "swim: one type of query/verify may be performed at a time\n";
+     exit;
+   }
+    
+
+   # The description and info about the package. 
+    if (($commands{"q"} || $commands{"query"}) && $commands{"i"}) {
+      if ($#ARGV != -1) {
+         require SWIM::Findex;
+         SWIM::Findex->import(qw(qindexer));
+         foreach (@ARGV) {
+          if (m,\.\./|^\.\.$,) {
+           if ($_ !~ m,/(\w-+)+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+             my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
+             my @pwd =  split(m,/,,$pwd);
+             s,\.\./,,g;
+             my $tpwd = "";
+             for (1 .. $#pwd - $dd) {
+               $_ == 1  ? ($tpwd = "/$pwd[$_]") 
+                        : ($tpwd = $tpwd . "/$pwd[$_]");
+             }
+            $_ ne ".." ? ($argument = "$tpwd/$_") : ($argument = "$tpwd/");
+             root();
+             qindexer(\%commands);
+           }
+           else {  print "swim: not implemented yet\n"; } 
+          }
+          elsif ( m,\/,) {
+            $argument = $_;
+              if ($argument =~ m,^\.\/.*,) {
+                  if ($pwd !~ m,^\/$,) {
+                    $argument =~ m,^\.([^\.].*$),;
+                    $argument = "$pwd$1";
+                  }
+                  else {
+                   $argument =~ m,^\.([^\.].*$),;
+                   $argument = "$1";
+                  }
+              } 
+            root();
+            #print "ARG $argument\n";
+            qindexer(\%commands);
+          }
+          elsif ($pwd =~ m,^\/$,) {
+          $argument = "/$_";
+            qindexer(\%commands);
+          }
+          else {
+            $argument = "$pwd/$_";
+              if ($argument =~ m,\.$,) {
+                 $argument =~ m,(.*)\.$,;
+                 $argument = $1;
+               }
+            qindexer(\%commands);
+          }
+         }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+    # The file list and configuration files
+    elsif (($commands{"q"} || $commands{"query"}) && ($commands{"l"} &&
+            $commands{"c"})) {
+      if ($#ARGV != -1) {
+         require SWIM::Indexer;
+         SWIM::Indexer->export(qw(indexer));
+         foreach (@ARGV) {
+          if (m,\.\./|^\.\.$,) {
+           if ($_ !~ m,/(\w-+)+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+             my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
+             my @pwd =  split(m,/,,$pwd);
+             s,\.\./,,g;
+             my $tpwd = "";
+             for (1 .. $#pwd - $dd) {
+               $_ == 1  ? ($tpwd = "/$pwd[$_]") 
+                        : ($tpwd = $tpwd . "/$pwd[$_]");
+             }
+            $_ ne ".." ? ($argument = "$tpwd/$_") : ($argument = "$tpwd/");
+            root();
+            SWIM::Indexer::indexer(\%commands);
+           }
+           else {  print "swim: not implemented yet\n";  }
+          }
+          elsif ( m,\/,) {
+            $argument = $_;
+              if ($argument =~ m,^\.\/.*,) {
+                  if ($pwd !~ m,^\/$,) {
+                    $argument =~ m,^\.([^\.].*$),;
+                    $argument = "$pwd$1";
+                  }
+                  else {
+                   $argument =~ m,^\.([^\.].*$),;
+                   $argument = "$1";
+                  }
+              }  
+            root();
+            SWIM::Indexer::indexer(\%commands);
+          }
+          elsif ($pwd =~ m,^\/$,) {
+            $argument = "/$_";
+            SWIM::Indexer::indexer(\%commands);
+          } 
+          else {
+            $argument = "$pwd/$_";
+              if ($argument =~ m,\.$,) {
+                 $argument =~ m,(.*)\.$,;
+                 $argument = $1;
+               }
+            SWIM::Indexer::indexer(\%commands);
+          }
+         } # end foreach
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+    # The file list
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"l"}) {
+      if ($#ARGV != -1) {
+         require SWIM::Findex;
+         SWIM::Findex->import(qw(findexer));
+         foreach (@ARGV) {
+          if (m,\.\./|^\.\.$,) {
+           if ($_ !~ m,/(\w-+)+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+             my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
+             my @pwd =  split(m,/,,$pwd);
+             s,\.\./,,g;
+             my $tpwd = "";
+             for (1 .. $#pwd - $dd) {
+               $_ == 1  ? ($tpwd = "/$pwd[$_]") 
+                        : ($tpwd = $tpwd . "/$pwd[$_]");
+             }
+            $_ ne ".." ? ($argument = "$tpwd/$_") : ($argument = "$tpwd/");
+            root();
+            findexer(\%commands);
+           }
+           else {  print "swim: not implemented yet\n";  }
+          }
+          elsif ( m,\/,) {
+            $argument = $_;
+              if ($argument =~ m,^\.\/.*,) {
+                  if ($pwd !~ m,^\/$,) {
+                    $argument =~ m,^\.([^\.].*$),;
+                    $argument = "$pwd$1";
+                  }
+                  else {
+                   $argument =~ m,^\.([^\.].*$),;
+                   $argument = "$1";
+                  }
+              }  
+            root();
+            findexer(\%commands);
+          }
+          elsif ($pwd =~ m,^\/$,) {
+            $argument = "/$_";
+            findexer(\%commands);
+          } 
+          else {
+            $argument = "$pwd/$_";
+              if ($argument =~ m,\.$,) {
+                 $argument =~ m,(.*)\.$,;
+                 $argument = $1;
+               }
+            findexer(\%commands);
+          }
+         }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+   # This should just grep Package: from description and produce
+   # the package name.  There is a qa version to.
+    elsif ($commands{"q"} || $commands{"query"}) {
+      if ($#ARGV != -1) {
+         require SWIM::Indexer;
+         SWIM::Indexer->export(qw(indexer));
+         foreach (@ARGV) {
+          if (m,\.\./|^\.\.$,) {
+           if ($_ !~ m,/(\w-+)+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+             my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
+             my @pwd =  split(m,/,,$pwd);
+             s,\.\./,,g;
+             my $tpwd = "";
+             for (1 .. $#pwd - $dd) {
+               $_ == 1  ? ($tpwd = "/$pwd[$_]") 
+                        : ($tpwd = $tpwd . "/$pwd[$_]");
+             }
+            $_ ne ".." ? ($argument = "$tpwd/$_") : ($argument = "$tpwd/");
+            root();
+            SWIM::Indexer::indexer(\%commands);
+           }
+           else {  print "swim: not implemented yet\n";  }
+          }
+          elsif ( m,\/,) {
+            $argument = $_;
+              if ($argument =~ m,^\.\/.*,) {
+                  if ($pwd !~ m,^\/$,) {
+                    $argument =~ m,^\.([^\.].*$),;
+                    $argument = "$pwd$1";
+                  }
+                  else {
+                   $argument =~ m,^\.([^\.].*$),;
+                   $argument = "$1";
+                  }
+              }  
+            root();
+            SWIM::Indexer::indexer(\%commands);
+          }
+          elsif ($pwd =~ m,^\/$,) {
+            $argument = "/$_";
+            SWIM::Indexer::indexer(\%commands);
+          } 
+          else  {
+            $argument = "$pwd/$_";
+              if ($argument =~ m,\.$,) {
+                 $argument =~ m,(.*)\.$,;
+                 $argument = $1;
+               }
+            SWIM::Indexer::indexer(\%commands);
+          }
+         }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+ } # about file      
+
+#@@@
+
+ elsif ($commands{"g"}) {
+   $| = 1; 
+ 
+   #my @stuff;
+
+   # check for some errors
+   if ($commands{"a"}) {
+     print "swim: one type of query/verify may be performed at a time\n";
+     exit;
+   }
+
+  # extract the packages related to the group.
+ if (!$commands{"n"}) {
+    require SWIM::DB_Library;
+    SWIM::DB_Library->import(qw(gb));
+    gb(\%commands);    
+ }
+ else {
+    require SWIM::DB_Library;
+    SWIM::DB_Library->import(qw(ngb));
+    ngb(\%commands);
+ } 
+   # someone may do something like this swim -qg text web so...
+      if ($commands{"g"} && !$commands{"q"}) {
+        print "swim: unexpected query source\n";
+        exit;
+      }
+      if ($#ARGV != -1) {
+         foreach (@ARGV) {
+           $argument = $_;
+           if (defined $gb{$argument}) {
+             @stuff = split(/\s/, $gb{$argument});
+             @PACKAGES = @stuff;
+           }
+           else {
+             print "group $argument does not contain any packages\n";
+           }
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+
+  untie %gb;
+   
+
+   # The description and info about the package. 
+    if (($commands{"q"} || $commands{"query"}) && $commands{"i"}) {
+      if ($#ARGV != -1) {
+         require SWIM::Ag;
+         SWIM::Ag->import(qw(description));
+         $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @stuff = @PACKAGES;
+         foreach (@stuff) {
+           $argument = $_;
+           description(\%commands);
+           #print "\n" if $commands{"S"};
+           print "\n";
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+    # The file list and configuration files
+    elsif (($commands{"q"} || $commands{"query"}) && ($commands{"l"} &&
+            $commands{"c"})) {
+      if ($#ARGV != -1) {
+         require SWIM::Ag;
+         SWIM::Ag->import(qw(q_description));
+         require SWIM::DB_Library;
+         SWIM::DB_Library->import(qw(version));
+         $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @stuff = @PACKAGES;
+         foreach (@stuff) {
+          $argument = $_;
+           version(\%commands);
+           q_description(\%commands);          
+           print "\n";
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+    # The file list
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"l"}) {
+       if ($#ARGV != -1) {
+        require SWIM::File;
+        SWIM::File->import(qw(file));
+        require SWIM::DB_Library;
+        SWIM::DB_Library->import(qw(version));
+        require SWIM::Info;
+        SWIM::Info->import(qw(scripts));
+        require SWIM::Ag;
+        SWIM::Ag->import(qw(q_description));
+         $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+        @stuff = @PACKAGES;
+         $file_now = "yes"; 
+         foreach (@stuff) {
+           $argument = $_;
+            version(\%commands);
+            #print "$argument\n";
+            if ($commands{"scripts"} || $commands{"preinst"} ||
+                $commands{"postinst"} || $commands{"prerm"} ||
+                $commands{"postrm"}) {
+              scripts(\%commands);
+            }
+           #copyright() if $commands{"copyright"}; 
+           #changelog() if $commands{"changelog"}; 
+           q_description(\%commands);
+           file(\%commands);
+           print "\n";
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+
+   # Find just the configuration files..mdsum included
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"c"}) {
+      if ($#ARGV != -1) { 
+         require SWIM::Ag;
+         SWIM::Ag->import(qw(q_description));
+         $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @stuff = @PACKAGES;
+         foreach (@stuff) { 
+           $argument = $_; 
+           # we will have to provide a return value for q_description
+           # version produced notorious one  
+           #version();
+           # argument needs to be printed out in q_
+           # print "$argument\n";
+           q_description(\%commands);
+           print "\n";
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+   # The documentation locations  "d" takes priority over "l"
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"d"}) {
+      if ($#ARGV != -1) {
+         require SWIM::File;
+         SWIM::File->import(qw(file));
+         require SWIM::DB_Library;
+         SWIM::DB_Library->import(qw(version));
+         require SWIM::Deps;
+         SWIM::Deps->import(qw(character));
+         require SWIM::Info;
+         SWIM::Info->
+         import(qw(scripts menu copyright changelog shlibs));
+         $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @stuff = @PACKAGES;
+         foreach (@stuff) {
+           $argument = $_; 
+           version(\%commands);
+            if ($commands{"scripts"} || $commands{"preinst"} ||
+                $commands{"postinst"} || $commands{"prerm"} ||
+                $commands{"postrm"}) {
+              scripts(\%commands);
+            }
+           menu(\%commands) if $commands{"menu"} || $commands{"m"};
+           copyright(\%commands) if $commands{"copyright"}; 
+           changelog(\%commands) if $commands{"changelog"}; 
+           # watch this
+           print "$argument\n";
+           character(\%commands); 
+           shlibs(\%commands) if $commands{"shlibs"};
+           file(\%commands);
+           print "\n";
+         }
+         if (!($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"})) {  
+          if ($commands{"x"} || $commands{"ftp"} || $commands{"source"} ||
+              $commands{"source_only"} || $commands{"remove"} ||
+              $commands{"r"} || $commands{"purge"}) {
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+          }
+         }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+
+   # This should just grep Package: from description and produce
+   # the package name.  There is a qa version to.
+    elsif (($commands{"q"} || $commands{"query"})) {
+      if ($#ARGV != -1) {
+         require SWIM::Ag;
+         SWIM::Ag->import(qw(q_description));
+         $aptor_group = "yes" if ($commands{"y"} || $commands{"z"});; 
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @stuff = @PACKAGES;
+         foreach (@stuff) {
+           $argument = $_;
+           #print "$argument\n" if $commands{"S"};
+           q_description(\%commands);
+         }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+
+ }
+
+
+#@@@
+ 
+ # not -g or -f,  but -n
+ else {
+
+   $| = 1; 
+
+   # check for some errors
+   if ($commands{"g"}) {
+     print "swim: one type of query/verify may be performed at a time\n";
+     exit;
+   }
+
+   # The description and info about the package. 
+    if (($commands{"q"} || $commands{"query"}) && $commands{"i"} &&
+         !$commands{"a"}) {
+      if ($#ARGV != -1) {
+         require SWIM::Ag;
+         SWIM::Ag->import(qw(description));
+         @PACKAGES = @ARGV;
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @ARGV = @PACKAGES; 
+         foreach (@ARGV) {        
+           $argument = $_;
+           description(\%commands);
+           print "\n" if $commands{"S"};
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"i"} &&
+         $commands{"a"}) {
+      if ($#ARGV == -1) {
+           require SWIM::Findex;
+           SWIM::Findex->import(qw(qindexer));
+           $argument = "/.";
+           qindexer(\%commands);
+       }
+       else {
+         print "swim: extra arguments given for query of all packages\n";
+       }
+    }
+
+
+    # The file list and configuration files
+    elsif (($commands{"q"} || $commands{"query"}) && ($commands{"l"} &&
+            $commands{"c"}) && !$commands{"a"}) {
+      if ($#ARGV != -1) {
+        require SWIM::File;
+        SWIM::File->import(qw(file));
+        require SWIM::Ag;
+        SWIM::Ag->import(qw(q_description));
+         @PACKAGES = @ARGV;
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @ARGV = @PACKAGES; 
+         $file_now = "yes";
+         foreach (@ARGV) {
+           $argument = $_;
+           print "$argument\n" if $commands{"S"};
+           q_description(\%commands);          
+           file(\%commands) if !$commands{"md5sum"};
+           print "\n" if $commands{"S"};
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+    elsif (($commands{"q"} || $commands{"query"}) && ($commands{"l"} &&
+            $commands{"c"}) && $commands{"a"}) {
+      if ($#ARGV == -1) {
+           require SWIM::Indexer;
+           SWIM::Indexer->import(qw(indexer));
+           $argument = "/.";
+           indexer(\%commands);
+       }
+       else {
+         print "swim: extra arguments given for query of all packages\n";
+       }
+    }
+
+    # The file list
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"l"} &&
+            !$commands{"a"}) {
+      if ($#ARGV != -1) {
+        require SWIM::File;
+        SWIM::File->import(qw(file));
+        require SWIM::Deps;
+        SWIM::Deps->import(qw(character));
+        require SWIM::Info;
+        SWIM::Info->import(qw(scripts copyright changelog menu shlibs));
+        require SWIM::DB_Library;
+        SWIM::DB_Library->import(qw(version));
+         @PACKAGES = @ARGV;
+         if ($commands{"z"} || 
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @ARGV = @PACKAGES; 
+         foreach (@ARGV) {
+           $argument = $_;
+            #push(@PACKAGES,$argument);
+            print "$argument\n" if $commands{"S"};
+            if ($commands{"scripts"} || $commands{"preinst"} ||
+                $commands{"postinst"} || $commands{"prerm"} ||
+                $commands{"postrm"}) {
+              scripts(\%commands);
+            }
+           menu(\%commands) if $commands{"menu"} || $commands{"m"};
+           copyright(\%commands) if $commands{"copyright"}; 
+           changelog(\%commands) if $commands{"changelog"}; 
+           version(\%commands);
+           character(\%commands);
+           shlibs(\%commands) if $commands{"shlibs"};
+           file(\%commands);
+           print "\n" if $commands{"S"};
+         }
+         if (!($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"})) {  
+          if ($commands{"x"} || $commands{"ftp"} || $commands{"source"} ||
+              $commands{"source_only"} || $commands{"remove"} ||
+              $commands{"r"} || $commands{"purge"}) {
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+          }
+         }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"l"} &&
+            $commands{"a"}) {
+      if ($#ARGV == -1) {
+           require SWIM::Findex;
+           SWIM::Findex->import(qw(findexer));
+           $argument = "/.";
+           findexer(\%commands);
+       }
+       else {
+         print "swim: extra arguments given for query of all packages\n";
+       }
+    }
+
+
+   # Find just the configuration files..mdsum included
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"c"} &&
+            !$commands{"a"}) {
+      if ($#ARGV != -1) { 
+         require SWIM::Ag;
+         SWIM::Ag->import(qw(q_description));
+         @PACKAGES = @ARGV; 
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @ARGV = @PACKAGES; 
+         foreach (@ARGV) { 
+           $argument = $_; 
+           print "$argument\n" if $commands{"S"};
+           q_description(\%commands);
+           print "\n" if $commands{"S"};
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"c"} &&
+            $commands{"a"}) {
+      if ($#ARGV == -1) {
+           require SWIM::Indexer;
+           SWIM::Indexer->import(qw(indexer));
+           $argument = "/.";
+           indexer(\%commands);
+       }
+       else {
+         print "swim: extra arguments given for query of all packages\n";
+       }
+    }
+
+
+   # The documentation locations  "d" takes priority over "l"
+   # Maybe this can be moved to indexer() 
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"d"} && 
+            !$commands{"a"}) {
+      if ($#ARGV != -1) {
+         require SWIM::File;
+         SWIM::File->import(qw(file));
+         require SWIM::Info;
+         SWIM::Info->
+         import(qw(scripts menu copyright changelog shlibs));
+         require SWIM::Deps;
+         SWIM::Deps->import(qw(character));
+         require SWIM::DB_Library;
+         SWIM::DB_Library->import(qw(version));
+         @PACKAGES = @ARGV;
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @ARGV = @PACKAGES; 
+         foreach (@ARGV) {
+           $argument = $_; 
+            print "$argument\n" if $commands{"S"};
+            if ($commands{"scripts"} || $commands{"preinst"} ||
+                $commands{"postinst"} || $commands{"prerm"} ||
+                $commands{"postrm"}) {
+              scripts(\%commands);
+            }
+            menu(\%commands) if $commands{"menu"} || $commands{"m"};
+            copyright(\%commands) if $commands{"copyright"}; 
+            changelog(\%commands) if $commands{"changelog"}; 
+           # watch this
+           version(\%commands);
+           character(\%commands); 
+           shlibs(\%commands) if $commands{"shlibs"};
+           file(\%commands);
+           print "\n" if $commands{"S"};
+         }
+         if (!($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"})) {  
+          if ($commands{"x"} || $commands{"ftp"} || $commands{"source"} ||
+              $commands{"source_only"} || $commands{"remove"} ||
+              $commands{"r"} || $commands{"purge"}) {
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+          } 
+        }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"d"} &&
+            $commands{"a"}) {
+      if ($#ARGV == -1) {
+           require SWIM::Indexer;
+           SWIM::Indexer->import(qw(indexer));
+           $argument = "/.";
+           indexer(\%commands);
+       }
+       else {
+         print "swim: extra arguments given for query of all packages\n";
+       }
+    }
+
+
+   # This should just grep Package: from description and produce
+   # the package name.  There is a qa version to.
+    elsif (($commands{"q"} || $commands{"query"}) &&
+           !$commands{"a"}) {
+      if ($#ARGV != -1) {
+         require SWIM::Ag;
+         SWIM::Ag->import(qw(q_description)); 
+         @PACKAGES = @ARGV;
+         if ($commands{"z"} ||
+             $commands{"ftp"} || $commands{"remove"} || $commands{"r"} ||
+             $commands{"purge"}) {  
+           require SWIM::Safex;
+           SWIM::Safex->import(qw(safex));
+           safex(\%commands);          
+         }
+         @ARGV = @PACKAGES; 
+         foreach (@ARGV) {
+           $argument = $_;
+           #print "$argument\n" if $commands{"S"};
+           q_description(\%commands);                    
+           #print "\n" if $commands{"S"};
+          }
+       }
+       else {
+         print "swim: no arguments given for query\n";
+       }
+    }
+    elsif (($commands{"q"} || $commands{"query"}) && $commands{"a"}) {
+      if ($#ARGV == -1) {
+           require SWIM::Indexer;
+           SWIM::Indexer->import(qw(indexer));
+           $argument = "/.";           
+           indexer(\%commands);
+       }
+       else {
+         print "swim: extra arguments given for query of all packages\n";
+       }
+    }
+
+
+  } # not about file or -g
+
+#@@@
+
+} # end sub command
+
+
+sub usage {
+
+# Shameless publication of the ThE_* Project, and also shameless self
+# agrandizing....
+print "SWIM version $swim_version
+Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+This may be freely redistributed under the terms of the GNU Public License\n";
+
+$save = "SWIM version $swim_version
+Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+This may be freely redistributed under the terms of the GNU Public License
+
+Usage: swim [--nopager -n]
+       swim {--help} [--nopager -n]
+       swim {--version}
+       swim {--history -h} [--arch <architecture>] [--dists <distribution>] 
+                        [-n] [--dbpath <dir>] [--root <dir>] 
+       swim {--initdb} [--dbpath <dir>] [--root <dir>] [--lowmem]
+                        [--split_data <lines>]
+       swim {--db} [--dbpath <dir>] [--root <dir>] [--check]
+       swim {--rebuilddb} [--dbpath <dir>] [--root <dir>] [--lowmem]
+                        [--split_data <lines>]
+       swim {--rebuildflatdb} [--dbpath <dir>] [--root <dir>]
+       swim {--search ? (--research || --refinesearch) <pattern(s)>} 
+                        [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only ? <[--diff]>] 
+                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [--df2apt] [--purge] [<\\d{1,}>]  
+       swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
+                        [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only ? <[--diff]>] 
+                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [--df2apt] [--purge] [<\\d{1,}>]  
+       swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
+                        [-d] [-c] [--scripts] [--preinst] [--postinst] 
+                        [--prerm] [--postrm] [-v] [--dbpath <dir>] [--menu -m] 
+                        [--shlibs] [-T] [--pre_depends] [--depends] 
+                        [--recommends] [--suggests] [--conflicts] 
+                        [--replaces] [--provides] [--md5sum] [--root <dir>] 
+                        [--copyright] [--changelog] [--allgroups] 
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only ? <[--diff]>] 
+                        [--stdin] [--extract <ALL|archive|PWD!archive>]
+                        [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df] 
+                        [--df2apt] [targets | -S ? <\\d{1,}>]
+       swim {--audit --status -C}
+       swim {--ftp} [--Contents <DF|directory>] [--Packages <DF|directory>]
+                        [--arch <architecture>] [--dists <distribution>]
+                        [--onec] [--Release_only]
+       swim {--apt} [--update] [--clean] [--autoclean] [--check] 
+       swim {--apt} [-xyz] [--upgrade] [--dist_upgrade]  
+       swim {--initndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>] 
+                        [--main] [--contrib] [--non-free] [--non-us] [--alt] 
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--dbpath <dir>] [--root <dir>] [--split_data <lines>]  
+                        [-v] [--cron] [targets|APT|DF]
+       swim {--ndb ? <[--report]>} [--main] [--contrib] [--non-free] [--non-us]
+                        [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
+                        [--arch <architecture>] [--dists <distribution>]
+                        [--dbpath <dir>] [--root <dir>] [--check] [--alt]
+                        [--status_only] [-v] [--cron] [targets|APT|DF] 
+       swim {--rebuildndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
+                        [--main] [--contrib] [--non-free] [--non-us] [--alt]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--dbpath <dir>] [--root <dir>] [-v] [--cron] 
+                        [--split_data <lines>] [targets|APT|DF]
+       swim {--rebuildflatndb} [--dbpath <dir>] [--root <dir>]
+                        [--arch <architecture>] [--dists <distribution>]
+       swim {--ramdiskon} [-n] [--searchfile] [--arch <architecture>] 
+                        [--dists <distribution>] [--dbpath] [--root]
+       swim {--ramdiskoff}
+
+Hints: Searches -                        equiv.   negated [^...]
+                escapes: word boundaries - \\b        \\B
+                         [0-9]           - \\d        \\D
+                         [a-zA-Z0-9_]    - \\w        \\W
+                         [ \\r\\t\\n\\f]     - \\s        \\S
+       case insensitive: \"pattern/i\" 
+   string = multi lines: \"pattern/m\"
+       string beginning: \^, \\A
+             string end: \$, \\Z
+       single character: \.
+            quantifiers: \*, \?, \+
+           alternatives: \"pattern|pattern\"
+        
+       Groups - subject(below) contrib\/subject or non-free\/subject  
+                               or non-us\/subject or swim -q --allgroups
+                exceptions - no contrib\/contrib or non-free\/non-free       
+                   contrib, non-free, admin, base, comm, devel, doc, 
+                   editors, electronics, experimental, games, graphics,
+                   hamradio, interpreters, libs, mail, math, misc, net,
+                   news, oldlibs, otherosfs, shells, sound, tex, text,
+                   utils, web, x11
+
+Quit?:press q here\n";
+}
+
+
+# nusage
+sub nusage {
+
+$save = "SWIM version $swim_version
+Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+This may be freely redistributed under the terms of the GNU Public License
+
+Usage: swim [--nopager -n]
+       swim {--help} [--nopager -n]
+       swim {--version}
+       swim {--history -h} [--arch <architecture>] [--dists <distribution>]
+                        [-n] [--dbpath <dir>] [--root <dir>] 
+       swim {--initdb} [--dbpath <dir>] [--root <dir>] [--lowmem]
+                        [--split_data <lines>]
+       swim {--db} [--dbpath <dir>] [--root <dir>] [--check]
+       swim {--rebuilddb} [--dbpath <dir>] [--root <dir>] [--lowmem]
+                        [--split_data <lines>]
+       swim {--rebuildflatdb} [--dbpath <dir>] [--root <dir>]
+       swim {--search ? (--research || --refinesearch) <pattern(s)>} 
+                        [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only ? <[--diff]>] 
+                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [--df2apt] [--purge] [<\\d{1,}>] 
+       swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
+                        [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only <[--diff]>] 
+                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [--df2apt] [--purge] [<\\d{1,}>]  
+       swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
+                        [-d] [-c] [--scripts] [--preinst] [--postinst] 
+                        [--prerm] [--postrm] [-v] [--dbpath <dir>] [--menu -m] 
+                        [--shlibs] [-T] [--pre_depends] [--depends] 
+                        [--recommends] [--suggests] [--conflicts] 
+                        [--replaces] [--provides] [--md5sum] [--root <dir>] 
+                        [--copyright] [--changelog] [--allgroups] 
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only ? <[--diff]>] 
+                        [--stdin] [--extract <ALL|archive|PWD!archive>]
+                        [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df] 
+                        [--df2apt] [targets | -S  ? <\\d{1,}>]
+       swim {--audit --status -C}
+       swim {--ftp} [--Contents <DF|directory>] [--Packages <DF|directory>]
+                        [--arch <architecture>] [--dists <distribution>]
+                        [--onec] [--Release_only]
+       swim {--apt} [--update] [--clean] [--autoclean] [--check] 
+       swim {--apt} [-xyz] [--upgrade] [--dist_upgrade]  
+       swim {--initndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>] 
+                        [--main] [--contrib] [--non-free] [--non-us] 
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--dbpath <dir>] [--root <dir>] [--split_data <lines>]  
+                        [-v] [--cron] [targets|APT|DF]
+       swim {--ndb ? <[--report]>} [--main] [--contrib] [--non-free] [--non-us]
+                        [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
+                        [--arch <architecture>] [--dists <distribution>]
+                        [--dbpath <dir>] [--root <dir>] [--check]
+                        [--status_only] [-v] [--cron] [targets|APT|DF] 
+       swim {--rebuildndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
+                        [--main] [--contrib] [--non-free] [--non-us]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--dbpath <dir>] [--root <dir>] [-v] [--cron] 
+                        [--split_data <lines>] [targets|APT|DF]
+       swim {--rebuildflatndb} [--dbpath <dir>] [--root <dir>]
+                        [--arch <architecture>] [--dists <distribution>]
+       swim {--ramdiskon} [-n] [--searchfile] [--arch <architecture>] 
+                        [--dists <distribution>] [--dbpath] [--root]
+       swim {--ramdiskoff}
+
+Hints: Searches -                        equiv.   negated [^...]
+                escapes: word boundaries - \\b        \\B
+                         [0-9]           - \\d        \\D
+                         [a-zA-Z0-9_]    - \\w        \\W
+                         [ \\r\\t\\n\\f]     - \\s        \\S 
+       case insensitive: \"pattern/i\"
+   string = multi lines: \"pattern/m\"
+       string beginning: \^, \\A
+             string end: \$, \\Z
+       single character: \.
+            quantifiers: \*, \?, \+
+           alternatives: \"pattern|pattern\"
+        
+       Groups - subject(below) or contrib\/subject or non-free\/subject 
+                               or non-us\/subject or swim -q --allgroups
+                exceptions - no contrib\/contrib or non-free\/non-free       
+                   contrib, non-free, admin, base, comm, devel, doc, 
+                   editors, electronics, experimental, games, graphics,
+                   hamradio, interpreters, libs, mail, math, misc, net,
+                   news, oldlibs, otherosfs, shells, sound, tex, text,
+                   utils, web, x11\n";
+} # end sub nusage
+
+# Tries to emulate rpm --help, but rather futile, because of the great
+# differnces between swim and rpm.
+sub help {
+
+$save = "SWIM version $swim_version
+Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+This may be freely redistributed under the terms of the GNU Public License
+
+usage:
+   --help                   - print this message
+   --nopager -n             - no pager wanted
+   --version                - print the version of swim being used
+
+   --history                - print the search and stdin history
+
+   --query
+   -q                       - query mode
+   -S                       - search result argument
+   -t                       - override output suppressor
+   --allgroups              - display all groups to which packages belong 
+      --dbpath <dir>        - use <dir> as the directory for the database
+      --root <dir>          - use <dir> as the top level directory
+      --arch <architecture> - database architecture
+      --dist <distribution> - database distribution
+      Package specification options:
+        -a                 - query all packages
+        -g                 - query all packages belong to a group
+        -f <file|dir>      - query package owning <file|dir>
+        --dir <dir>        - query package owning <dir>
+        -p <packagefile>   - query debian package <packagefile>
+        -n <file|dir|-agf> - query not-installed system package
+      Information selection options:
+        -i                 - display package information
+        -l                 - display package file list
+        --df               - display package directories (used with -l)
+        -v                 - ls -l listing (-p only)
+        -d                 - list documentation files (overrides -l)
+        -c                 - list configuration files and MD5 checksums
+        --scripts          - print the various scripts 
+        -t can be used to show title for an individual script
+        --preinst          - display pre-installation scripts
+        --postinst         - display post-installation scripts
+        --prerm            - display pre-removal scripts
+        --postrm           - display post-removal scritps
+        --changelog        - display the package's changelog
+        --copyright        - display the package's copyright 
+        --menu
+        -m                 - display menufile for package
+        --shlibs           - display shared libraries file for package
+        -T                 - display all package relationships
+        --pre_depends      - display any pre-depends package
+        --depends          - display any real or virtual depends package
+        --recommends       - display any real or virtual recommends package
+        --suggests         - display any real or virtual suggests package
+        --conflicts        - display any real or virtual conflict package
+        --replaces         - display packages this package can replace 
+        --provides         - display any declared virtual package
+      MD5 checksum option
+        --md5sum           - display result for MD5 checksum for -l, -d,
+                              -c, or -p
+      Extraction option
+         --extract 
+         <ALL|archive|PWD!archive> - extract archive, choice (-l), or
+                                     choice (-l) in pwd (-p only)
+
+      Virtual options
+        -x                 - simulate apt-get installation
+        -y                 - answer yes to all apt-get prompts
+        -z                 - get and install package using apt-get
+        --nz               - only download package when using apt-get
+        --ftp              - download package 
+        --source           - download source package
+        --source_only      - only download source package
+        --diff             - only download the source package's diff file
+        --purge            - remove the installed package, and the
+                             package's configuration files
+        --remove
+        -r                 - remove the installed package, but not the
+                             package's configuration files  
+        --apt2df           - not implemented
+        --df2apt           - not implemented
+      Editing Option
+        --stdin            - allows readline editing capabilities when
+                             used with virtual options 
+      Arguments
+         <targets>         - package, packagename, packagename_version,
+                             files/dirs, group
+         -S <\\d{1,}>       - results from search/stdin history, 1 is
+                             default.
+   
+   --search <pattern(s)>       - search package information
+   --powersearch <pattern(s)>  
+   --ps <pattern(s)>           - search package information and all files 
+   --research <pattern(s)>     - research a previous search without making
+                                 the new results permanent
+   --refinesearch <pattern(s)> - research a previous search making the new
+                                 results permanent
+      --dbpath <dir>           - use <dir> as the directory for the
+      --root <dir>             - use <dir> as the top level directory
+                                  database
+      --arch <architecture>    - database architecture
+      --dist <distribution>    - database distribution
+      Package specification options:
+        -g                     - search all packages belong to a group
+        -n <-g>                - search not-installed system package
+      Database selection option:
+        --dir                  - search all directories (powersearch only)
+      Virtual options
+        -x                     - simulate apt-get installation
+        -y                     - answer yes to all apt-get prompts
+        -z                     - get and install package using apt-get
+        --nz                   - only download package when using apt-get
+        --ftp                  - download package 
+        --source               - download source package
+        --source_only          - only download source package
+        --diff                 - only download the source package's diff file
+        --purge                - remove the installed package, and the
+                                 package's configuration files
+        --remove
+        -r                     - remove the installed package, but not the
+                                 package's configuration files  
+        --apt2df               - not implemented
+        --df2apt               - not implemented
+      Editing Option
+        --stdin                - allows readline editing capabilities when
+                                 used with virtual options 
+      Output
+        --no                   - no output during search
+      Argument
+         <\\d{1,}>              - search/stdin history, 1 is
+                                 default.
+
+    --ramdiskon                - create and mount ramdisk 
+    --ramdiskoff               - unmount ramdisk
+      --dbpath <dir>           - use <dir> as the directory for the
+      --root <dir>             - use <dir> as the top level directory
+                                  database
+      --arch <architecture>    - database architecture
+      --dist <distribution>    - database distribution
+      Database selection options
+        -n                     - use not-installed system databases
+        --searchfile           - use search databases
+                        
+   --audit 
+   --status 
+   -C                     - audit package statuses
+
+   --ftp                         - get specified databases
+   --Release_only                - only check and update Release version
+      --arch <architecture>      - database architecture
+      --dist <distribution>      - database distribution
+      Database Selection
+       --Packages <DF|directory> - put Packages database in default
+                                   directory or specified directory
+       --Contents <DF|directory> - put Contents database in default
+                                   directory or specified directory
+          --onec                 - retrieve only one Contents per
+                                   distribution/architecture       
+
+
+   --apt                  - important apt-get options        
+      --update            - retrieve Package databases, update cache, and
+                            update Release version 
+      --clean             - removes packages from archives directory
+      --autoclean         - remove only packages not found in cache
+      --check             - check and update cache 
+
+   --apt                  - apt-get options allowing major changes to
+                            installed system 
+      --upgrade           - install newest versions of the packages
+                            installed on the system
+      --dist_upgrade      - do an upgrade as well as intelligently
+                            installing new packages
+      Control options
+        -x               - simulate apt-get installation
+        -y               - answer yes to all apt-get prompts
+        -z               - get and install package using apt-get
+
+   --initdb               - make databases for installed system
+   --db                   - update databases for installed system
+   --rebuilddb            - rebuild databases for installed system
+   --rebuildflatdb        - rebuild the search databases
+     --dbpath <dir>       - use <dir> as the directory for the database
+     --root <dir>         - use <dir> as the top level directory
+     --lowmem              - use low memory method to make databases
+     --split_data <lines>  - change size of database making files by
+                             altering the amount of lines 
+     --check                  - check what will be updated (--db)
+
+   --initndb                  - make database for not-installed system
+   --ndb                      - update not-installed system
+   --rebuildndb               - rebuild database for not-installed system
+   --rebuildflatndb           - rebuild the search databases
+     --dbpath <dir>           - use <dir> as the directory for the database
+     --root <dir>             - use <dir> as the top level directory
+     --arch <architecture>    - database architecture
+     --dist <distribution>    - database distribution
+     --alt <alt. Deb. dist.>  - alternative Debian archival distribution
+     --lowmem                 - use low memory method to make databases
+     --split_data <lines>     - change size of database making files by
+                                altering the amount of lines 
+     --check                  - check what will be updated (--ndb)
+     --status_only            - update status only (--ndb)
+     --report                 - not implemented (--ndb)
+
+      Alternative Sections
+        --main                - extract main section
+        --contrib             - extract contrib section
+        --non-free            - extract non-free section
+        --non-us              - extract non-us section          
+      Automate 
+        --cron                - automate database production
+      Test
+        -v                    - check built-in comparison function
+      Contents Database
+       --Contents 
+       <target|FDBtarget|DF|FDBDF> - use Contents database  (FDB - make
+                                     only a flat database from the Contents
+                                     database allowing file listing)
+       --nue                       - use if non-us or experimental have
+                                     files/dirs in Contents (unusual).
+     
+      Packages Database
+       [targets|APT|DF]            - use Packages database specified in a
+                                     particular directory, apt's, or the
+                                     default directory. 
+
+
+
+\n";
+
+} # end sub help
+
+# Pulled this from dftp, but I like "less" (the default) !
+sub pager {                                                                 
+  my($text) = @_;                                                               
+  open(PAGER, "| $ENV{PAGER}") or                                               
+        die "Couldn't open your pager ($ENV{PAGER})";                           
+  print PAGER $text;                                                            
+  close PAGER;                                                                  
+} # end sub pager

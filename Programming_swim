@@ -1,0 +1,114 @@
+Database Structure 
+
+note: what's below was written for readability, not to
+indicate complex structures, all databases are normal hashes.  stripped
+implies that the control field was removed, but the data afterwards kept.
+
+Structure of statusindex.deb
+
+1). Initially made in SWIM::DB_Init::database
+2). Updated in SWIM::DB::db
+3). $sb(packagename) = qw(packagename_version group priority
+                          status(separated with :));
+    All fields stripped
+
+Structure of nstatusindex-arch-dists.deb
+
+1).  Initally made in SWIM::NDB_Init::not_installed
+2).  Updated in SWIM::NDB::update_packages_ndb
+3).  $nsb(packagename) = qw(packagename_version group priority);
+     $nsb{"/."} = qw(packagename_version ...);
+     All fields stripped
+
+
+Structure of packages.deb
+
+1). Initally made in SWIM::DB_Init::database
+2). Updated in SWIM::DB::db
+3). %db = [ @name => (packagename packagename_version ...),
+            @Tdescriptions => (packagename_version format_info ...),
+            @conf => (packagename_versionCONF
+                      every_indented_line_after_Conffiles ...),
+            @REPLACE => (packagename_version(with PRE, DEP, REC, SUG,
+                         CON, PRO, or REP appended)
+                         package_relationship_field (unstripped) ...)
+          ]
+
+Structure of npackages-arch-dists.deb
+
+1). Initially made in SWIM::NDB_Init::not_installed
+2). Updated in SWIM::NDB::update_packages_ndb
+3). %ndb = [ @name => (packagename packagename_version ...),
+             @Tdescriptions => (packagename_version format_info ...),
+             @conf => (empty),
+             @REPLACE => (packagename_version(with PRE, DEP, REC, SUG,
+                          CON, PRO, REP, MD, and FN appended)
+                          package_relationship_field (unstripped) ...),
+             @FILENAME => (packagename_versionFN Filename_field(stripped) ...),
+             @MD5SUM => (packagename_versionMD
+                         package_MD5_checksum(stripped) ...),
+             @revision => (packagename_versionMD(this comes from the
+                           Filename field) "packagename_versionMD REVISION"
+                           (this time the version comes from the Version
+                            field) ...)
+          ]
+
+The revision field is unusual and occurs in the experimental distribution.
+The hash is used by -p so that the version can be figured out. (check
+"revision: situation" in SWIM::Deb).
+
+Structure of groupindex.deb
+
+1). Initally made in SWIM::DB_Init::database
+2). Updated in SWIM::DB::db
+3). $gb(group) = qw(packagenames ......) group stripped from Section:
+ 
+Structure of ngroupindex-arch-dists.deb
+
+1). Initially made in SWIM::NDB_Init::not_installed
+2). Updated in SWIM::NDB::update_packages_ndb
+3). $ngb = qw(packagenames ......) group stripped from Section: 
+
+Structure of searchindex.deb and dirindex.deb
+
+1). When SWIM::DB_Init::database finishes  SWIM::DB_Init::md begins.
+    This writes @dpackage to transfer.deb, which is processed by either
+    fastswim (filedir -> big and long) or imswim (which is like longswim,
+    which produces one large file - filedir.deb), and slowswim (big and
+    long) into the two files big.debian and long.debian and then the
+    databases are finished by SWIM::MD::process_md().
+2). Rebuilt by SWIM::DB::rebuildflatdb
+3). searchindex.deb = /path/filename\n ...... (1 package)
+    dirindex.deb    = /path/dir\n ...... (> 1 package)
+   
+Structure of nsearchindex-arch-dists.deb and ndirindex-arch-dists.deb
+
+1). After SWIM::NDB_Init::initndb runs SWIM::NDB_Init::not_installed,
+    SWIM::NDB_Init::nmd runs longswim which produces
+    filedir.deb, then initndb runs slowswim producing big.debian and
+    long.debian.  Then the database(s) are finished by
+    SWIM::MD::prcess_md.  
+2).
+3). nsearchindex-arch-dists.deb = /path/filename\n ...... (1 package)
+    ndirindex-arch-dists.deb    = /path/dir\n ...... (> 1 package)
+    Note:  nsearch* includes elements which pertain to only one
+           package, this generally implies files, not directories, however
+           the ni often has more than one package sharing a file, so its
+           placed into ndir* (this would be rare with an i system). 
+           SWIM::Search::search processes these two files differently,
+           which is more effecient for the much larger nsearch*, for this
+           reason you can't merge the two databases together.
+                   
+Structure of ncontentsindex-arch-dists.deb.
+
+1). A compressed Contents database, no alterations (originally the headers
+    were removed, but this is a waste of time.) If the FDB (flat database
+    option if given) SWIM::Library::compress_contents is called from
+    initndb(), otherwise longswim called from SWIM::NDB_Init::nmd 
+    copies and compresses.  The longswim method compresses, but 
+    compress_contents does a cp (not -a).  In both cases the header
+    removal has been depreciated.  The important thing is that the utime
+    remains the same.
+2). The new Contents database is copied (utime) and renamed via
+    compress_contents called from SWIM::NDB. 
+3). Contents format

@@ -1,0 +1,8 @@
+* Permissions of some directories are weird using mkdir().
+* ftp()/qftp() doesn't handle timeout problems very well, if alarm()
+  and SIG{ALRM} are used program quits with stdout "Alarm Bell".
+* Debian md5sum program has different output than non-Debian md5sum
+  programs, will probably switch to MD5 module.
+* --ftp, swimz.list, for non-US using the dists/arch/ notation doesn't 
+  work on all sites, normal notation works if the site is set-up
+  this way.

@@ -1,0 +1,49 @@
+<html><head>
+<title>swim - PREPARING YOUR INSTALLATION FOR APT
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 8<br>
+PREPARING YOUR INSTALLATION FOR APT
+
+</h1>
+
+<pre>usage: swim --audit
+       swim --status
+       swim -C</pre>
+<P>
+
+If you are using <strong>apt</strong> with <strong>swim</strong>, and this
+is the first time you are using it with your installation, check your live
+installation with this major mode. This is a call to <strong>dpkg -C
+(--audit)</strong>, and will show any packages which are not properly
+configured or installed. If you get any output, make corrections. The goal
+is to get absolutely no output whatsoever because it is under these
+conditions that apt will work properly. See the <A href="ch-query.html#s-vrrm">REMOVING AN INSTALLED PACKAGE - VIRTUAL OPTIONS 
+, section 9.8</A> with 
+<strong>-q</strong> to remove the offending packages. You may have to
+remove the package by hand under unusual situations like when it is not
+just dependencies (see <code>-T</code>) between packages keeping the package
+from being removed perhaps due to a broken script (see
+<code>--scripts</code>). In an extreme case you could manually remove the
+entry for this package from the <em>/var/lib/dpkg/status</em> database,
+and hunt down and remove all the files associated with the package with
+<strong>swim's -l</strong> option. When you are done if you still want
+some of the packages you removed, use <strong>apt</strong> to reinstall
+them with <strong>swim's -xyz</strong> option. Also, <strong>apt</strong>
+provides its own built-in method to clean up your system, and will provide
+instructions, but you still may have to do some of the cleaning yourself
+as discussed above.
+
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-query.html">next</A>; <A href="ch-notinstalled.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

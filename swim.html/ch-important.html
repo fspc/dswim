@@ -1,0 +1,330 @@
+<html><head>
+<title>swim - IMPORTANT DEBIAN DATABASES FOR NOT-INSTALLED
+DATABASES
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 6<br>
+IMPORTANT DEBIAN DATABASES FOR NOT-INSTALLED
+DATABASES
+
+</h1>
+<hr>
+<h2><A name="s-downimportant">
+6.1 A. downloading the important databases with --ftp.
+
+</A></h2>
+
+<pre>usage: swim --ftp
+
+options: --Contents &lt;DF|directory&gt;
+         --Packages &lt;DF|directory&gt; 
+         [--dists &lt;distribution&gt;] [--arch &lt;architecture&gt;]
+         [--onec] [--Release_only]</pre>
+<hr>
+<h2><A name="s6.2">
+6.2 OVERVIEW
+
+</A></h2>
+ <strong>swim</strong> provides a method so that all information about
+an existing Debian distribution is quickly accessible through databases.
+Debian already provides flat file databases for all its distributions. One
+database called ``<em>Contents-(architecture)</em>'' provides a complete
+listing of all the files associated with each package, the other much more
+important database called ``<em>Packages</em>'' provides everything from
+the Package's description, to all the dependencies for that package. The
+Packages database is a crucial database for other important Debian
+administrative tools like <strong>dpkg</strong> and <strong>apt</strong>.
+<hr>
+<h2><A name="s-dd">
+6.3 DISTRIBUTION DEFINED
+
+</A></h2>
+Debian Distributions choose a name which reflect the development state of
+that distribution. The distribution named ``<em>unstable</em>'' is where
+the majority of the development processing occurs, after <em>unstable</em>
+has reached a certain level of maturity, it's copied over to a new
+distribution called ``<em>frozen</em>'' which is tested extensively before
+becoming the new ``<em>stable</em>'' distribution. The <em>frozen
+distribution</em> retains the <em>Release version number</em> of the
+<em>unstable distribution</em>, and the <em>unstable distribution</em>
+receives a new <em>Release version number</em>. Eventually,
+<em>frozen</em> becomes <em>stable</em>, and at this point both
+<em>frozen</em>, and the older <em>stable distribution</em> are removed.
+Code names are associated with the <em>Release Version number</em> given
+for each of the distributions. This is much better for mirroring Debian
+sites.
+
+<P>
+
+<strong>swim</strong> was designed to ignore these code names, and instead
+shows the user the <em>Release version number</em> associated with the
+distribution. Swim users must always use the real distribution name, or
+swim will not work properly. This is a nice feature because it allows user
+to make decisions related to the management of their databases, and makes
+research much more easier.
+
+<P>
+
+The other Debian distribution which swim recognizes is
+<em>experimental</em>. This distribution <em>does not have any Release
+version number</em>, and contains packages which are considered risky
+because of their development level.
+
+
+<P>
+<hr>
+<h2><A name="s6.4">
+6.4 SECTIONS
+
+</A></h2>
+ Each Debian distribution has sections related to the relationship of
+each of the packages to the <em>Debian's Policy Manual</em>. In
+``<em>main</em>'' there are packages which have a correct relationship
+with these Policies. Packages in ``<em>contrib</em>'' comply with the
+<em>DFSG</em> (<em>Debian Free Software Guidelines</em> found in the
+<em>Debian Policy Manual</em>) but have various limitations like requiring
+a package which is found in non-free, or is not in the Debian archive.
+Packages in ``<em>non-free</em>'' do not comply with the <em>DFSG</em> but
+are electronically distributable across international borders. The
+``<em>non-us</em>'' section is found outside of the United States and
+exists for packages which have export restrictions. 
+
+
+<P>
+<hr>
+<h2><A name="s6.5">
+6.5 ARCHITECTURES
+
+</A></h2>
+ Distributions also have architecture specific sections since not all
+packages compiled for one architecture can run on all other
+archictectures, however, there are a large percentage of packages which do
+run on all architectures. The architectures are <em>alpha</em>,
+<em>arm</em>, <em>i386</em>, <em>m68k</em>, <em>powerpc</em>,
+<em>sparc</em>, and more recently <em>hurd-i386</em> which represents
+packages for the hurd GNU kernel for the i386 architecture.
+
+<P>
+<hr>
+<h2><A name="s6.6">
+6.6 SWIMZ.LIST
+
+</A></h2>
+ <strong>--ftp</strong> uses a file called <em>swimz.list</em> which
+has the same type of format (see format below) as the
+<em>sources.list(5)</em> which <strong>apt</strong> uses. There are some
+differences. The <strong>first difference</strong> mentioned above (see
+<A href="#s-dd">DISTRIBUTION DEFINED
+, section 6.3</A>) requires that the distribution names never should be the
+code names for the <em>Release version</em>.  <strong>Secondly</strong>,
+<strong>apt</strong> only retrieves databases specific to one
+archictecture, normally the one you are running <strong>apt</strong> on.
+With <strong>swim</strong> though you can fetch databases for any, or
+every architecture by adding the architecture to ``deb'' with a hyphen
+(deb-hurd-i386). If deb has no architecture appended it is assumed that
+the architecture you want is the same as the system you are running
+<strong>swim</strong> on.  <strong>Thirdly</strong>, at this time
+<strong>swim</strong> only supports the ftp method. 
+<strong>Fourthly</strong>, you can change <em>swimz.list</em> as often as
+you want without worrying about databases being removed so that that the
+<em>swimz.list</em> and the downloaded databases match. This would occur
+with <strong>apt's</strong> <em>sources.list(5)</em> if you removed a
+site. <strong>Fifthly</strong>, databases are kept in a compressed state. 
+<strong>Sixthly</strong> because the list is used for both Contents and
+Packages, more flexibility is provided by only allowing the default
+distribution/archictecture or distribution/architecture provided on the
+commandline to be downloaded. 
+<P>
+
+
+For <strong>apt</strong> users: If you are using <strong>apt</strong>, and
+<strong>swim</strong> together it is a good strategy to use the real
+distribution name in the <em>sources list(8)</em>, and to have an exact
+copy of the <em>sources.list(5)</em> ftp sites in the <em>swimz.list</em>. 
+Packages databases specific to the architecture <strong>apt</strong> is
+using can be retrieved using <strong>swim --apt --update</strong> (this
+also will keep track of the Release version), and then
+<strong>swim</strong> can be used to fetch the architecture specific
+<em>Contents database</em> as shown below.  It should also be of interest
+to note that Packages downloaded by either swim or apt can be used
+interchangeably by using 'cp -a' and 'gzip -d' or 'gzip -9'.
+<P>
+
+Here is a brief outline of the format required by <em>swimz.list</em>.  
+
+<P>
+
+<strong>deb uri distribution [section ...  ]</strong>
+<P>
+
+<strong>deb</strong> - represents a standard Debian distribution. And is
+simply written as deb or with the architecture appended
+(<strong>deb</strong> or <strong>deb-alpha</strong>). 
+
+<P>
+
+<strong>uri</strong> - Universal Resource Identifier is exactly how you
+would enter an address into a web browser. This address is the base of a
+Debian distribution, generally this is right before the directory called
+``<em>dists</em>''. So if <em>dists</em> is found in
+<em>/stuff/pub/debian/dists</em>, and the site is
+<strong>somewhere.com</strong> then the uri would be
+<em>ftp://somewhere.com/stuff/pub/debian</em>.
+<P>
+
+<strong>distribution</strong> - This can be <em>unstable</em>,
+<em>frozen</em>, <em>stable</em>, <em>experimental</em>. Distribution can
+also be a path which must end with a slash like
+<em>unstable/binary-i386/</em>. This is used when there is no section as
+in the experimental distribution or in sites which do not have symlinks to
+the non-us section. No section would be mentioned in this situation.
+ <P>
+<strong>section</strong> - <em>main</em>, <em>contrib</em>,
+<em>non-free</em>, <em>non-US</em> (write it this way).
+
+<P>
+<hr>
+<h2><A name="s6.7">
+6.7 SWIMZ.LIST EXAMPLES
+
+</A></h2>
+Examples (each on one line):
+
+<P>
+
+<strong>deb-alpha ftp://somewhere.com/stuff/pub/debian unstable main contrib non-US</strong>
+<P>
+
+This will fetch the alpha databases from somewhere.com for the unstable
+distribution for the main, contrib and non-US sections.
+
+<P>
+
+Note: In these next two examples you can not append any architecture to deb
+with a hyphen. 
+<P>
+
+<strong>deb ftp://somewhere.com/stuff/pub/debian project/experimental/</strong>
+
+<P>
+
+This will fetch the experimental database, but there is not a
+Contents-(architecture) database for this distribution. Notice that it ends
+with a slash.
+
+<P>
+
+<strong>deb ftp://somewhere.com/stuff/pub/debian-non-US stable/binary-i386/</strong>
+<P>
+
+This will fetch the i386 databases for the stable distribution for non-us,
+
+<hr>
+<h2><A name="s-ftp">
+6.8 FTP OR APT?
+
+</A></h2>
+ How you use major mode <strong>--ftp</strong> depends on your goals. 
+Even if you are using <strong>apt</strong>, you may be interested in
+keeping tabs on different architectures. In this case you would have to
+download the <em>Packages databases</em> specific to these architectures. 
+If you are only interested in the architecture which <strong>apt</strong>
+is interested in, then you only need to use <strong>--ftp</strong> to
+fetch the <em>Contents database(s)</em>. But, because it isn't a
+requirement to set up a virtual filesystem, you are not required to fetch
+the Contents database. The <strong>advantages</strong> of fetching the
+Contents database is determined by the method you choose to make the
+database (see <A href="ch-notinstalled.html">MAKING NOT-INSTALLED DATABASES
+, chapter 7</A>). These advantages include the
+ability to <em>view a listing of the files and directories</em> associated
+with a package, the ability to <em>query files and directories</em> to
+find out which packages relate to them, and the ability to perform a
+<em>powersearch</em> on all the files and directories to find the
+associated packages. 
+<P>
+<hr>
+<h2><A name="s6.9">
+6.9 OPTIONS
+
+</A></h2>
+<strong>Remember:</strong>  If you want to download a different
+distribution/architecture other than the default specified in your
+configuration file, you must specify this on the commandline. 
+<P>
+ <strong>--Packages</strong> determines where you want the Packages
+database as well as the Release data put when they are downloaded. The
+<strong>DF argument</strong> implies that the databases will be put in
+your default directory (see <code>swimrc(5)).</code> These databases can later
+be located by the major modes <strong>--initndb and --rebuildndb</strong>
+just by using <strong>DF</strong> as an argument. Alternatively, these
+databases can be put in any directory you choose by providing a
+<strong>directory as an argument</strong>. 
+<P>
+
+<strong>--Contents</strong> determines where you want the
+<em>Content-(architecture)</em> <code>database(s)</code> put. (see
+--Packages). 
+<P>
+
+<strong>--onec</strong> will download only one Contents-arch per 
+distribution/architecture specified on the commandline or by default.
+<P>
+
+<strong>--Release_only</strong> will download only the Release data for
+the <em>swimz.list</em> or particular <em>Package(s)</em> mentioned on the
+command line.
+<P>
+
+<strong>--dists</strong> will only find the distribution which corresponds
+to the argument provided this option.
+<P>
+
+<strong>--arch</strong> will only find the architecture which corresponds
+to the argument provided this option.  The different architecture needs to
+be specified in swimz.list with a hyphen and the architecture appended to
+deb (deb-(arch)). 
+<hr>
+<h2><A name="s6.10">
+6.10 B. downloading the important databases with apt, and maintenance
+options.
+
+</A></h2>
+usage: <strong>swim --apt</strong> 
+<P>
+
+options: <strong>[--update] [--clean] [--autoclean] [--check]</strong>
+
+<P>
+
+Please read <A href="#s-downimportant">A. downloading the important databases with --ftp.
+, section 6.1</A> for more information.
+<P>
+
+<strong>--update</strong> calls <strong>apt</strong> to download the
+Packages databases.
+<P>
+
+<strong>--clean</strong> is a call to an <strong>apt</strong> option to
+remove any packages stored in <strong>apt's</strong> storage area for
+downloaded packages. The default for this storage area is
+<em>/var/cache/apt/arhives</em>
+<P>
+
+<strong>--autoclean</strong> will only clean out packages which are not
+found in apt's cache.
+<P>
+
+<strong>--check</strong> tests and updates apt's cache.
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-notinstalled.html">next</A>; <A href="ch-makinginst.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

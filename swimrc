@@ -1,0 +1,29 @@
+# Read QUICKSTART in /usr/doc/swim for important information and to 
+# quickly prepare the swimrc, then read the swimrc(5) manpage for more 
+# enlightenment and configuration options like "Do you want to use apt?",
+# "How about non-us?".
+
+# Which do you have on your system?  Pick dpkg if Debian, ar if non-Debian.
+#$package_tool = "/usr/bin/dpkg";
+#$package_tool = "/usr/bin/ar";
+
+# Do you have apt installed?
+#$apt = "yes";
+
+# Pick one.
+#$architecture = "alpha";
+#$architecture = "arm";
+#$architecture = "hurd-i386";
+#$architecture = "i386";
+#$architecture = "m68k";
+#$architecture = "powerpc";
+#$architecture = "sparc";
+
+# Which distribution? Pick one.
+#$distribution = "stable";
+#$distribution = "unstable";
+#$distribution = "frozen";
+
+# Remove sections after qw that you do not want. Use non-US for non-us.
+#@user_defined_section = qw(main contrib non-free);
+

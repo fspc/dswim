@@ -1,0 +1,131 @@
+#!/usr/bin/perl -w
+
+#use diagnostics;
+use strict;
+
+################################################################################
+#    Package administration and research tool for Debian                       #
+#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
+#                                                                              #
+#    This program is free software; you can redistribute it and/or modify      #
+#    it under the terms of the GNU General Public License as published by      #
+#    the Free Software Foundation; either version 2 of the License, or         #
+#    (at your option) any later version.                                       #
+#                                                                              #
+#    This program is distributed in the hope that it will be useful,           #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+#    GNU General Public License for more details.                              #
+#                                                                              #
+#    You should have received a copy of the GNU General Public License         #
+#    along with this program; if not, write to the Free Software               #
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
+################################################################################
+
+
+=pod
+
+This program only takes two argument, a temp directory and the name of the
+binary sort..sort.  You can test a filedir.deb file. 
+
+
+=cut
+
+ if ($#ARGV == -1) {
+  print "swim: slowswim requires arguments, see program for instructions\n";
+  exit;
+ }
+
+my $tmp = $ARGV[0];
+my $sort = $ARGV[1];
+
+pre_md();
+
+# This is nmd()'s version of fastswim..also a lowmem method, after making
+# long.debian and big.debian, process_md() finishes the job.
+sub pre_md {
+
+  my %HL;
+  my $temp;
+  my %repeaters;
+  my $fcount = 0;
+  my @tempholder;
+
+  print "Sorting everything\n";
+  system ("$sort $tmp/filedir.deb > $tmp/sortfiledir.deb");
+  unlink("$tmp/filedir.deb");
+
+    # grab the keys from the sorted file
+     print "Making the massive hash using lowmem\n";
+     $| = 1; my $x = 1;
+     open(FILEDIR, "$tmp/sortfiledir.deb") or die "where is sortfiledir.deb?\n";
+         while (<FILEDIR>) {
+          $x = 1 if $x == 6;
+          print "|\r" if $x == 1 || $x == 4; print "/\r" if $x == 2;
+          print "-\r" if $x == 3 || $x == 6; print "\\\r" if $x == 5;
+          $x++;
+             my ($place, $packname) = split(/ -> /,$_,2);
+             push(@tempholder,"$place -> $packname");
+              if ($fcount != 0) {
+              my($tplace,$tpackname) = split(/ -> /,$tempholder[$fcount - 1],2);
+              chomp $tpackname;
+                # As long as they aren't different add to HL because they
+                # belong to a group.
+                if ($tplace eq $place) {
+                    #print "$tplace and $place\n";
+                    $repeaters{$tplace}++;
+                    if ($repeaters{$tplace} == 1) {  
+                       $temp = 0;
+                    }
+                    else {
+                      $temp = $repeaters{$tplace} - 1;
+                    }              
+                    $HL{$tplace}[$temp] = $tpackname;
+                } 
+                # they new guy is different, but the old guy belongs to the
+                # previous group or not, so finish adding to %HL and then
+                # print out, and undef %HL
+                else {
+                   #print "I AM DIFF $tplace\n";
+                    # finish adding
+                    $repeaters{$tplace}++;
+                    if ($repeaters{$tplace} == 1) {  
+                       $temp = 0;
+                    }
+                    else {
+                      $temp = $repeaters{$tplace} - 1;
+                    }              
+                    $HL{$tplace}[$temp] = $tpackname;
+                 
+                   # print out
+                   open(BIG, ">>$tmp/big.debian") or die;
+                   open(LONG, ">>$tmp/long.debian") or die;
+                   my $thingo;
+                   foreach $thingo (sort keys %HL ) {
+                    my $tingy  = "@{ $HL{$thingo} }";
+                    if (@{ $HL{$thingo} } > 1 || @{ $HL{$thingo} } eq "") {
+                      print LONG "$thingo -> $tingy\n";
+                    }
+                    elsif (@{ $HL{$thingo} } == 1) {
+                      print BIG "$thingo -> $tingy\n"; 
+                    }
+                  }
+                 close(BIG);
+                 close(LONG);
+
+                 # The whole key for lowmem systems
+                 undef %repeaters; 
+                 undef %HL; 
+                 undef $tempholder[$fcount - 1];
+
+               }              
+              } # if fcount ne 0
+                               
+         $fcount++;
+         }
+
+         # also do this in db() & ndb()
+         unlink("$tmp/sortfiledir.deb");
+         
+
+} # end sub pre_md

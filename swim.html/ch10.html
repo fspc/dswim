@@ -1,0 +1,64 @@
+<html><head>
+<title>swim - UPGRADING WITH APT
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 10<br>
+UPGRADING WITH APT
+
+</h1>
+
+usage: <strong>swim --apt</strong>
+<P>
+
+options: <strong>[-xyz] [--upgrade] [--dist_upgrade]</strong>
+<P>
+
+<strong>apt-get</strong> provides powerful methods to change an
+installion. When these methods are called using <strong>--apt</strong>,
+<strong>swim</strong> will not allow you to proceed until you are
+absolutely sure this is what you want to do. Before using these methods do
+a ``<strong>swim --apt --update</strong>'' so that
+<strong>apt-get</strong> knows the newest versions of available packages.
+This major mode requires a combination of <strong>-x</strong>,
+<strong>-xz</strong> or <strong>-xyz</strong> to be used along with either
+<strong>--upgrade</strong> or <strong>--dist_upgrade</strong>. 
+<strong>-x</strong> used alone will simulate what would happen if
+<strong>-xz or -xyz</strong> were used (also see <code>-xyz</code> above).
+
+<P>
+
+<strong>--upgrade</strong> is somewhat similiar to doing ``<strong>swim
+-qatxz</strong>'' except that it is a more intelligent method because
+<strong>apt</strong> does some behind the scene calculations in regards to
+package relationships, in fact the ``<strong>swim -qatxz</strong>''
+approach will provide totally different results, or maybe these were the
+results you really wanted. ``<strong>swim --apt --upgrade -xz</strong>''
+is the prefered, proper, and built-in way provided by
+<strong>apt-get</strong> to install the newest versions for all packages
+installed on your system.  This method will not install any newer versions
+of packages which would change the install status of other packages. Note:
+It is not recommended to combine the query option <strong>-a</strong> with
+<strong>-xz or -xyz</strong>, but combining the query option
+<strong>-a</strong> just with <strong>-x</strong> can be educational. 
+
+<P>
+
+<strong>--dist_upgrade</strong> combines an <strong>--upgrade</strong>
+with the installation of packages which are not installed. This method
+carefully examines dependencies, and resolves conflicts, and given these
+factors it will upgrade the most important packages before considering the
+installation of less important packages. Less important packages will be
+installed only if there are not any conflicts.
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-search.html">next</A>; <A href="ch-query.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

@@ -1,0 +1,591 @@
+#!/usr/bin/perl -w
+
+#use diagnostics;
+use strict;
+use DB_File;
+
+################################################################################
+#    Package administration and research tool for Debian                       #
+#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
+#                                                                              #
+#    This program is free software; you can redistribute it and/or modify      #
+#    it under the terms of the GNU General Public License as published by      #
+#    the Free Software Foundation; either version 2 of the License, or         #
+#    (at your option) any later version.                                       #
+#                                                                              #
+#    This program is distributed in the hope that it will be useful,           #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+#    GNU General Public License for more details.                              #
+#                                                                              #
+#    You should have received a copy of the GNU General Public License         #
+#    along with this program; if not, write to the Free Software               #
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
+################################################################################
+
+
+=pod
+
+This program creates the file filedir.deb using choice() and
+comma_choice()  (which both use timing() in case Contents is newer than
+Packages). It establishes the file based on --main, --contrib, --non-free,
+--non-us or the default.  This program is quite time consuming and uses
+more and more memory as it runs.  Afterwared, the output can be processed
+by fastswim (high memory approach) or slowswim (low memory approach),
+whether either is faster is still subject to experimentation.  swim packs
+everything into the databases.  It also produces the report
+.contentsdiff-arch-dists.deb which shows which packages exist in Contents
+which don't exist in Packages. 
+
+This program takes a large amount of arguments.  Look at nmd() in
+SWIM::NDB_Init.
+
+=cut
+
+
+ if ($#ARGV == -1) {
+  print "swim: longswim requires many arguments, see program for instructions\n";
+  exit;
+ }
+
+my $Contents;
+my $contentsindex;
+my ($main,$contrib,$non_free,$non_us);
+my $tmp;
+my (%watch,%ndb);
+my $npackages;
+my $gzip;
+my $place;
+
+# process @ARGV
+$Contents = $ARGV[0]; $contentsindex = $ARGV[1];
+$main = $ARGV[2]; $contrib = $ARGV[3]; 
+$non_free = $ARGV[4]; $non_us = $ARGV[5];
+$tmp = $ARGV[6];
+$npackages = $ARGV[7];
+$gzip = $ARGV[8];
+$place = $ARGV[9];
+my $Contents_mtime = $ARGV[10];
+
+# tie it once not a quarter million times
+tie %ndb, 'DB_File', "$npackages" or die "DB_File: $!";
+
+# Let's find the arch and dists
+my @archdist = split(m,/,,$contentsindex);
+my($arch,$dist) = (split(m,-,,$archdist[$#archdist]))[1,2]; 
+$dist =~ s,\.deb,,;
+
+unlink("$place/.contentsdiff-$arch-$dist.deb") 
+ if -e "$place/.contentsdiff-$arch-$dist.deb";
+
+nmd();
+
+# main processing program
+sub nmd {
+
+  my %again;
+  my %all;
+
+    $| = 1; my $x = 1;
+    open(CONTENTS, "$Contents") or die "where is it?\n";
+    open(FILEDIR,">$tmp/filedir.deb");
+    open(CONTENTSDB,">$contentsindex");
+    while (<CONTENTS>) {
+      print CONTENTSDB $_;
+      if (/^FILE\s*LOCATION$/) {
+         while (<CONTENTS>) {
+             s,^(\./)+,,;  # filter for Debians altered dir structure 
+             print CONTENTSDB $_;
+          $x = 1 if $x == 6;
+          print "|\r" if $x == 1 || $x == 4; print "/\r" if $x == 2;
+          print "-\r" if $x == 3 || $x == 6; print "\\\r" if $x == 5;
+          $x++;             
+             chomp $_;
+             # find all directories
+              # split is the way to go. 
+              # If it ends with / its a directory
+              my($dirfile,$package,@packs,@dirfile,@package,@comma);
+
+
+              ######################
+              #    ENDS WITH /     #
+              ######################
+              if (m,.*/\s+\w*,) {
+                ($dirfile,$package) = split(/\s+/,$_,2);
+                if ($package !~ m,^[a-z0-9-]*/.*$|^[a-z0-9-]*/.*/.*$,) {
+                 my @more_things = split(/\s+/,$package);
+                 $package = $more_things[$#more_things];
+                 (my $backpackage = $package) =~ s,\+,\\+,g;
+                 my @dirfile = split(/\s+$backpackage/,$_);
+                 $dirfile = $dirfile[0];
+                }
+                @dirfile = split(/\//,$dirfile); $dirfile =~ s,/$,,;
+                @comma = split(/,/,$package);
+
+                #################
+                # HAS A COMMA   #
+                ################# 
+                if (scalar(@comma) >= 2) {
+                # humm many packages share this file/dir
+                  my @choice_package;
+                    ##########
+                    ## MAIN ##
+                    ##########
+                    if ($main eq "yes") {
+                       foreach (@comma) {
+                        if (defined $_) { 
+                         if ($_ !~ m,^non-free/|^contrib/|^non-us/,) {
+                           push(@choice_package,$_);                      
+                         }
+                        }
+                       }    
+                       @packs = comma_choice(@choice_package);                                           
+                    }   # choice in main
+                    ############ 
+                    ##NON-FREE##
+                    ############
+                    if ($non_free eq "yes") {
+                      foreach (@comma) {
+                        if (m,^non-free/,) {
+                          push(@choice_package,$_);                      
+                        }
+                      }
+                      @packs = comma_choice(@choice_package);
+                    }  # choice non-free
+                    ###########
+                    ##CONTRIB##
+                    ###########
+                    if ($contrib eq "yes") {
+                      foreach (@comma) {
+                        if (m,^contrib/,) {
+                          push(@choice_package,$_);                      
+                        }
+                      }
+                      @packs = comma_choice(@choice_package);
+                    } # choice contrib
+                    #########
+                    #NON-US##
+                    #########
+                    if ($non_us eq "yes") {
+                      foreach (@comma) {
+                        if (m,^non-us/,) {
+                           push(@choice_package,$_);                      
+                        }
+                      }
+                      @packs = comma_choice(@choice_package);
+                    }  # choice non-us
+
+                } # scalar @comma >= 2
+
+                # When only one package exists for dir
+                #############                  
+                ##############
+                # NO COMMA   #
+                ##############
+                elsif (scalar(@comma) == 1) {
+                    my $choice_package;
+                    ##########
+                    ## MAIN ##
+                    ##########
+                    if ($main eq "yes") {
+                       # only one package found related to choice section
+                        if (defined $package) { 
+                         if ($package !~ m,^non-free/|^contrib/|^non-us/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+                    ############ 
+                    ##NON-FREE##
+                    ############
+                    if ($non_free eq "yes") {
+                        if (defined $package) { 
+                         if ($package =~ m,^non-free/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+                    ###########
+                    ##CONTRIB##
+                    ###########
+                    if ($contrib eq "yes") {
+                        if (defined $package) { 
+                         if ($package =~ m,^contrib/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+                    #########
+                    #NON-US##
+                    #########
+                    if ($non_us eq "yes") {
+                        if (defined $package) { 
+                         if ($package =~ m,^non-us/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+
+                } # @comma = 1
+
+               #################
+               # WRITE TO FILE #
+               #################
+              foreach $package (@packs) {
+               my ($count,$holder);
+               for ($count = 0; $count <= $#dirfile; $count++) {
+                    if ($count == 0) {
+                      $holder = "/$dirfile[$count]";
+                      my $again = "$dirfile[$count] -> $package"; 
+                      my $all = "/. -> $package"; 
+                      $again{$again}++;
+                      $all{$all}++;
+                      if ($all{$all} == 1) {
+                       print FILEDIR "/. -> $package\n";
+                       ##repeaters("/.",$package);
+                      }
+                      if ($again{$again} == 1) {
+                       print FILEDIR "/$dirfile[$count] -> $package\n"; 
+                       ##repeaters("/$dirfile[$count]",$package);
+                      }
+                    }
+                    else {
+                      $holder =  $holder . "/$dirfile[$count]";
+                      #print "$holder -> $package\n";
+                      #repeaters($holder,$package);
+                      my $again = "$holder -> $package"; 
+                      $again{$again}++;
+                      if ($again{$again} == 1) {
+                       print FILEDIR "$holder -> $package\n";
+                       ##repeaters($holder,$package);
+                      }
+                    }
+               } # end for
+              }
+              } # does end with /
+
+              ######################
+              # DOESN'T END WITH / #
+              ######################
+              # find all files and directories
+              else {
+              ($dirfile,$package) = split(/\s+/,$_,2);
+                if ($package !~ m,^[a-z0-9-]*/.*$|^[a-z0-9-]*/.*/.*$,) {
+                 my @more_things = split(/\s+/,$package);
+                 $package = $more_things[$#more_things];
+                 (my $backpackage = $package) =~ s,\+,\\+,g;
+                 # watch this
+                 my @dirfile = split(/\s+$backpackage/,$_);
+                 $dirfile = $dirfile[0];
+                }
+                @dirfile = split(/\//,$dirfile);
+                @comma = split(/,/,$package);
+
+                #################
+                # HAS A COMMA   #
+                ################# 
+                if (scalar(@comma) >= 2) {
+                # humm many packages share this file/dir
+                  my @choice_package;
+                    ##########
+                    ## MAIN ##
+                    ##########
+                    if ($main eq "yes") {
+                       foreach (@comma) {
+                        if (defined $_) { 
+                         if ($_ !~ m,^non-free/|^contrib/|^non-us/,) {
+                           push(@choice_package,$_);                      
+                         }
+                        }
+                       }    
+                        @packs = comma_choice(@choice_package);                                           
+                    }   # choice in main
+                    ############ 
+                    ##NON-FREE##
+                    ############
+                    if ($non_free eq "yes") {
+                      foreach (@comma) {
+                        if (m,^non-free/,) {
+                          push(@choice_package,$_);                      
+                        }
+                      }
+                      @packs = comma_choice(@choice_package);
+                    }  # choice non-free
+                    ###########
+                    ##CONTRIB##
+                    ###########
+                    if ($contrib eq "yes") {
+                      foreach (@comma) {
+                        if (m,^contrib/,) {
+                          push(@choice_package,$_);                      
+                        }
+                      }
+                      @packs = comma_choice(@choice_package);
+                    } # choice contrib
+                    #########
+                    #NON-US##
+                    #########
+                    if ($non_us eq "yes") {
+                      foreach (@comma) {
+                        if (m,^non-us/,) {
+                           push(@choice_package,$_);                      
+                        }
+                      }
+                      @packs = comma_choice(@choice_package);
+                    }  # choice non-us
+
+                } # scalar @comma == 2
+
+                # When only one package exists for file
+                #############                  
+                ##############
+                # NO COMMA   #
+                ##############
+                elsif (scalar(@comma) == 1) {
+                    my $choice_package;
+                    ##########
+                    ## MAIN ##
+                    ##########
+                    if ($main eq "yes") {             
+                       # only one package found related to choice section
+                        if (defined $package) { 
+                         if ($package !~ m,^non-free/|^contrib/|^non-us/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+                    ############ 
+                    ##NON-FREE##
+                    ############
+                    if ($non_free eq "yes") {
+                        if (defined $package) { 
+                         if ($package =~ m,^non-free/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+                    ###########
+                    ##CONTRIB##
+                    ###########
+                    if ($contrib eq "yes") {
+                        if (defined $package) { 
+                         if ($package =~ m,^contrib/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+                    #########
+                    #NON-US##
+                    #########
+                    if ($non_us eq "yes") {
+                        if (defined $package) { 
+                         if ($package =~ m,^non-us/,) {
+                           $choice_package = $package;                      
+                           @package = split(/\//,$choice_package);
+                         }
+                        }
+                        @packs = choice(@package);
+                    } # end choice main
+
+
+                } # @comma = 1
+
+              #################
+              # WRITE TO FILE #
+              #################
+              foreach $package (@packs) {
+               my ($count,$holder);
+               for ($count = 0; $count <= $#dirfile; $count++) {
+                    if ($count == 0) {
+                      $holder = "/$dirfile[$count]";
+                      my $again = "$dirfile[$count] -> $package"; 
+                      my $all = "/. -> $package"; 
+                      $again{$again}++;
+                      $all{$all}++;
+                      if ($all{$all} == 1) {
+                       print FILEDIR "/. -> $package\n";
+                      }
+                      if ($again{$again} == 1) {
+                       print FILEDIR "/$dirfile[$count] -> $package\n";
+                      }
+                    }
+                    # Here's where things really start to turn ugly.
+                    else {
+                      $holder =  $holder . "/$dirfile[$count]";
+                      my $again = "$holder -> $package"; 
+                      $again{$again}++;
+                     if ($again{$again} == 1) {
+                       print FILEDIR "$holder -> $package\n";
+                      }
+                    }
+               } # end for
+              } # @packs - more than one package for this file
+              } # end else not dir
+          }
+        }
+    }
+    close(FILEDIR);
+    close(CONTENTS);
+
+    print "Compress contents\n";
+    system "$gzip", "-9", "$contentsindex";
+    utime(time,$Contents_mtime,$contentsindex); 
+    print "Cleaning up\n";
+    # this will add a newline, but better to do a Ctrl-C than to have the
+    # process hang and respawn itself - something which sometimes happens
+    kill INT => $$;
+    print "swim: please press Ctrl-c\n"; # just in case :)
+
+    # probably don't need to do this ends the program 
+    #undef %all;
+    #undef %again;
+
+} # end sub nmd
+
+# this finds the package or none which equal choice section when a
+# file/dir is found with one package
+sub choice {
+
+   my (@package) = @_;
+   my @packs;
+                        if ($#package == 1) {
+                          my $what = timing($package[1]); 
+                          if (defined $what) {
+                           #$package[1] = version($package[1]);
+                           @packs = $what;
+                          }
+                        }
+                        elsif ($#package == 2) {
+                          my $what = timing($package[2]); 
+                          if (defined $what) {                          
+                           #$package[2] = version($package[2]);
+                           @packs = $what;
+                          }
+                        } 
+
+                return @packs;
+
+} # end sub choice
+
+
+# this finds the package(s) or none which equal choice section when a
+# file/dir is found with more than one package
+sub comma_choice {
+
+   my (@choice_package) = @_;
+   my (@package,@packs);
+
+                      if (@choice_package) {
+                       if ($#choice_package == 0) {
+                          @package = split(/\//,$choice_package[0]);
+                          if ($#package == 1) {
+                             my $what = timing($package[1]); 
+                             if (defined $what) {
+                              #$package[1] = version($package[1]);
+                              push(@packs,$what);
+                             }
+                           }
+                           elsif ($#package == 2) {
+                             my $what = timing($package[2]); 
+                             if (defined $what) {
+                              #$package[2] = version($package[2]);
+                              push(@packs,$what);
+                             }
+                           }  
+                       }
+                       elsif ($#choice_package > 0) {
+                        # Basically, we will keep all conflicting dirs/files
+                        # because often they are related
+                        foreach (@choice_package) {   
+                          @package = split(/\//,$_);
+                          if ($#package == 1) {
+                             my $what = timing($package[1]);                        
+                             if (defined $what) {
+                              push(@packs,$what);
+                             }
+                           }
+                           elsif ($#package == 2) {
+                             my $what = timing($package[2]);   
+                             if (defined $what) {
+                              push(@packs,$what);
+                             }
+                           }  
+                        }                     
+                       } # else more than 1 for choice
+                      } # defined choice
+                      return @packs;
+
+} # end sub comma_choice
+
+
+# this sub produces a report file..in case Packages is older than Contents
+# there will be other reports, ofcourse, like if Packages is newer than
+# Contents.  Uses version();
+sub timing {
+
+  my ($lookup) = @_;
+
+      my $afterlookup = nversion($lookup);
+       if ($afterlookup eq 1) {
+         $watch{$lookup}++;
+         if ($watch{$lookup} == 1) {
+          open(REPORT,">>$place/.contentsdiff-$arch-$dist.deb") 
+           or die "can't create a file\n";
+            print REPORT "Found in Contents, not in Packages:  $lookup\n";
+          close(REPORT);
+         } 
+       return;
+       }
+       else {
+         return $afterlookup;
+       }
+
+} # end my timing
+
+# checks npackage.deb to find version for package found in Contents
+sub nversion {
+         
+  my ($argument) = @_;
+  #ndb();        
+           
+  if (defined $argument) {
+     # We will check for more than two..just in case
+     if ($argument !~ /_/) {
+       if (defined $ndb{$argument}) {
+         $argument = $ndb{$argument};
+         return $argument;
+       }
+       # fixed the space packages
+       else {
+         return 1;
+       }
+     }
+  }
+  #untie %ndb;
+
+} # end sub nversion
+
+sub ndb {
+     #tie %ndb, 'DB_File', "$npackages" or die "DB_File: $!";
+} # end sub ndb

@@ -1,0 +1,162 @@
+<html><head>
+<title>swim</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>swim</h1>
+
+<h2><A name="toc">
+0.1 Table of contents
+</A></h2>
+<ul>
+<li><A href="ch-description.html">1 DESCRIPTION
+</A>
+<li><A href="ch-commandline.html">2 COMMAND LINE OPTION SYNTAX
+</A>
+<li><A href="ch-version.html">3 VERSION
+</A>
+<li><A href="ch-history.html">4 HISTORY
+</A>
+<li><A href="ch-makinginst.html">5 MAKING INSTALLED SYSTEM DATABASES
+</A>
+<ul>
+<li><A href="ch-makinginst.html#s-initdb">5.1</A> Initial database making, and Rebuilding for an
+Installed system.
+
+<li><A href="ch-makinginst.html#s5.2">5.2</A> UPDATING
+
+<li><A href="ch-makinginst.html#s-searchy">5.3</A> REBUILDING THE SEARCH
+
+
+<li><A href="ch-makinginst.html#s5.4">5.4</A> FILES
+
+</ul>
+<li><A href="ch-important.html">6 IMPORTANT DEBIAN DATABASES FOR NOT-INSTALLED
+DATABASES
+</A>
+<ul>
+<li><A href="ch-important.html#s-downimportant">6.1</A> A. downloading the important databases with --ftp.
+
+<li><A href="ch-important.html#s6.2">6.2</A> OVERVIEW
+
+<li><A href="ch-important.html#s-dd">6.3</A> DISTRIBUTION DEFINED
+
+<li><A href="ch-important.html#s6.4">6.4</A> SECTIONS
+
+<li><A href="ch-important.html#s6.5">6.5</A> ARCHITECTURES
+
+<li><A href="ch-important.html#s6.6">6.6</A> SWIMZ.LIST
+
+<li><A href="ch-important.html#s6.7">6.7</A> SWIMZ.LIST EXAMPLES
+
+<li><A href="ch-important.html#s-ftp">6.8</A> FTP OR APT?
+
+<li><A href="ch-important.html#s6.9">6.9</A> OPTIONS
+
+<li><A href="ch-important.html#s6.10">6.10</A> B. downloading the important databases with apt, and maintenance
+options.
+
+</ul>
+<li><A href="ch-notinstalled.html">7 MAKING NOT-INSTALLED DATABASES
+</A>
+<ul>
+<li><A href="ch-notinstalled.html#s7.1">7.1</A> OVERVIEW
+
+<li><A href="ch-notinstalled.html#s7.2">7.2</A> OPTIONS
+
+<li><A href="ch-notinstalled.html#s7.3">7.3</A> UPDATING
+
+<li><A href="ch-notinstalled.html#s7.4">7.4</A> REBUILDING THE SEARCH
+
+<li><A href="ch-notinstalled.html#s7.5">7.5</A> FILES
+
+</ul>
+<li><A href="ch-aptprep.html">8 PREPARING YOUR INSTALLATION FOR APT
+</A>
+<li><A href="ch-query.html">9 QUERYING THE INSTALLED AND NOT-INSTALLED DATABASES
+</A>
+<ul>
+<li><A href="ch-query.html#s-mm">9.1</A> MINOR MODES
+
+<li><A href="ch-query.html#s-specdata">9.2</A> SPECIFYING THE DATABASES TO USE
+
+<li><A href="ch-query.html#s9.3">9.3</A> OPTIONS
+
+<li><A href="ch-query.html#s9.4">9.4</A> PACKAGE RELATIONSHIPS
+
+<li><A href="ch-query.html#s-format">9.5</A> FORMAT
+
+<li><A href="ch-query.html#s-vrftp">9.6</A> FTP - VIRTUAL OPTIONS
+
+<li><A href="ch-query.html#s-vrapt">9.7</A> APT - VIRTUAL OPTIONS
+
+<li><A href="ch-query.html#s-vrrm">9.8</A> REMOVING AN INSTALLED PACKAGE - VIRTUAL OPTIONS 
+
+<li><A href="ch-query.html#s9.9">9.9</A> STDIN - VIRTUAL OPTIONS
+
+<li><A href="ch-query.html#s9.10">9.10</A> PACKAGE MANIPULATION - VIRTUAL OPTIONS
+
+<li><A href="ch-query.html#s-dblocus">9.11</A> DATABASE LOCATIONS
+
+</ul>
+<li><A href="ch10.html">10 UPGRADING WITH APT
+</A>
+<li><A href="ch-search.html">11 SEARCHING
+</A>
+<ul>
+<li><A href="ch-search.html#s11.1">11.1</A> OVERVIEW
+
+<li><A href="ch-search.html#s11.2">11.2</A> NARROWING A PREVIOUS SEARCH
+
+<li><A href="ch-search.html#s11.3">11.3</A> MINOR MODES
+
+<li><A href="ch-search.html#s11.4">11.4</A> OTHER OPTIONS
+
+<li><A href="ch-search.html#s11.5">11.5</A> EXAMPLES
+
+</ul>
+<li><A href="ch-ramdisk.html">12 RAMDISK
+</A>
+<ul>
+<li><A href="ch-ramdisk.html#s12.1">12.1</A> OVERVIEW
+
+</ul>
+<li><A href="ch13.html">13 FILES
+</A>
+<li><A href="ch-seealso.html">14 SEE ALSO
+</A>
+<li><A href="ch15.html">15 BUGS</A>
+</ul>
+<hr><h2><A name="copyright">0.2 Copyright</A></h2>
+                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        <P>
+                                                                     
+          SWIM, including this manual, is free software; you          
+          may redistribute it and/or modify it under the terms of the           
+          GNU General Public License as published by the Free Software          
+          Foundation; either version 2, or (at your option) any later           
+          version.                                                              
+        <P>
+                                                                     
+          This is distributed in the hope that it will be useful, but           
+          <em>without any warranty</em>; without even the implied               
+          warranty of merchantability or fitness for a particular               
+          purpose.  See the GNU General Public License for more                 
+          details.                                                              
+        <P>
+                                                                     
+          You should have received a copy of the GNU General Public             
+          License with the <kbd>swim</kbd> source as the file                      
+          <code>COPYING</code>.  If not, write to the Free Software                 
+          Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.             
+        <hr>
+swim
+- <A href="#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="#toc">Contents</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

@@ -1,0 +1,35 @@
+<html><head>
+<title>swimrc - swim configuration file - RESTRICTIONS                                                 
+                       </title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swimrc - swim configuration file - chapter 6<br>
+RESTRICTIONS                                                 
+                       
+</h1>
+                                                         
+Strange Situations: If the same package happens to exist in two different
+sections, <em>main and non-us</em> for example, and you make the
+databases, you will still be able to find this package in the non-us
+group, but its section and locations will be the one which main recognizes
+assuming that you use the order in the example below. 
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+Example: You just want to pull out main and contrib every time you run          
+<code>--initndb</code>, <code>--rebuildndb</code>, or <code>--ndb</code>.                   
+<P>
+<code>@user_defined_section</code> = <code>``qw(main contrib non-US)'';</code>              
+<hr>
+swimrc - swim configuration file
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-files.html">back</A>.
+<br>
+<address>14 May 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

@@ -1,0 +1,126 @@
+* Configuration for --dbpath, --root, --main, --contrib, --non-free,
+  --non-us, --arch, --dists could be automated so that a state could be
+  established on the command line, without needing to enter any of these
+  options again, untill a new state was desired, --default would  bring
+  everything back to the default directory /var/lib/dpkg.
+
+* Non-root users could run all functions if permissions were changed,
+  probably this should be left up to the system administrator.
+
+* Add --todo --bugs to -q.
+
+* Looks like --source and --source_only is kind of deprecated now that apt_0.3.6
+  is out, and there are Sources.gz in the appropriate places.  But, now
+  there exists three unique ways to get sources, debget which doesn't use
+  databases, apt which uses databases, and swim which combines the
+  approaches of both apt and debget, all three ways have their advantages. 
+  Swim isn't dependent on the existence of an up to date Sources.gz.
+
+* --ftp automatically removes packages with changed upstream-revisions..
+  perhaps move them to a storage location.
+	
+* base-files package has changed it's file/dir listing, eventually
+  SWIM::File can be modified in the future.
+
+* SWIM::Apt needs to be modified so that when it reads the Packages names
+  in the default directory it will look at the basename to take into
+  account non-Debian distributions.  Non-Debian distributions should 
+  be presented separately when DF is used as an argument.  Probably a new
+  option will be added.  This adheres to the swim philosophy of allowing
+  independent distributions with the exact directory structure of a normal
+  Debian distribution to exist.  
+
+* mention netselect to help people find the best mirror site, and maybe
+  automatically use netselect on swimz.list to find which sites are up,
+  and are best to use first, overridding the default sequential order!
+
+* Yes, you can 'cp -a' and 'gzip -d' sources from swim to sources for
+  apt, then just do a swim --apt --check or vica versa.
+
+* Make sure this doesn't happen for proposed-updates - "swim:
+  dists/proposed-updates/single/binary-i386/Release does not exist on the
+  server", and make a note of proposed-updates in the manual, no Contents.
+  Incoming can be grabbed by doing something like this, "deb url
+  debian/Incoming" vs experimental "deb url/debian project/experimental/".
+  Packages are available here, too, no Release or Contents.  swim is too
+  hardwired and this needs to be changed.
+
+* For now, a trade-off will be made in respect to updating the n* virtual
+  filesystem, even if Contents hasn't been updated, the versions of C,CR
+  will still be updated with the old Contents, on the other hand if
+  nfile* was version-less this wouldn't be necessary, then the behavior
+  mentioned next could be implemented anyways. If Contents are ever
+  updated on a more consistent basis, this behavior will be changed to
+  wait for these packages untill the next Contents, but basically this
+  should be done anyways, it will mean, quick updates during the week, and
+  one long one when the new Contents becomes available, the lack of
+  versioning would make this viable.  Basically, a database will be kept
+  for .packagesdiff-arch-dist.deb, nfile* will remain versioned because
+  this means faster lookups.
+
+* Implement the "on the fly" distribution creation system. 
+
+* Add the DF virtual system which will allow --apt2df and --df2apt to
+  work.
+
+* a search for everything found in -T
+
+* -o DPkg::Options::=--purge once --remove isn't a standard option to dpkg
+ for "remove", and possible --admindir (like --dbpath) --root (like
+ --root) and --instdir (where packages should be installed).
+
+* add --force-* at least for --purge and depends.
+
+* an option which would show all packages relationships for a package
+  being --ftp or -xyrz on the --stdin line
+
+* Complete menuindex() which allows a search of the debian menu system.
+
+* add the pid (personal information database) editing, and data storage.
+
+* Use the MD5 module from libmd5-perl for --md5sum?
+
+* gnupg, pgp, and md5sum checking for source probably using dscverify from
+  package devscripts, this uses the MD5 module
+
+* Need to add the capability to deal with weird non-standard Filename: .*
+  situations, both in retrieval, and archiving.  In situations like this,
+  the distribution may not be apparent, but the package could still be
+  found and placed in a special area, and a special database could store
+  the information.  This database could be transparent, and available for
+  quering regardless of the distribution default, or command line
+  specification.
+
+* Add the --file and --http capabilities or at least the capability to
+  look at Packages from strange directories grabbed by apt using these
+  methods. Meanwhile, swim's ftp capabilities make slow modems happy, and
+  allow for precise downloading versus downloading every package related
+  to -T.
+
+* Add a hash option so that swim can know that po -> unstable, this would 
+  work fine, because swim shows the Release version, but the author is
+  against implementing this ability.
+
+* Instead of PWD!full_path, allow multiple filenames to be quoted without
+  pathnames for --extract.
+
+* .., ../, ../../, ../../file-or-dir (not ../../file-or-dir/) ability for 
+  -qf|p works, but more complex ../ is not implemented, yet.  ../ will
+  also follow a symbolic link, this is a feature.
+
+* --search by dirs when in place using -f.
+
+* Add the retro full spectrum of dpkg options, it's nice sometimes to just
+  do a simple install.
+
+* Gather together all the build children into a giant family including the
+  teacher and the checker.
+
+* Do the Perl for Non Free OSes thing.
+
+* Remove a large percentage of the bold and underlining from the
+  documentation.
+
+* Make needed changes and improvements to the Manual - a constant TODO.
+
+* swim faster and faster!

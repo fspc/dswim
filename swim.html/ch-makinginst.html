@@ -1,0 +1,180 @@
+<html><head>
+<title>swim - MAKING INSTALLED SYSTEM DATABASES
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 5<br>
+MAKING INSTALLED SYSTEM DATABASES
+
+</h1>
+ 
+<hr>
+<h2><A name="s-initdb">
+5.1 Initial database making, and Rebuilding for an
+Installed system.
+
+</A></h2>
+
+<pre>
+usage: swim --initdb       
+       swim --rebuilddb
+
+options:  [--dbpath &lt;dir&gt;] [--root &lt;dir&gt;] [--lowmem]  
+          [--split_data &lt;lines&gt;]
+
+</pre>
+<P>
+
+An <em>installed Debian distribution</em> is one in which packages are
+installed using <strong>dpkg</strong> or some front-end to
+<strong>dpkg</strong> like <strong>apt</strong> or
+<strong>dselect</strong>;  <strong>swim</strong> supports installation
+through <strong>apt</strong>. These major modes are for a computer with an
+<em>installed Debian distribution</em> and make the databases which allow
+querying and searching capabilities for the installed distribution.
+<P>
+
+<strong>--initdb</strong> is run when the databases do not exist yet,
+<strong>--rebuilddb</strong> is run if the databases have become corrupt,
+or you want to rebuild the databases instead of updating them. 
+
+<P>
+
+<strong>--dbpath</strong> can be specified as an alternative location for
+where the databases will be made. The default location is
+``<em>/var/lib/dpkg</em>''. An argument like ``<em>/otherstuff</em>''
+could be provided, and then the databases would be made here instead. 
+
+<P>
+
+<strong>--root</strong> allows a database to be made for a Debian distribution installed on a
+different partition. If the distribution is mounted on
+<em>/New_Debian</em>, ``<em>/New_Debian</em>'' would be the argument to root. The databases would be made for the
+Debian distribution installed on the ``<em>/New_Debian</em>'' partition. 
+
+<P>
+
+<strong>--dbpath</strong> and <strong>--root</strong> can be used
+together. Given the previous two examples, the databases would be made on
+``<em>/New_Debian/otherstuff</em>'', assuming
+``<em>/New_Debian/otherstuff</em>'' actually existed. 
+
+<P>
+
+<strong>--lowmem</strong> uses a method which uses a small amount of
+memory to make the databases. By default <strong>--initdb</strong> and
+<strong>--rebuilddb</strong> use a method which fully takes advantage of
+memory, this is a good thing, because it means the databases are made in a
+quicker manner. On a computer with a K6-200 CPU, 64MB of memory, and 1500
+installed packages, the databases can be made in 4.5 minutes using the
+default method, and 11 minutes using the low memory method. The high
+memory method is the default because in general the size of a distribution
+is related to how much resources a computer has, and probably a large
+installation is unusual. If you get an ``out of memory'' when you use the
+default method, or if your system is overloaded to begin with, the
+<strong>--lowmem method</strong> is the prefered way.
+
+<P>
+
+<strong>--split_data</strong> determines the size of the files in the
+temporary directory used to contruct the database. The default is 25000
+lines per file. If you are using the <strong>--lowmem method</strong> you
+may want to provide a different argument to <strong>--split_data</strong>,
+like ``<strong>--split_data 10000</strong>''. This is a subject of
+experimentation. 
+<P>
+<hr>
+<h2><A name="s5.2">
+5.2 UPDATING
+
+</A></h2>
+usage: <strong>swim --db</strong>
+
+
+
+<P>
+
+options: <strong>[--dbpath</strong> &lt;<strong>dir</strong>&gt;<strong>]
+[--root</strong> &lt;<strong>dir</strong>&gt;<strong>] [--check]</strong>
+
+<P>
+
+<strong>--db</strong> allows you to update the databases by hand when
+packages have been removed, added, or changed. swim will automatically run
+<strong>--db</strong> under certain conditions. 
+<P>
+<strong>--check</strong> prints out the changes to STDERR, and the
+total to STDOUT without proceeding with the update.
+<P>
+
+See <A href="#s-initdb">Initial database making, and Rebuilding for an
+Installed system.
+, section 5.1</A> for options <strong>--dbpath</strong> and
+<strong>--root</strong>.
+
+<P>
+<hr>
+<h2><A name="s-searchy">
+5.3 REBUILDING THE SEARCH
+
+
+</A></h2>
+
+usage:  <strong>swim --rebuildflatdb</strong>
+
+
+
+<P>
+
+options: <strong>[--dbpath</strong> &lt;<strong>dir</strong>&gt;<strong>]
+[--root</strong> &lt;<strong>dir</strong>&gt;<strong>]</strong>
+
+<P>
+
+swim makes the flat databases <em>searchindex.deb</em> and
+<em>dirindex.deb</em> for doing <em>powersearches</em>. Instead of
+rebuilding these databases everytime <strong>--db</strong> is run, new
+information is just appended to these databases, and old information is
+kept. Generally, this is not a problem because only files and directories
+which the other databases actually know something about will be refered
+to. But in a situation where a file has changed into a directory, the
+<em>powersearch</em> may not work properly, because the old file name
+remains in <em>searchindex.deb</em>, and the new directory name is now in
+<em>dirindex.deb</em> directory. In general, it takes a lot of changes to
+the installed system before it is really becomes necessary to rebuild the
+flat databases. This process takes less than a minute on a K6-200 with
+1500 packages.
+
+<P>
+
+See <A href="#s-initdb">Initial database making, and Rebuilding for an
+Installed system.
+, section 5.1</A> for options <strong>--dbpath</strong> and
+<strong>--root</strong>.
+<hr>
+<h2><A name="s5.4">
+5.4 FILES
+
+</A></h2>
+
+Databases which are made:
+<P>
+
+<pre> packages.deb
+ fileindex.deb
+ statusindex.deb
+ groupindex.deb
+ searchindex.deb
+ dirindex.deb</pre>
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-important.html">next</A>; <A href="ch-history.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

@@ -1,0 +1,672 @@
+<html><head>
+<title>swim - QUERYING THE INSTALLED AND NOT-INSTALLED DATABASES
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 9<br>
+QUERYING THE INSTALLED AND NOT-INSTALLED DATABASES
+
+</h1>
+<pre>usage: swim -q [-fpgn --dir] [targets | -S]
+       swim --query [-fpgn --dir] [targets | -S]
+       swim -qa || swim --query -a </pre>
+<P>
+
+<pre>options: [--total -t] [-i] [-l ? &lt;[--df]&gt;] [-d] [-c]
+         [--scripts] [--preinst] [--postinst] [--prerm] 
+         [--postrm] [-v] [--dbpath &lt;dir&gt;] [--menu -m] 
+         [--shlibs] [-T] [--pre_depends] [--depends] 
+         [--recommends] [--suggests] [--conflicts] 
+         [--replaces] [--provides] [--md5sum] [--root &lt;dir&gt;] 
+         [--copyright] [--changelog] [--allgroups] 
+         [--arch &lt;architecture&gt;] [--dists &lt;distribution&gt;] 
+         [--ftp ? --source | --source_only ? &lt;[--diff]&gt;] 
+         [--stdin] [--extract] &lt;ALL|archive|PWD!archive&gt;]
+         [-xyrz --remove ? &lt;[--nz]&gt;] [--purge] [--apt2df] 
+         [--df2apt] </pre><P>
+
+global arguments: <strong>[targets | -S ? &lt;\d{1,}&gt;]</strong>
+<P>
+
+Quering almost always involves using <strong>-q or --query</strong> with
+zero or one or a combination of the <strong>minor mode options</strong>
+(package specification options), and one or more (only one for
+<code>-g</code>) targets specific to the minor mode, or the results of a
+search (<code>-S</code>).  [<code>-S</code> can be provided a numerical argument
+pertaining to the past history.]  This can be combined with one or more
+options. The one exception is ``<strong>swim -q --allgroups</strong>''. 
+
+<P>
+
+<strong>--query or -q</strong> can be used by itself or with
+<strong>-n</strong> to query known package names or package names with
+versions. ``<strong>swim -q test1 test2_0.3-1</strong>'' would produce the
+output:
+
+<P>
+
+<pre>test1_1.0-2
+test2_0.3-1</pre>
+<hr>
+<h2><A name="s-mm">
+9.1 MINOR MODES
+
+</A></h2>
+ <strong>-n</strong> is the minor mode option to access the
+<em>not-installed system</em>, it can be combined with the minor mode
+options <strong>-a</strong>, <strong>-g</strong>, <strong>-f</strong>, or
+it can be used by itself. 
+
+<P>
+
+<strong>-a</strong> allows <em>every package</em> on an installed or
+not-installed (<strong>-n</strong>) system to be queried. ``<strong>swim
+-qan</strong>'' will show all the package names with versions for the
+not-installed system
+
+<P>
+
+<strong>-f</strong> allows <em>files or directories</em> to be queried,
+when used without any options the package name with version is shown. 
+<strong>--dir</strong> will only query directories, this is useful if you
+are not sure whether what you are quering is a directory or a file. When a
+directory is queried, swim shows all packages which exist below the
+queried directory.  ``<strong>swim -qf /</strong>'' is exactly the same as
+``<strong>swim -qa</strong>''. Hint: ``<strong>swim -qf .</strong>'' and
+``<strong>swim -qf *</strong>'' are quite different, the first shows all
+packages which exist below the current directory, and the second will show
+the package which each file in the current directory comes from. 
+<P>
+ 
+<strong>-g</strong> will query a <em>group</em> (also called a section,
+see <A href="#s-section">SECTION AND PRIORITY 
+, subsection 9.5.3</A>)) of packages. Groups represent subjects which
+packages with similiar characteristics are catagorized by. To view all the
+groups found in an installed or not-installed system use ``<strong>swim -q
+--allgroups</strong>'' or ``<strong>swim -qn --allgroups</strong>''. 
+``<strong>swim -qg hamradio</strong>'' or ``<strong>swim -qng
+hamradio</strong>'' shows all the package names for the hamradio group. 
+<P>
+
+<strong>-p</strong> is used to query a <em>Debian package</em>, these
+packages are distinguished by their ``deb'' ending, but swim can
+tell whether a file is a debian package even without the ending. Called
+without any options the package name with version will be shown. 
+<hr>
+<h2><A name="s-specdata">
+9.2 SPECIFYING THE DATABASES TO USE
+
+</A></h2>
+ <strong>--dists</strong> will use the databases for the argument
+given, otherwise the databases pertaining to the value found in swimrc
+will be used. 
+
+<P>
+
+<strong>--arch</strong> will use the databases for the argument given,
+otherwise the databases pertaining to the value found in swimrc will be
+used. 
+
+<P>
+
+Example: <strong>swim -qat --arch hurd-i386 --dists unstable</strong>
+
+<P>
+
+Assuming these databases exist this will show all packages and their
+versions for the unstable distribution and architecture hurd-i386 even if
+the values in <em>swimrc</em> are i386 and stable.
+
+<P>
+
+see <A href="ch-important.html#s-downimportant">A. downloading the important databases with --ftp.
+, section 6.1</A> and <A href="ch-notinstalled.html">MAKING NOT-INSTALLED DATABASES
+, chapter 7</A> for more
+information about the databases. 
+
+<hr>
+<h2><A name="s9.3">
+9.3 OPTIONS
+
+</A></h2>
+ <strong>--total or -t</strong> are <em>used to override the output
+suppressor</em>. The output suppressor will not show output if a certain
+number of packages is exceeded, instead it will show the number of
+packages you are querying. This is useful for two reasons, first, knowing
+the number of packages you are quering can be very informative, second, it
+gives you a chance to add to the command line a pipe to a pager, ex:
+``<strong>swim -qat | less</strong>''. You can set the number that the
+output suppressor works at as high or low as you want in the
+<em>swimrc(8)</em> file. By design the <strong>-t</strong> option will
+have to be used if the <strong>-i</strong> option is used and more than
+one package is being queried. This option can also be used to alter the
+output of the various script options (--scripts, --preinst, --postinst,
+--prerm, and --postrm). 
+
+<P>
+
+<strong>-i</strong> provides <em>information</em> about each package being
+queried. The format differs slightly for the installed packages versus the
+not-installed packages. see <A href="#s-format">FORMAT
+, section 9.5</A>:
+
+<P>
+
+<strong>-l</strong> provides a listing of the files associated with a
+package. If the option <strong>--df</strong> is provided as an argument,
+all the directories associated with package will be shown. It is important
+to remember that many packages provide directories which become important
+to them after they are installed, so the option <strong>--df</strong>
+often provides necessary information which <strong>-l</strong> called by
+itself would have not.
+
+<P>
+
+<strong>-d</strong> shows the documentation which the package provides
+found in <em>/usr/doc/*</em>, <em>/usr/man/*</em>, <em>/usr/info/*</em>. 
+Other documentation which the package may provide in a non-standard
+location will not be shown. <strong>-d</strong> takes precedence over
+<strong>-l</strong>, so if <strong>-l</strong> is used on the command line
+with <strong>-d</strong>, only the output for <strong>-d</strong> will be
+shown. 
+
+<P>
+
+<strong>-v</strong> is a special option which works only with the minor
+mode <strong>-p</strong>. It can be used with <strong>-l</strong>,
+<strong>--df</strong>, <strong>-d</strong>, to show the packages files
+and/or directories in long format (<code>ls -
+l</code>). 
+
+<P>
+
+<strong>-c</strong> will show the configuration files packages use. If the
+package does not have a configuration file then nothing will be shown. The
+output will show the file and its path indented one space with the
+<strong>MD5 checksum</strong>. This will not work with
+<strong>-n</strong>.
+
+<P>
+
+<strong>--scripts</strong> shows all scripts associated with a package
+with the name of the script presented before each script in this way
+<strong>#####scriptname######</strong>. If the scripts are called
+individually by using the script options <strong>--preinst</strong>,
+<strong>--postinst</strong>, <strong>--prerm</strong>, or
+<strong>--postrm</strong> no title is shown, this is nice for writing to a
+file. If <strong>-t</strong> is used with the individual script options a
+title will be shown, this makes sense because normally only individual
+packages would be queried to write a script to a file, and
+<strong>-t</strong> wouldn't be used in this situation. Scripts are the
+soul of Debianized packages allowing packages to be installed, configured,
+and removed seamlessly and cleanly under all kinds of conditions. These
+options do no work with <strong>-n</strong>. 
+
+<P>
+
+<strong>--menu or -m</strong> is used to view menufiles which belong to
+various packages. If the package does not have a menufile nothing will be
+shown. This option can be useful in troubleshooting a menu entry which
+does not seem to work, or in finding out where the menu entry is. 
+<em>Joost Witteveen's Debian menu system</em> is a centralized program
+which interacts with all kinds of menus.  <em>Please read the
+documentation</em> ``<strong>swim -qd menu</strong>'' which comes with the
+menu package to find out more. This will not work with
+<strong>-n</strong>. 
+
+<P>
+
+<strong>--shlibs</strong> shows a list of shared libraries certain
+packages supply. The <em>Debian Packaging Manual</em> (packaging-manual)
+provides detailed information about the format of a shlibs file. This will
+not work with <strong>-n</strong>. 
+<P>
+
+<strong>--md5sum</strong> checks <strong>MD5 checksums</strong>. It can be
+used with <strong>-l</strong>, <strong>-d</strong>, <strong>-c</strong>,
+or <strong>-p</strong>. If there are checksums available the md5sum result
+will be either <strong>OK</strong>, <strong>FAILED</strong>, or
+<strong>MISSING</strong>.  <strong>MISSING</strong> means that although a
+checksum exists, the file can not be found. The result is put after the
+file and its path and the <strong>MD5 checksum</strong> or the package
+name and version and the <strong>MD5 checksum</strong>. 
+
+<P>
+
+<strong>--copyright</strong> does a case insensitive search for copy or
+license in the <em>/usr/doc/packagename</em> directory. This should show
+how the package relates to <em>Debian's Policy Manual</em>.
+
+<P>
+
+<strong>--changelog</strong> searches for any files in
+<em>/usr/doc/packagename</em> which look like changelogs. Debian packages
+always have a <em>Maintainer's</em> changelog for the package. There may
+be a separate changelog kept by the author of the program.
+<hr>
+<h2><A name="s9.4">
+9.4 PACKAGE RELATIONSHIPS
+
+</A></h2>
+
+<strong>-T</strong> shows all the package relationships of packages. 
+Individual package relationships can be viewed using
+<strong>--pre_depends</strong>, <strong>--depends</strong>,
+<strong>--recommends</strong>, <strong>--suggests</strong>,
+<strong>--replaces</strong>, <strong>--conflicts</strong> or
+<strong>--provides</strong>. Package relationships are the spirit of
+Debian packages, here is a quick overview briefly reiterating what can be
+found in the <em>Debian Packaging Manual</em>.  <em>Package
+Maintainers</em> set these relationships in control file fields of the
+same name.
+<P>
+
+<strong>Dependencies</strong>
+
+ <em>Pre-depends</em> - means that the pre-depended package or packages
+must be installed before the queried package can be installed.  Most
+packages which have pre-dependencies are usually essential and required
+packages.
+
+<P>
+
+<em>Depends</em> - declares an absolute dependency to another package or
+packages either <em>real or virtual</em>. The queried package cannot
+function without this other package.
+
+<P>
+
+<em>Recommends</em> - declares a strong, but not absolute dependency to
+another package or packages either <em>real or virtual</em>. You would
+usually find the recommended package together with the queried package in
+a normal installation.
+
+<P>
+
+<em>Suggests</em> - can be one or more packages either <em>real or
+virtual</em> which would be useful to the queried package, but are not
+necessary. 
+
+
+<strong>Alternative Packages</strong>
+<P>
+
+<em>Conflicts</em> - is a package or packages either <em>real or
+virtual</em> which would cause problems with the queried package, and
+would not be allowed to be installed while the queried package was
+installed. 
+<P>
+
+<strong>Overwriting files and Replacing Packages</strong>
+<P>
+
+<em>Replaces</em> - allows the queried package to replace another package
+or packages by overwriting their files, after which the previous package
+would be considered to have disappeared. Essentially this allows the
+queried package to take over the package or packages. In a situation where
+there was a Conflict between the queried package and these packages this
+field would help determine which packages should be removed. 
+<P>
+
+<strong>Virtual Packages</strong> 
+<P>
+
+<em>Provides</em> - declares a virtual package which may be mentioned in
+<em>Depends</em>, <em>Recommends</em>, <em>Suggests</em>, or
+<em>Conflicts</em>.  <em>Virtual packages</em> allow one or more packages
+to share the same name of another package, which means if the queried
+package has a reference to a virtual package in one of the before
+mentioned package relationship fields, then whatever packages provide the
+virtual package are also being listed. 
+ <hr>
+<h2><A name="s-format">
+9.5 FORMAT
+
+</A></h2>
+
+<strong>1). Installed system</strong>
+
+<P>
+
+<pre> Package: name                        Status: hold ok installed
+ Version: 1.1-1                       Essential: no
+ Section: namers                      Priority: extra
+ Installed-Size: 10                   Source: generatename (2.0-1)
+ Maintainer: name &lt;name@name.org&gt;
+ Description: hostname maker
+  A nice way to figure out a hostname nobody
+  else has.</pre>
+<P>
+
+<strong>2) Not-installed system</strong>
+
+
+
+<P>
+
+<pre> Package: name                        Status: r&gt; hold ok installed (1.1-1)
+ Version: 1.1-2                       Essential: no
+ Section: names                       Priority: extra
+ Installed-Size: 11                   Source: generatename (2.0-1)
+ Size: 43000                          Architecture: i386
+ Distribution: experimental
+ Maintainer: name &lt;name@name.org&gt;
+ Description: hostname maker
+  A nice way to figure out a hostname nobody
+  else has.</pre>
+<P>
+
+There are several things to point out. The difference between the two
+outputs relates to the addition of the Distribution, Size, and
+Architecture fields for the not-installed query. Installed-Size is how
+many kilobytes the package will occupy when it is unpacked, whereas Size
+is the size in bytes of the package. 
+<hr>
+<h3><A name="s9.5.1">
+9.5.1 STATUS FIELD 
+
+</A></h3>
+ 
+
+The Status field provides the installation status of the package, this
+holds true for the not-installed query as well. In a sense, the
+not-installed database isn't always not-installed. If the not-installed
+package is actually already installed, and the version numbers are exactly
+the same, then the status will be the same for either query. If the
+not-installed package is not installed then the status will be
+``not-installed''. In cases where the not-installed package is already
+installed, swim uses it's comparison function to figure out whether it is
+a newer of older package which is installed. In the above example, swim
+realizes the same package is installed, and only the debian-revision has
+changed, hence the only difference is that the revision number is greater
+``r&gt;'' for the not-installed package. When only the debian-revision has
+changed it can safely be assumed that the author (creator, programmer) of
+the same program has not made any changes to the same program, but the
+Debian maintainer has made a change to an aspect of the package like a
+change in the script the package uses to properly install. You may have
+also noticed that the status field shows the version number of the
+installed package enclosed in parenthesis.
+<hr>
+<h3><A name="s9.5.2">
+9.5.2 SOURCE FIELD
+
+</A></h3>
+
+The Source field is present in these examples, but the Source field will
+not always be present for packages. In cases where the name of the source
+package is the same as the the name found in the Package field, and the
+version number of the source package is also the same as found in the
+Version field, then there will be no Source field. In the above examples
+there is a Source field. In this case name was probably one of many
+packages generated from the source package called generatename. In this
+particular example generatename also has its own unique version number
+2.0-1 enclosed in parentheses, if no version number had been mentioned
+then the source package would have the same version number as found in the
+Version field.
+<hr>
+<h3><A name="s-section">
+9.5.3 SECTION AND PRIORITY 
+
+</A></h3>
+
+Section shows the subject which a package is categorized with (see
+<code>-g</code>). Priority shows how important the package is to have
+installed. In the case of the not-installed databases the information for
+these fields is almost always available from the Packages databases, but
+this is not always the case for Debian packages. For packages which do no
+provide this information swim will do its best to fill in the blanks from
+information found in the installed and not-installed databases. If proper
+information can not be found it will be indicated as ``unavailable'' or
+``unknown.'' Unavailable would indicate that information about the package
+exists, but it is from a different version (includes debian-revision), and
+no information exists for this version. Unknown means no similiar package
+exists, and there is absolutely no information about this package in the
+databases.
+<P>
+
+When a Debian package is queried using the <strong>-p</strong>
+option you will get output like the first example shows, the status field
+is also calculated. 
+<hr>
+<h2><A name="s-vrftp">
+9.6 FTP - VIRTUAL OPTIONS
+
+</A></h2>
+
+For ftp capabilities swim uses the <em>swimz.list</em> to determine which
+sites it will check for the requested packages. The first site which fills
+the request will be used, otherwise <strong>swim</strong> will go through
+all the sites avoiding repeats, and if no sites can fill the request,
+<strong>swim</strong> will either quit or proceed on to check for another
+request.
+<P>
+
+<strong>--ftp</strong> allows the queried package, its source package, or
+just the source package diff to be downloaded while being queried. This is
+refered to as virtual downloading because the quering and the downloading
+are seamless as though the package already exists locally. This has to be
+used with the option <strong>-n</strong> because packages which which are
+not part of the not-installed database are considered to already have been
+downloaded. Packages which are already installed can be downloaded or
+their source retrieved by setting up a database which corresponds to these
+packages; if the installed packages belong to the stable distribution,
+set-up the not-installed stable databases. 
+<P>
+
+Packages or source code are placed in an area below the default directory
+mirroring the remote directory they were downloaded from after their size
+and modification times are checked for correct values. This area is called
+the <strong>DF</strong> directory, and although this directory mirrors
+remote directories, it is not an exact mirror, but specific to the
+requirements of swim because code names for Release versions are not taken
+into account. For real mirroring capabilities there exist many excellent
+programs. If a package has a <strong>MD5 checksum</strong>,
+<strong>--md5sum</strong> will automatically be run and the value shown.
+Regardless of whether or not the md5sum check is <strong>OK</strong> or
+not, the package will still be put in the <strong>DF</strong> directory to
+allow the package to be looked at, so watch the output from
+<strong>--ftp</strong> to check for <strong>FAILED md5sums</strong>.
+
+<P>
+
+Packages or source code packages will not be downloaded again if they are
+found in the <strong>DF</strong> directory unless their
+<em>upstream-version</em> has changed in the not-installed database, if
+the packages are not in the DF directory and the remote
+<em>upstream-version</em> is different than the not-installed
+<em>upstream-version</em> then the packages will not be downloaded until
+the not-installed database is updated or rebuilt to reflect the version
+change. Changes in the package's <em>upstream-version</em> indicates that
+the <code>author(s)</code> of the program have made changes to the computer
+code for the program contained in the package or the source code package.
+On the other hand, swim will check for a <em>debian-revision</em> change
+at the remote site if the package can not immediately be found. If the
+package's <em>debian-revision</em> has changed and the package does not
+exist locally in the <strong>DF</strong> directory, it will be downloaded.
+This is a nice feature, especially for the unstable distribution, because
+it tends to extend the time needed before the not-installed database has
+to be updated or rebuilt to match the changes at remote sites.
+
+<P>
+
+<strong>--source</strong> is used with <strong>--ftp</strong> to download
+the source code package. <strong>--source_only</strong> will download the
+source code package without the deb package.  <em>Source packages consist
+of three files</em>.  The <em>source control file</em> which ends in
+``dsc'', the <em>original source archive</em> which is a compressed tar
+file, and the <em>unified context diff</em> showing the changes necessary
+to make the original source into Debian source. The diff can be downloaded
+by itself if <strong>--diff</strong> is provided as an argument to
+<strong>--source or --source_only</strong>.
+
+<P>
+
+For <strong>apt</strong> users: <strong>apt</strong> allows packages to be
+downloaded, but if more than one package is required for the package
+relationships to be proper, <strong>apt</strong> will download all these
+packages.  <strong>--ftp</strong> allows specific packages to be
+downloaded, packages from other architectures, and source packages to be
+downloaded, here lies the advantage of this option over using <strong>-xyz
+--nz</strong> (see below). If a particular package has been dowloaded into
+the <strong>DF</strong> directory and it is needed by <strong>apt</strong>
+for installation, simply copy or move the package from the
+<strong>DF</strong> directory to <em>/var/cache/apt/archives</em> before
+running <strong>apt</strong>, and the package will not be downloaded by
+<strong>apt</strong> again; future versions of <strong>swim</strong> will
+have an option to automatically accomplish this (see <code>--df2apt</code>).
+<hr>
+<h2><A name="s-vrapt">
+9.7 APT - VIRTUAL OPTIONS
+
+</A></h2>
+
+apt-get(8) is a nice package relationship checker from the
+<strong>apt</strong> package which figures out what needs to be done to
+properly install a package or packages when one or more package names are
+provided to it.  <strong>apt-get</strong> will get all packages which are
+needed using a variety of methods, and then <strong>apt-get</strong>
+interacts with <strong>dpkg</strong> in a way which allows for a
+successful installation.
+
+<P>
+
+<strong>-xyrz, --remove, and --nz</strong> can be used if
+<strong>apt-get</strong> from the <strong>apt</strong> package is
+installed. These options allow for what is refered to as virtual
+installation/removal. It is prudent to always test what will happen by
+using the <strong>-x</strong> option alone before actually proceeding with
+the installation with the <strong>-z</strong> option.  <strong>-x</strong>
+will actually simulate what would happen in an installation, showing which
+and how many packages will be changed, which and how many new packages
+will need to be installed, which and how many packages will need to be
+removed, any conflicts, and what needs to be configured.
+<strong>-y</strong> will automatically answer yes to any prompts
+<strong>apt-get</strong> may produce allowing <strong>apt-get</strong> to
+run non-interactively.  <strong>-z</strong> as mentioned before actually
+proceeds with the installation using <strong>dpkg</strong> after the
+<strong>apt-get</strong> gets the packages.  You can append a minus sign
+to a package name to cause it to be removed.  <strong>--nz</strong> when
+used as an optional argument with <strong>-xz or -xyz</strong> will only
+download the packages into <em>/var/cache/apt/archives</em> or into
+whatever directory you configured for holding archives for
+<strong>apt</strong>.
+<P>
+
+<strong>IMPORTANT</strong>:  <strong>apt</strong> makes it so easy to make
+changes to your installation that it is highly recommended to do your
+research with swim first. This can be done by checking package
+relationships, file/dir listings, comparing the not-installed package to
+an installed package if such exists, checking <strong>--md5sum</strong>
+and <strong>-c</strong> for the installed package, and checking the Source
+field by running a <strong>--search</strong> (see <A href="ch-search.html">SEARCHING
+, chapter 11</A>) to
+check to see how the source package has been split into binary packages
+for the not-installed package versus an installed package if such exists. 
+Ofcourse, there are many other things you could look at, and you can
+always do your research after the fact. Presently <strong>--db</strong> is
+run only by hand, so you can check the old state after an installation if
+you have not already run <strong>--db</strong>, yourself. 
+<hr>
+<h2><A name="s-vrrm">
+9.8 REMOVING AN INSTALLED PACKAGE - VIRTUAL OPTIONS 
+
+</A></h2>
+
+<strong>--purge</strong> uses <strong>dpkg</strong> to remove an installed
+package or packages and the configuration files as shown with
+``<strong>swim -qc packagename</strong>''.
+<P>
+
+<strong>-r or --remove</strong> removes an installed package or packages
+with <strong>apt</strong>, but not the configuration files as shown with
+``<strong>swim -qc packagename</strong>''.  You may also append a plus
+sign to a package name to cause it to be installed.  This option is used
+with -x or -x(y)z. 
+<hr>
+<h2><A name="s9.9">
+9.9 STDIN - VIRTUAL OPTIONS
+
+</A></h2>
+
+<strong>--stdin</strong> works with either <strong>--ftp</strong>,
+<strong>-x</strong>, <strong>-xyz</strong>, <strong>-xz</strong>,
+<strong>--purge</strong>, <strong>-r</strong>, or
+<strong>--remove</strong>. 
+<P>
+
+<strong>--stdin</strong> provides the <em>readline capabilities</em>
+commonly found in shells allowing you to edit what is on the command line.
+You can edit the command line, press enter and then recall the history,
+and make more changes, or <em>type in exit to process the changed or
+unchanged command line</em>. To find out more about what readline commands
+your shell supports please read the man pages which apply to your shell.
+Information for the bash shell can be found in <code>bash(1)</code> under the
+title ``<strong>Readline Command Names</strong>''.
+<P>
+
+Example: ``<strong>swim -qgnx --stdin hamradio</strong>'' will list all
+the packages from the not-installed hamradio group on the command line,
+this list can be edited then submitted to <strong>apt-get</strong> for a
+simulated installation. Another instance of <strong>swim</strong> can be
+run at the same time, perhaps ``<strong>swim -qinTg hamradio</strong>'' to
+help in making editing decisions for <strong>--stdin</strong>.
+<hr>
+<h2><A name="s9.10">
+9.10 PACKAGE MANIPULATION - VIRTUAL OPTIONS
+
+</A></h2>
+
+<strong>--extract</strong> only works with the <strong>minor mode
+-p</strong> to extract parts or all of a Debian package. If the
+<strong>argument ALL</strong> is provided then <em>everything found in the
+package will be extracted</em> below the current directory in the exact
+directories found in the package.  A particular <em>file may be extracted
+in its exact location</em> below the current directory by <em>entering the
+exact path for the file</em> as shown by ``<strong>swim -qpl</strong>'' or
+``<strong>swim -qpd</strong>'' as the argument.  Alternativily, a <em>file
+may be extracted in the current directory</em> regardless of its proper
+location by <em>prepending PWD\!  before the path</em> shown by
+``<strong>swim -qpl</strong>'' or ``<strong>swim -qpd</strong>''. Notice
+the backslash before the exclamation point, this is because shells
+consider ! a special character, so it has to be backslashed so that the
+shell knows that it is not such a special character. Example: 
+``<strong>swim -qpi --extract PWD\!usr/bin/name --scripts
+name_1.1-2.deb</strong>'' will extract the binary name in the current
+directory from the name package, show information for the name package,
+and show any scripts for the name package. 
+<hr>
+<h2><A name="s-dblocus">
+9.11 DATABASE LOCATIONS
+
+</A></h2>
+
+<strong>--dbpath</strong> can be specified as an alternative location for
+where the databases would be found. The default location is
+``<em>/var/lib/dpkg</em>''. An argument like ``<em>/otherstuff</em>'' can
+be provided, and then the databases would be found here instead. 
+
+<P>
+
+<strong>--root</strong> allows a database to be found for a Debian
+distribution installed on a different partition. If the distribution is
+mounted on <em>/New_Debian</em>, ``<em>/New_Debian</em>'' would be the
+argument to root. The databases would be found for the Debian distribution
+installed on the ``<em>/New_Debian</em>'' partition. 
+<P>
+
+<strong>--dbpath and --root</strong> can be used together. Given the
+previous two examples, the databases would be found on
+``<em>/New_Debian/otherstuff</em>'', assuming
+``<em>/New_Debian/otherstuff</em>'' actually existed. 
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch10.html">next</A>; <A href="ch-aptprep.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

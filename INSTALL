@@ -1,0 +1,51 @@
+To install swim, become root and type "make install".  
+
+To install extra and important documentation, type "make installdoc".
+
+To remove, type "make remove".
+
+Pod documentation is found in Conf.pm and swim.pod if you want to make
+different types of documention using pod translators.  There are SGML
+documents conforming to the debiandoc DTD for swimrc and swim which can be
+converted using tools from the debiandoc-sgml package.
+
+(The modules mentioned below can be located at CPAN at www.perl.com.) 
+
+Some distributions may require this module for ftp capabilities. 
+
+Net::FTP from libnet-perl
+
+This module provides readline libraries.  There are other similiar modules
+which also work with Perl's Term::ReadLine(3pm).
+
+Term::ReadLine::Gnu from libterm-readline-gnu-perl or
+Term::ReadLine::Perl from libterm-readline-perl-perl
+
+Also read QUICKSTART.text or QUICKSTART.html for additional information.
+_________________________________________________________________
+
+Alternative Installation
+
+The modules are put into /usr/lib/perl5/SWIM because this is in Perl's
+@INC path, and does not violate Debian's Policy, on the other hand the
+modules are rather specific to swim, although they definitely could be
+used for other things. To put it in /usr/lib meant either using 'use lib
+"/usr/lib"' or pushing the alternative directory into @INC doing a
+'BEGIN{}', or setting the Environment variable PERL5LIB. The first method
+slowed swim down, the second method caused a bad bug in SWIM::Deb, and the
+third method involved trying to make a universe of shells happy, but this
+is the best approach for an alternative @INC path. 
+
+That's why there is Makefile.alternative.  If you already did a 'make
+install', now do a 'make remove'.  Change the name of Makefile, and change
+Makefile.alternative's name to Makefile.  You can change PREFIX in this
+Makefile to /usr/local if you want to.  Follow the same steps as for the
+original Makefile, but add one more step, set the Environment vaiable
+PERL5LIB to the directory where the modules are.  If the PREFIX was not
+changed, and you are using a bash shell then 'export PERL5LIB=/usr/lib'.
+
+This alternative Makefile uses the tradition /usr/doc, /usr/man 
+directories whereas the other Makefile uses /usr/share/doc and
+/usr/share/man, this is because of Debian's adherence to the next
+generation fsstnd.
+

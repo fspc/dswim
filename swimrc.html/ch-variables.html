@@ -1,0 +1,284 @@
+<html><head>
+<title>swimrc - swim configuration file - VARIABLES
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swimrc - swim configuration file - chapter 3<br>
+VARIABLES
+
+</h1>
+This is a list of variables with explanations. The default values for
+<strong>swim</strong> are shown.
+
+
+<hr>
+<h2><A name="s3.1">
+3.1 OUTPUT VARIABLE 
+
+</A></h2>
+<code>$my_number</code> can be changed to how many lines you would like
+``swim -qf &lt;&gt;'' to print out, before the program asks for
+<code>-t</code> or <code>--total</code>. Exception: If <code>-i</code> is
+used in the query and there is more than one package then the total will
+be presented.
+
+<P>
+
+Hint:  <code>-t</code> can be used with all the various
+<code>--scripts</code> family members to view the title of the script file
+regardless of this variable setting, and if <code>-t</code> has to be
+used, the titles will be displayed, which makes sense.
+
+<P>
+
+<strong>$my_number = 23;</strong>
+
+<hr>
+<h2><A name="s3.2">
+3.2 HISTORY
+
+</A></h2>
+
+This is a shell-like history kept in relation to searches and the most
+recent edit when <code>--stdin</code> is used.
+<P>
+
+<strong>$HISTORY = 10;</strong>
+
+<hr>
+<h2><A name="s3.3">
+3.3 AR or DPKG?                                                  
+      
+</A></h2>
+                                                                          
+Debian packages are ar archives. If you are using a Debian Distribution         
+assign ``dpkg'' to $package_tool, otherwise assign ``ar'' to                    
+$package_tool.                                                                  
+                                                                          <P>
+                                                                                
+<strong>$package_tool = &quot;/usr/bin/ar&quot;;</strong>   
+<hr>
+<h2><A name="s3.4">
+3.4 APT                                                          
+
+</A></h2>
+                                                                                
+<strong>Swim</strong> does not assign a value for apt. To use                   
+<code>--apt</code> and <code>-xyz</code> assign <code>$apt</code> the                       
+value ``yes''.                                                                  
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+Example: <strong>$apt = &quot;yes&quot;;</strong>
+<hr>
+<h2><A name="s3.5">
+3.5 PAGER                                                        
+     
+</A></h2>
+                                                                           
+
+<strong>less</strong> is a nice pager, unless you like
+<strong>more</strong>! Pager is used for <code>--help</code> and
+<strong>swim</strong> called without any options. There is an option
+<code>--nopager</code> or <code>-n</code>. <strong>more</strong> comes from the
+required package util-linux, whereas <strong>less</strong> comes from a
+standard package called less.  Values: ``less'', ``more'', or ``most''
+or... 
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+<strong>$ENV{PAGER} = &quot;less&quot;;</strong>
+<hr>
+<h2><A name="s3.6">
+3.6 NOT-INSTALLED VARIABLES                                      
+   
+</A></h2>
+                                                                             
+Assign values for <code>$architecture</code> and/or                                 
+<code>$distribution</code> to avoid having to use <code>--arch</code> and               
+<code>--dists</code> everytime the not-installed databases are accessed             
+with <code>-n</code> or made or altered.                                            
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+Architectures are always being added so check with Debian to find a list.       
+There is <em>alpha, arm, hurd-i386 (alternative kernel to linux), i386,         
+m68k, powerpc, sparc</em>. Just use the arch found after the hyphen in the      
+Contents-(arch) file.                                                           
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+<strong>$architecture = &quot;i386&quot;;</strong> 
+<P>
+                                                                             
+                                                                                
+The distribution can be either <em>stable, unstable, frozen, or
+experimental (rare)</em>. These represent the state of development that
+the packages are under. The unstable distribution can have lot's of
+changes within a very short time period, and frozen may or may not be
+available. 
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+<strong>$distribution = &quot;unstable&quot;;</strong>    
+<P>
+                                                                             
+                                                                                
+Distributions are divided into sections. These sections were called             
+distributions in the version 2.4.1.0 packaging manual, because they were
+at     
+one time separate distributions, but this has since changed.                    
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+You can determine which of the sections <em>main, non-free, contrib or          
+non-US</em> to pull out of the Contents file if you don't want to use           
+<code>--main</code>, <code>--contrib</code>, <code>--non-free</code>, and                   
+<code>--non-us</code> to selectively pick the sections.                             
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+For efficiency, you should choose the sections which you will be pulling        
+out of the Packages <code>file(s)</code> being targetted.                           
+                                                                                
+                                                                                <P>
+
+
+Rule: Use ``non-US'' not ``non-us''.                                            
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+<strong>@user_defined_section = qw(main contrib non-free non-US);</strong>      
+   
+<hr>
+<h2><A name="s3.7">
+3.7 DF LOCATION                                                  
+
+</A></h2>
+                                                                                
+A little philosophy:  <strong>swim</strong> was developed for maximum           
+versatility, so whether you are just interested in researching, and             
+keeping tabs on the newest packages, or maintaining a Debian virtual            
+distribution on a non-Debian distribution, or you are a using                   
+<strong>swim</strong> for distribution development, <strong>swim</strong>       
+provides a way.                                                                 
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+The next two variables determine the location of the DF (default                
+directory/file system)                                                          
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+The default directory keeps track of Contents and/or Packages databases
+retrieved with --ftp. The Contents and Packages databases and Release file
+are give names specific to the distribution and architectures they
+represent using the naming convention found in apt's sources directory. 
+You also have the freedom not to use the default directory, in which case
+swim
+
+will still do the renaming and keeping track of the mtime, but you will         
+have to remember where you put the files.                                       
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+<strong>$default_directory = '/root/.swim';</strong>                            
+                                                                                
+                                                                                
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+The default root directory (DRD) is the key to easy management of binary        
+packages, source, dsc, and diff files received from --ftp, and provides an      
+easy way to put together a personalized distribution. This directory can
+be     
+a real ftp site on your computer, or put wherever else you are allowed to       
+have directories. The DRD is always placed below the value assigned to          
+$default_directory. According to the previous assignment to                     
+$default_directory, if the DRD is ``/pub/a/debian'' then the full path          
+would be ``/root/.swim/pub/a/debian''.   
+<P>
+                                                                             
+                                                                                
+Example: When a package is downloaded it will be placed in                      
+dists/distribution/section/architecture/subject below the DRD.                  
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+Rule: debian must be the final directory before dists, this is because          
+other distributions are placed alongside debian, like debian-non-US or          
+personal (specialized distribution).                                            
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+<strong>$default_root_directory = '/pub/debian';</strong>                       
+                                                                                <P>
+                                                                             
+                                                                                
+Because you may be using a real ftp site, this variable allows you to           
+determine what permissions <strong>swim</strong> will assign for
+directories it 
+creates below the DRD.                                                          
+                                                                                
+                                                                                <P>
+                                                                             
+                                                                                
+<strong>$permission = '0755';</strong>                                                                                                
+                                                                                
+     <hr>
+<h2><A name="s3.8">
+3.8 TEMPORARY DIRECTORY                                          
+                                                                                
+</A></h2>
+If you want to set an alternative directory for the temporary files
+created when the databases are made, change here. You may want to make
+<code>$tmp</code> a RAM disk. See package loadlin for initrd documentation and
+an explanation for making such a disk. There is also documentation in
+/usr/src/kernel-source.version/Documentation. Whether this will speed
+things up is a subject of experimentation. 
+                                                                                                                                                                <P>
+                                                                             
+                                                                                
+<strong>$tmp = &quot;/tmp&quot;;</strong>                                                                             
+<hr>
+<h2><A name="s3.9">
+3.9 FTP
+
+</A></h2>
+
+You can alter the Firewall, Port, Timeout, Debug and Passive
+characteristics of the ftp client as defined in Net::FTP(3pm) by providing
+arguments to these variables. All variables but $timeout are set to untrue
+by default. 
+ 
+<pre> $firewall = 0; (FTP firewall machine name)
+ $port = 0;  (defaults to 23)   
+ $timeout = 120;  (120 seconds)
+ $debug = 0;  (1 will turn on STDERR)
+ $passive = 0; (1 will enable)</pre>
+<hr>
+swimrc - swim configuration file
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-othervars.html">next</A>; <A href="ch-usage.html">back</A>.
+<br>
+<address>27 May 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

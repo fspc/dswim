@@ -1,0 +1,230 @@
+<html><head>
+<title>swim - MAKING NOT-INSTALLED DATABASES
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 7<br>
+MAKING NOT-INSTALLED DATABASES
+
+</h1>
+
+<pre>
+usage:  swim --initndb
+        swim --ndb
+        swim --rebuildndb
+
+options: [--Contents &lt;target|FDBtarget|DF|FDBDF&gt;]
+         [--main] [--contrib] [--non-free] [--non-us]
+         [--arch &lt;architecture&gt;]  [--dists &lt;distribution&gt;] 
+         [--dbpath &lt;dir&gt;] [--root &lt;dir&gt;] [--alt]
+         [--split_data &lt;lines&gt;] [-v] [--cron] 
+         [targets|APT|DF]
+</pre>
+<P>
+<hr>
+<h2><A name="s7.1">
+7.1 OVERVIEW
+
+</A></h2>
+The <strong>not-installed database</strong> provides swim with many capabilities like the searching, and querying of
+packages which do not actually exist on the live filesystem, as well as the
+ability to seamlessly install packages while searching or quering, or the
+ability to fetch the packages source code. The <em>virtual filesystem</em> is optional, but it is highly recommended. These two major mode options set
+up these databases, after determining the level of interaction which you
+want. 
+<P>
+
+Whenever <strong>swim</strong> makes databases it thinks only in terms of
+one distribution and one architecture. This keeps things logical. 
+<strong>swim</strong> does have the ability to take Packages files with
+multiple architectures, and distributions, and to extract information for
+one distribution and one archictecture to make its databases. This could
+provide interesting information from dumps from <strong>apt</strong>
+(<code>apt-cache dumpavail</code>).
+<P>
+
+<strong>--initndb</strong> creates the initial not-installed databases for
+a particular architecture and distribution, and
+<strong>--rebuildndb</strong> remakes the not-installed databases for that
+same architecure and distribution. If not otherwise specified
+<strong>swim</strong> <em>will use the values</em> it finds in
+<em>swimrc</em> to determine what architecture and distribution you want
+to use to make <strong>swim's</strong> databases. Otherwise...
+
+<hr>
+<h2><A name="s7.2">
+7.2 OPTIONS
+
+</A></h2>
+ <strong>--arch</strong> allows an argument to override the
+<strong>architecture</strong> found in <em>swimrc</em>. 
+
+<P>
+
+<strong>--dists</strong> allows an argument to override the
+<strong>distribution</strong> found in <em>swimrc</em>. 
+<P>
+
+<strong>--alt</strong> is used for a distribution with a Debian archival
+structure, but which has a different name.  This allows for alternative
+distributions. 
+<P>
+
+When <strong>APT</strong> or <strong>DF</strong> are provided as arguments
+(see below), by default the <em>Packages</em> which pertain to the
+sections found in <em>swimrc</em> will be shown. If you only want certain
+sections you may specify them on the command line. If you are not using
+<strong>APT</strong> or <strong>DF</strong>, it is a good idea to make
+sure that either the sections found in <em>swimrc</em> or the sections you
+put on the command line match the <em>Packages</em> you a targetting
+because this is much more effecient.
+<P>
+
+<strong>--main</strong> will override the sections found in
+<em>swimrc</em>, and will use this section.
+<P>
+
+<strong>--contrib</strong> will override the sections found in
+<em>swimrc</em>, and will use this section
+<P>
+
+<strong>--non-free</strong> will override the sections found in
+<em>swimrc</em>, and will use this section
+<P>
+
+<strong>--non-us</strong> will override the sections found in
+<em>swimrc</em>, and will use this section
+<P>
+
+Global arguments <strong>targets|APT|DF</strong> must be used with either
+of these two major modes to find the <em>Packages</em> databases. targets
+can be a full path to one or a set of <em>Packages</em>. 
+<strong>APT</strong> will use the <em>Packages</em> found in
+<em>/var/state/apt/lists</em>, and <strong>DF</strong> will use the
+Packages found in the default directory for <strong>swim</strong> (see
+<code>--ftp</code>). If you use either <strong>APT</strong> or
+<strong>DF</strong> you will be given an <strong>interface</strong> which
+allows you to choose one <em>Packages</em> database for each section you
+would like to use from the various sites.  This <strong>interface</strong>
+shows the <strong>site</strong>, <strong>date</strong>,
+<strong>size</strong> and <strong>Release version</strong> for each
+<em>Packages</em>.
+<P>
+
+<strong>--cron</strong> allows you to override the
+<strong>interface</strong> produced when <strong>APT</strong> or
+<strong>DF</strong> is provided as an argument. This is useful if you want
+to automate the database making process.  <strong>--cron</strong> will
+choose the newest <code>database(s),</code> if cron notices that the Release
+version has changed, cron will not proceed, but will provide a warning
+instead. This allows you to make the appropriate changes and choices.
+<P>
+
+<strong>--Contents</strong> can be give one of four arguments:  
+<P>
+
+<strong>1).</strong> If you have a <em>Contents-(architecture)</em>
+database in a target location you know about you may provide a path to the
+location. The <em>Contents</em> database can be compressed.
+<P>
+
+<strong>2).</strong> If you prepend the path with the letters
+<strong>FDB</strong> (meaning flat database) when the databases for swim
+are made, instead of using the Contents database to make: 
+
+<pre> 
+ nfileindex-arch-dists.deb
+ nsearchindex-arch-dists.deb 
+ ndirindex-arch-dists.deb</pre>
+<P>
+
+Only the <em>ncontentsindex-arch-dists.deb.gz</em> database will be made
+which allows the ability to view file/dir listing for not-installed
+packages, but does not provide the virtual file system or powersearch
+capabilities which the other databases would have provided.
+<P>
+
+<strong>3).</strong> The argument <strong>DF</strong> may be used if you
+have used <strong>--ftp</strong> with the <strong>DF</strong> argument to
+the option <strong>--Contents</strong> (see <code>--ftp</code>). In this case
+it is assumed you are also using global arguments <strong>DF</strong> or
+<strong>APT</strong> for the Packages databases. This will give you an 
+<strong>interface</strong> (if --cron isn't used) allowing you to choose
+one <em>Contents</em> database for the particular distribution you want to
+make the databases for.
+<P>
+
+<strong>4).</strong> <strong>FDB</strong> does the same exact thing with
+<strong>DF</strong> as it does with the before mentioned
+<strong>FDBtarget</strong>, and provides the <strong>interface</strong>. 
+<P>
+
+<strong>-v</strong> will only work if you have dpkg installed. It allows
+swim to verify <strong>swim's</strong> own built-in version comparison
+function with <strong>dpkg's version comparison function</strong>. This is
+good for debugging purposes, and produces a report called
+<em>.version_compare</em> in the same location that
+<strong>swim's</strong> databases are made.
+<P>
+
+<strong>--split_data</strong> is only advantageous if
+<strong>--Contents</strong> is being used. See <strong>--initdb</strong>
+for more information about the <strong>--split_data</strong> option. 
+<P>
+
+See <A href="ch-makinginst.html#s-initdb">Initial database making, and Rebuilding for an
+Installed system.
+, section 5.1</A> for options <code>--dbpath</code> and <code>--root</code>.
+<hr>
+<h2><A name="s7.3">
+7.3 UPDATING
+
+</A></h2>
+
+<code>--ndb</code> has the same options as --initndb and --rebuildndb except
+for --split_data.  It also has a new option <code>--nue</code> which will
+never have to be used unless the experimental distribution or non-us
+section are found in Contents (which presently isn't the case). 
+<code>--check</code> prints out the changes to STDERR, and the total to STDOUT
+without proceeding with the update.  <code>--status_only</code> can be used
+after a new package has been installed to update the status, after which
+-qni and -qi will correlate properly.
+<hr>
+<h2><A name="s7.4">
+7.4 REBUILDING THE SEARCH
+
+</A></h2>
+<code>--rebuildflatndb</code> serves the same purpose as --rebuildflatdb.  See
+<A href="ch-makinginst.html#s-searchy">REBUILDING THE SEARCH
+
+, section 5.3</A>
+<hr>
+<h2><A name="s7.5">
+7.5 FILES
+
+</A></h2>
+Databases and reports which are made (arch = architecture dists =
+distribution): 
+<P>
+
+<pre> 
+ npackages-arch-dists.deb
+ nfileindex-arch-dists.deb requires &lt;--Contents&gt;
+ nstatusindex-arch-dists.deb
+ ngroupindex-arch-dists.deb
+ nsearchindex-arch-dists.deb
+ ndirindex-arch-dists.deb
+ .packagesdiff-arch-dists.deb requires &lt;--Contents&gt;</pre>
+<P>
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-aptprep.html">next</A>; <A href="ch-important.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

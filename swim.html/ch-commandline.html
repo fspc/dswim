@@ -1,0 +1,158 @@
+<html><head>
+<title>swim - COMMAND LINE OPTION SYNTAX
+</title>
+<link rev=made href="mailto:mttrader@access.mountain.net">
+</head><body>
+<h1>
+swim - chapter 2<br>
+COMMAND LINE OPTION SYNTAX
+
+</h1>
+ When you press ``<strong>swim</strong>
+&lt;<strong>enter</strong>&gt;`` you will see a listing of command line
+options in a particular syntax.  This is to help you understand under what
+context to use the options.  When you enter the options on the command
+line, the brackets, parentheses, braces, diamonds, and question marks are
+not actually used.
+<P>
+ 
+
+<strong>Major Mode Option</strong>
+<P>
+
+All command line options for <strong>swim</strong> always start with a
+<strong>major mode option</strong>, except for ``swim &lt;enter&gt;``
+which will show the whole listing of options. A major mode option is
+surrounded in braces <strong>{ major mode option }</strong>. In the case
+of {--search} there are the alternative major mode options
+{--refinesearch} and {--research}, but because --search needs to be used
+first before either of these two options, --refinesearch and --research
+are surrounded in parentheses (). 
+<P>
+
+Note: Through the other chapters of this manual <strong>{}</strong> is
+assumed for the <strong>major modes</strong> in the
+<strong>usage:</strong> section shown at the beginning of every chapter. 
+<P>
+
+Let's take a closer look at this situation:
+
+<P>
+
+<code>{--search ? (--research || --refinesearch)&lt;pattern(s)&gt;}</code>
+<P>
+ `<strong>||</strong>' or `<strong>|</strong>' are used to indicate
+`<strong>or</strong>', `<strong>?</strong>' indicates
+`<strong>optional</strong>', &lt;diamond&gt; indicates an
+<strong>argument</strong> (a required argument - see Arguments below),
+(parenthesis) means `if used, must be used after the
+previous required option was used'. Note: for readability
+<code>--research</code> and -<code>-refinesearch</code> are not surrounded in
+<code>{}</code>. 
+<P>
+
+<strong>Normal Options</strong>
+<P>
+
+Options to the major mode options are enclosed in brackets <strong>[
+option to major mode ]</strong>.  <code>swim [-n]</code>
+&lt;<code>enter</code>&gt; (assume enter from here on out), for instance,
+will show all the command line options without using the pager. The pager
+which swim uses can be set in <em>swimrc</em> (see <em>swimrc(8)</em>).
+``<code>swim {--help} [-n]</code>'' will provide brief explanations of all of
+swim's options without using the pager. In this case the major mode option
+<strong>{--help}</strong>, and the option <strong>[-n]</strong> were used.
+<P>
+
+<strong>Dashes</strong>
+<P>
+
+Options which have a single dash can be combined with other single dashed
+options <strong>(-qaint)</strong>. Double dashed options need to be
+entered by themselves <strong>(--help --nopager)</strong>, many double
+dashed options have an alternative single dash option <strong>(-n for
+--nopager)</strong>.  The meaning of options is related to the major
+mode they are being used with. <strong>[-n]</strong> means no pager
+when called with <strong>{--help}</strong>, but it's a reference to the
+not-installed databases when used with <strong>{-q --query}</strong>,
+fortunately most options do not have double meanings.
+<P>
+
+<strong>Arguments</strong>
+<P>
+
+Many options require an argument. Arguments are enclose in diamonds &lt; 
+<strong>argument</strong> &gt;. An argument to an option may also be
+optional in which case a question mark ``<strong>?</strong>'' will be
+placed between the option and the argument.  <strong>[-l ? 
+&lt;[--df]&gt;]</strong> illustrates such a situation.
+<strong>[-l]</strong> shows a file listings, and optionally the option
+<strong>[--df]</strong> can be use with <strong>[-l]</strong> to show an
+expanded listing. 
+<P>
+
+<strong>[--dbpath</strong> &lt;<strong>dir&gt;]</strong> requires an
+argument, this time the argument would not be another option, but rather
+it is a directory. 
+<P>
+
+Rule: When an option is an argument to another option it can be written
+anywhere, but when a non-option is an argument
+&lt;<strong>dir</strong>&gt; <strong>(notice no brackets)</strong> it has
+to be placed directly after the option.  Sometimes, there may be
+alternative arguments divided with ``<strong>|</strong>''. 
+&lt;<strong>argument1|argument2</strong>&gt;  means use argument1 or
+argument2, but not both.
+<P>
+
+Based on what we now know, let's compare this situation to the
+<strong>{--search}</strong> situation shown above: 
+<P>
+
+<code>[--ftp ? --source | --source_only ? &lt;[--diff]&gt;]</code>
+<P>
+  
+
+In this case <strong>--source</strong> or alternatively
+<strong>--source_only</strong> can be optionally used along with
+<strong>--ftp</strong> because they aren't in parentheses
+<strong>()</strong> (also notice: | was used instead of ||, but means the
+same thing ``or'').  <strong>--diff</strong> can optionally be provided as
+an argument to either <strong>--source</strong> or
+<strong>--source_only</strong>. For readability --source and --source_only
+weren't enclosed in brackets.
+<P>
+
+<strong>Global Arguments</strong>
+<P>
+
+A <strong>global argument</strong> can be typed anywhere on the command
+line, and can be an option or text. If global arguments
+exist they are placed last after the list of normal
+options that can be used with a major mode
+option. 
+<P>
+
+[targets | -S] and [targets|APT|DF] are
+examples.  {-q}, {--initndb}, and
+{--rebuildndb} all use global arguments.  
+<P>
+
+<strong>Minor Mode Options</strong>
+<P>
+
+{-q --query} will generally use zero or more
+minor mode options [-afpgn --dir], with
+one exception (see <A href="ch-query.html">QUERYING THE INSTALLED AND NOT-INSTALLED DATABASES
+, chapter 9</A>). 
+<hr>
+swim
+- <A href="index.html#copyright">                                                      
+          Copyright © 1999 Jonathan D. Rosenbaum                           
+        </A>
+<br>
+<A href="index.html#toc">Contents</A>; <A href="ch-version.html">next</A>; <A href="ch-description.html">back</A>.
+<br>
+<address>15 June 1999<br>
+Jonathan D. Rosenbaum<A href="mailto:mttrader@access.mountain.net">mttrader@access.mountain.net</A></address>
+</body></html>

@@ -1,0 +1,402 @@
+.rn '' }`
+''' $RCSfile$$Revision$$Date$
+'''
+''' $Log$
+'''
+.de Sh
+.br
+.if t .Sp
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.de Ip
+.br
+.ie \\n(.$>=3 .ne \\$3
+.el .ne 3
+.IP "\\$1" \\$2
+..
+.de Vb
+.ft CW
+.nf
+.ne \\$1
+..
+.de Ve
+.ft R
+
+.fi
+..
+'''
+'''
+'''     Set up \*(-- to give an unbreakable dash;
+'''     string Tr holds user defined translation string.
+'''     Bell System Logo is used as a dummy character.
+'''
+.tr \(*W-|\(bv\*(Tr
+.ie n \{\
+.ds -- \(*W-
+.ds PI pi
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+'''   \*(M", \*(S", \*(N" and \*(T" are the equivalent of
+'''   \*(L" and \*(R", except that they are used on ".xx" lines,
+'''   such as .IP and .SH, which do another additional levels of
+'''   double-quote interpretation
+.ds M" """
+.ds S" """
+.ds N" """""
+.ds T" """""
+.ds L' '
+.ds R' '
+.ds M' '
+.ds S' '
+.ds N' '
+.ds T' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds M" ``
+.ds S" ''
+.ds N" ``
+.ds T" ''
+.ds L' `
+.ds R' '
+.ds M' `
+.ds S' '
+.ds N' `
+.ds T' '
+.ds PI \(*p
+'br\}
+.\"	If the F register is turned on, we'll generate
+.\"	index entries out stderr for the following things:
+.\"		TH	Title 
+.\"		SH	Header
+.\"		Sh	Subsection 
+.\"		Ip	Item
+.\"		X<>	Xref  (embedded
+.\"	Of course, you have to process the output yourself
+.\"	in some meaninful fashion.
+.if \nF \{
+.de IX
+.tm Index:\\$1\t\\n%\t"\\$2"
+..
+.nr % 0
+.rr F
+.\}
+.TH swimrc 5 " " "27/May/99" " "
+.UC
+.if n .hy 0
+.if n .na
+.ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
+.de CQ          \" put $1 in typewriter font
+.ft CW
+'if n "\c
+'if t \\&\\$1\c
+'if n \\&\\$1\c
+'if n \&"
+\\&\\$2 \\$3 \\$4 \\$5 \\$6 \\$7
+'.ft R
+..
+.\" @(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2
+.	\" AM - accent mark definitions
+.bd B 3
+.	\" fudge factors for nroff and troff
+.if n \{\
+.	ds #H 0
+.	ds #V .8m
+.	ds #F .3m
+.	ds #[ \f1
+.	ds #] \fP
+.\}
+.if t \{\
+.	ds #H ((1u-(\\\\n(.fu%2u))*.13m)
+.	ds #V .6m
+.	ds #F 0
+.	ds #[ \&
+.	ds #] \&
+.\}
+.	\" simple accents for nroff and troff
+.if n \{\
+.	ds ' \&
+.	ds ` \&
+.	ds ^ \&
+.	ds , \&
+.	ds ~ ~
+.	ds ? ?
+.	ds ! !
+.	ds /
+.	ds q
+.\}
+.if t \{\
+.	ds ' \\k:\h'-(\\n(.wu*8/10-\*(#H)'\'\h"|\\n:u"
+.	ds ` \\k:\h'-(\\n(.wu*8/10-\*(#H)'\`\h'|\\n:u'
+.	ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'^\h'|\\n:u'
+.	ds , \\k:\h'-(\\n(.wu*8/10)',\h'|\\n:u'
+.	ds ~ \\k:\h'-(\\n(.wu-\*(#H-.1m)'~\h'|\\n:u'
+.	ds ? \s-2c\h'-\w'c'u*7/10'\u\h'\*(#H'\zi\d\s+2\h'\w'c'u*8/10'
+.	ds ! \s-2\(or\s+2\h'-\w'\(or'u'\v'-.8m'.\v'.8m'
+.	ds / \\k:\h'-(\\n(.wu*8/10-\*(#H)'\z\(sl\h'|\\n:u'
+.	ds q o\h'-\w'o'u*8/10'\s-4\v'.4m'\z\(*i\v'-.4m'\s+4\h'\w'o'u*8/10'
+.\}
+.	\" troff and (daisy-wheel) nroff accents
+.ds : \\k:\h'-(\\n(.wu*8/10-\*(#H+.1m+\*(#F)'\v'-\*(#V'\z.\h'.2m+\*(#F'.\h'|\\n:u'\v'\*(#V'
+.ds 8 \h'\*(#H'\(*b\h'-\*(#H'
+.ds v \\k:\h'-(\\n(.wu*9/10-\*(#H)'\v'-\*(#V'\*(#[\s-4v\s0\v'\*(#V'\h'|\\n:u'\*(#]
+.ds _ \\k:\h'-(\\n(.wu*9/10-\*(#H+(\*(#F*2/3))'\v'-.4m'\z\(hy\v'.4m'\h'|\\n:u'
+.ds . \\k:\h'-(\\n(.wu*8/10)'\v'\*(#V*4/10'\z.\v'-\*(#V*4/10'\h'|\\n:u'
+.ds 3 \*(#[\v'.2m'\s-2\&3\s0\v'-.2m'\*(#]
+.ds o \\k:\h'-(\\n(.wu+\w'\(de'u-\*(#H)/2u'\v'-.3n'\*(#[\z\(de\v'.3n'\h'|\\n:u'\*(#]
+.ds d- \h'\*(#H'\(pd\h'-\w'~'u'\v'-.25m'\f2\(hy\fP\v'.25m'\h'-\*(#H'
+.ds D- D\\k:\h'-\w'D'u'\v'-.11m'\z\(hy\v'.11m'\h'|\\n:u'
+.ds th \*(#[\v'.3m'\s+1I\s-1\v'-.3m'\h'-(\w'I'u*2/3)'\s-1o\s+1\*(#]
+.ds Th \*(#[\s+2I\s-2\h'-\w'I'u*3/5'\v'-.3m'o\v'.3m'\*(#]
+.ds ae a\h'-(\w'a'u*4/10)'e
+.ds Ae A\h'-(\w'A'u*4/10)'E
+.ds oe o\h'-(\w'o'u*4/10)'e
+.ds Oe O\h'-(\w'O'u*4/10)'E
+.	\" corrections for vroff
+.if v .ds ~ \\k:\h'-(\\n(.wu*9/10-\*(#H)'\s-2\u~\d\s+2\h'|\\n:u'
+.if v .ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'\v'-.4m'^\v'.4m'\h'|\\n:u'
+.	\" for low resolution devices (crt and lpr)
+.if \n(.H>23 .if \n(.V>19 \
+\{\
+.	ds : e
+.	ds 8 ss
+.	ds v \h'-1'\o'\(aa\(ga'
+.	ds _ \h'-1'^
+.	ds . \h'-1'.
+.	ds 3 3
+.	ds o a
+.	ds d- d\h'-1'\(ga
+.	ds D- D\h'-1'\(hy
+.	ds th \o'bp'
+.	ds Th \o'LP'
+.	ds ae ae
+.	ds Ae AE
+.	ds oe oe
+.	ds Oe OE
+.\}
+.rm #[ #] #H #V #F C
+.SH "NAME"
+swimrc \- swim configuration file
+.SH "DESCRIPTION"
+\fBswimrc\fR is the configuartion file for swim allowing many default values
+to be set so that they do not have to be mentioned on the command line. 
+Swimrc interacts directly with Perl allowing a wide variety of variables
+found in \fBSWIW::Conf\fR to be altered.
+.SH "USAGE"
+Values for variable can be altered for \fBswim\fR by assigning different
+values enclosed in quotes or quoted whitespace (\fIqw()\fR), and ended with a
+semi-colon.
+.PP
+.Vb 2
+\& $variable = "value";
+\& $variable = "qw(value1 value2 ..)";
+.Ve
+.SH "VARIABLES"
+This is a list of variables with explanations.  The default values for
+\fBswim\fR are shown.
+.Sh "\s-1OUTPUT\s0 \s-1VARIABLE\s0 "
+$my_number can be changed to how many lines you would like \*(L"swim \-qf <>\*(R" 
+to print out, before the program asks for \f(CW-t\fR or \f(CW--total\fR.  Exception: 
+If \f(CW-i\fR is used in the query and there is more than one package then the
+total will be presented. 
+.PP
+Hint:  \f(CW-t\fR can be used with all the various \f(CW--scripts\fR family members
+to view the title of the script file regardless of this variable setting,
+and if \f(CW-t\fR has to be used, the titles will be displayed, which makes
+sense. 
+.PP
+\fB$my_number = 23;\fR
+.Sh "\s-1HISTORY\s0"
+This is a shell-like history kept in relation to searches and the most
+recent edit when \f(CW--stdin\fR is used. 
+.PP
+\fB$\s-1HISTORY\s0 = 10;\fR
+.Sh "\s-1AR\s0 or \s-1DPKG\s0?"
+Debian packages are ar archives.  If you are using a Debian Distribution
+assign \*(L"dpkg\*(R" to \f(CW$package_tool\fR, otherwise assign \*(L"ar\*(R" to \f(CW$package_tool\fR.
+.PP
+\fB$package_tool = \*(L"/usr/bin/ar\*(R";\fR
+.Sh "\s-1APT\s0"
+\fBSwim\fR does not assign a value for apt.  To use \f(CW--apt\fR and \f(CW-xyz\fR
+assign \f(CW$apt\fR the value \*(L"yes\*(R". 
+.PP
+Example: \fB$apt = \*(L"yes\*(R";\fR
+.Sh "\s-1PAGER\s0"
+less is a nice pager, unless you like more!  Pager is used for \f(CW--help\fR
+and \fBswim\fR called without any options. There is an option \f(CW--nopager\fR or
+\f(CW-n\fR.  more comes from the required package util-linux, whereas less
+comes from a standard package called less.  Values: \*(L"less\*(R", \*(L"more\*(R", or
+\*(L"most\*(R" or... 
+.PP
+\fB$\s-1ENV\s0{\s-1PAGER\s0} = \*(L"less\*(R";\fR
+.Sh "\s-1NOT\s0\-\s-1INSTALLED\s0 \s-1VARIABLES\s0 "
+Assign values for \f(CW$architecture\fR and/or \f(CW$distribution\fR to avoid having to
+use \f(CW--arch\fR and \f(CW--dists\fR everytime the not-installed databases are
+accessed with \f(CW-n\fR or made or altered.
+.PP
+Architectures are always being added so check with Debian to find a list. 
+There is \fIalpha, arm, hurd-i386 (alternative kernel to linux), i386,
+m68k, powerpc, sparc\fR.  Just use the arch found after the hyphen in the
+Contents-(arch) file.
+.PP
+\fB$architecture = \*(L"i386\*(R";\fR
+.PP
+The distribution can be either \fIstable, unstable, frozen, or experimental
+(rare)\fR.  These represent the state of development that the packages are
+under.  The unstable distribution can have lot's of changes within a very
+short time period, and frozen may or may not be available.
+.PP
+\fB$distribution = \*(L"unstable\*(R";\fR
+.PP
+Distributions are divided into sections.  These sections were called
+distributions in the version 2.4.1.0 packaging manual, because they were
+at one time separate distributions, but this has since changed.  
+.PP
+You can determine which of the sections \fImain, non-free, contrib or
+non-\s-1US\s0\fR to pull out of the Contents file if you don't want to use
+\f(CW--main\fR, \f(CW--contrib\fR, \f(CW--non-free\fR, and \f(CW--non-us\fR to selectively
+pick the sections. 
+.PP
+For efficiency, you should choose the sections which you will be pulling
+out of the Packages \fIfile\fR\|(s) being targetted.  
+.PP
+Rule: Use \*(L"non-\s-1US\s0\*(R" not \*(L"non-us\*(R".
+.PP
+\fB@user_defined_section = qw(main contrib non-free non-\s-1US\s0);\fR
+.Sh "\s-1DF\s0 \s-1LOCATION\s0"
+A little philosophy:  \fBswim\fR was developed for maximum versatility, so
+whether you are just interested in researching, and keeping tabs on the
+newest packages, or maintaining a Debian virtual distribution on a
+non-Debian distribution, or you are a using \fBswim\fR for distribution
+development, \fBswim\fR provides a way.  
+.PP
+The next two variables determine the location of the \s-1DF\s0 (default
+directory/file system)
+.PP
+The default directory keeps track of Contents and/or Packages databases
+retrieved with --ftp.  The Contents and Packages databases and Release
+file are give names specific to the distribution and architectures they
+represent using the naming convention found in apt's sources directory. 
+You also have the freedom not to use the default directory, in which case
+swim will still do the renaming and keeping track of the mtime, but you
+will have to remember where you put the files.
+.PP
+\fB$default_directory = \*(L'/root/.swim\*(R';\fR
+.PP
+The default root directory (\s-1DRD\s0) is the key to easy management of binary
+packages, source, dsc, and diff files received from --ftp, and provides an
+easy way to put together a personalized distribution. This directory can
+be a real ftp site on your computer, or put wherever else you are
+allowed to have directories.  The \s-1DRD\s0 is always placed below the value
+assigned to \f(CW$default_directory\fR.  According to the previous assignment to 
+\f(CW$default_directory\fR, if the \s-1DRD\s0 is \*(L"/pub/a/debian\*(R" then the full path
+would be \*(L"/root/.swim/pub/a/debian\*(R". 
+.PP
+Example: When a package is downloaded it will be placed in
+dists/distribution/section/architecture/subject below the \s-1DRD\s0. 
+.PP
+Rule: debian must be the final directory before dists, this is because
+other distributions are placed alongside debian, like debian-non-\s-1US\s0 or
+personal (specialized distribution).
+.PP
+\fB$default_root_directory = \*(L'/pub/debian\*(R';\fR
+.PP
+Because you may be using a real ftp site, this variable allows you to
+determine what permissions \fBswim\fR will assign for directories it creates
+below the \s-1DRD\s0. 
+.PP
+\fB$permission = \*(L'0755\*(R';\fR
+.Sh "\s-1TEMPORARY\s0 \s-1DIRECTORY\s0"
+If you want to set an alternative directory for the temporary files
+created when the databases are made, change here.  You may want to make
+\f(CW$tmp\fR a \s-1RAM\s0 disk.  See package loadlin for initrd documentation and an
+explanation for making such a disk.  There is also documentation in
+/usr/src/kernel-source.version/Documentation.  Whether this will speed
+things up is a subject of experimentation. 
+.PP
+\fB$tmp = \*(L"/tmp\*(R";\fR
+.Sh "\s-1FTP\s0"
+You can alter the Firewall, Port, Timeout, Debug and Passive
+characteristics of the ftp client as defined in \fINet::\s-1FTP\s0\fR\|(3pm) by providing
+arguments to these variables. All variables but \f(CW$timeout\fR are set to untrue
+by default.  
+.PP
+.Vb 5
+\& $firewall = 0; (FTP firewall machine name)
+\& $port = 0;  (defaults to 23)
+\& $timeout = 120;  (120 seconds)
+\& $debug = 0;  (1 will turn on STDERR)
+\& $passive = 0; (1 will enable)
+.Ve
+.SH "OTHER VARIABLES"
+see SWIM::Conf
+.SH "FILES"
+.PP
+.Vb 2
+\& /etc/swim/swimrc
+\& ~/.swim/swimrc
+.Ve
+.SH "SEE ALSO"
+\fIswim\fR\|(8), \fINet::FTP\fR\|(3pm)
+.SH "BUGS"
+Send directly to mttrader@access.mountain.net.
+.SH "AUTHOR"
+Jonathan D. Rosenbaum <mttrader@access.mountain.net> 
+.SH "COPYRIGHT"
+Copyright (c) 1999 Jonathan Rosenbaum. All rights reserved. This program
+is free software; you can redistribute it and/or modify it under the GPL. 
+
+.rn }` ''
+.IX Title "swimrc 5"
+.IX Name "swimrc - swim configuration file"
+
+.IX Header "NAME"
+
+.IX Header "DESCRIPTION"
+
+.IX Header "USAGE"
+
+.IX Header "VARIABLES"
+
+.IX Subsection "\s-1OUTPUT\s0 \s-1VARIABLE\s0 "
+
+.IX Subsection "\s-1HISTORY\s0"
+
+.IX Subsection "\s-1AR\s0 or \s-1DPKG\s0?"
+
+.IX Subsection "\s-1APT\s0"
+
+.IX Subsection "\s-1PAGER\s0"
+
+.IX Subsection "\s-1NOT\s0\-\s-1INSTALLED\s0 \s-1VARIABLES\s0 "
+
+.IX Subsection "\s-1DF\s0 \s-1LOCATION\s0"
+
+.IX Subsection "\s-1TEMPORARY\s0 \s-1DIRECTORY\s0"
+
+.IX Subsection "\s-1FTP\s0"
+
+.IX Header "OTHER VARIABLES"
+
+.IX Header "FILES"
+
+.IX Header "SEE ALSO"
+
+.IX Header "BUGS"
+
+.IX Header "AUTHOR"
+
+.IX Header "COPYRIGHT"
+

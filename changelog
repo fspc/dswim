@@ -1,0 +1,78 @@
+swim (0.3.6) -  October 20 2000
+
+-- Made swim perl-5.6 happy.  Thanks to Douglas du Boulay 
+   <ddb@crystal.uwa.edu.au> for pointing this out.
+
+swim (0.3.5) - January 28 2000
+
+-- Fixed a minor bug pertaining to the mtime of Contents which occured
+   during initial building of the uninstalled filesystem using FDBDF or
+   DF.  This bug arose as a result of a bug fix in 0.3.4.
+
+swim (0.3.4) - January 23 2000
+
+-- Made the changelog and copyright option work properly in relation to
+   the fsstnd Debian has adopted with backwards compatibility.  Fixed a
+   regexp in Qftp to properly deal with packages which match one another,
+   but aren't the same.  Fixed xyzr to work properly with ps.  Fixed share
+   -d/l output for p option.  Added an indication when extraction
+   succeeds.  Now Contents is properly filtered for ndb. Removed extra
+   output from menu for package option.  Added example documentation,
+   thanks to John Lapeyre for the suggestion.  Also, thanks to Joel Soete
+   for reporting corrupt sources from a faulty upload, and to tucows.com
+   for adding swim to their archive and awarding swim 5 Penguins. 
+
+swim (0.3.3) - January 15 2000
+
+-- Repaired a bug in longswim causing the uninstalled filesystem to be
+   made with packages which looked like spaces due to a return code error,
+   which caused some trouble for the virtual directories.  ncontents is 
+   now filtered of ./, though it was cool to look at.
+
+swim (0.3.2) - January 05 2000
+
+-- Fixed to properly find documentation in the not-installed new Debian 
+   share directories, perl5 in Depends for the new Debian perl policy, and 
+   year 2000 in help.   
+
+swim (0.3.1) - January 04 2000                                                  
+                                                                                
+-- Because of change in Debian's directory structure in Contents, added a       
+   filter so that not-installed database is properly made without repeats.      
+   Fixed a documentation error in QUICKSTART.  Made swim@the.netpedia.net       
+   default anonymous login.  Minor documentation improvements. 
+
+swim (0.3.0) - June 15 1999
+
+-- The cleaned up version of 0.2.9.  Rebuild databases if you were using
+   version 0.2.8 or less.
+
+swim (0.2.9) - May 14 1999
+
+-- This is an interim release until 0.3.0 is released.  Major bug fixes,
+   and some new features, including a history, and updating for
+   not-installed db. Rebuild databases if you were using an older version. 
+
+swim (0.2.8) - Mar 13 1999
+
+-- Fixed a minor bug which was preventing virtual options --xyz and --ftp
+   from working with searches.
+-- Set the $swim_version variable to the right version number, and
+   automated the release process to avoid problems like the failure to
+   change this variable in the 0.2.7 release from occurring again.
+
+swim (0.2.7) -  Mar 12 1999
+
+-- Fixed a file test in SWIM::Conf which kept the initial directories from
+   being created on startup, making the program fail.  Three names deserve
+   recognition:  John Lapeyre, Jonathan P. Tomer, and Cale Epstein who all
+   provided their own perspective to the problem, I combined all three
+   approaches.  Shaleh pointed out a packaging error.
+
+swim (0.2.6)
+
+-- First initial public offering around the beginning of March, 1999,
+   includes the main swim program, four exercise programs to help with
+   database creation, important swim manuals and twenty-five module 
+   members.
+-- swimmers ... take your mark ... go!

@@ -1,0 +1,11 @@
+# Read QUICKSTART for a quick start, and check out the SWIMZ.LIST 
+# section in swim(8) for much more information.  This list is read 
+# sequentially, so earlier entries are read before later entries 
+# 
+# Debian users: Unlike apt which only downloads Packages, swim reads this
+# list based on the specified or default distribution/architecture to
+# make handling the downloading of both the Contents and Packages files
+# easier.  Look at the Cron example in /usr/doc/swim/examples. 
+# 
+# deb ftp://ftp.debian.org/pub/debian unstable contrib non-free main
+# deb ftp://ftp.debian.org/pub/debian stable contrib non-free main

@@ -1,0 +1,73 @@
+# Set this to wherever you want swim to install. Eg, /usr/local or /usr
+PREFIX=/usr
+
+all:
+
+clean:
+	-rm build
+	-rm *.bak
+
+install:	
+	install -d $(DESTDIR)/var/lib/dpkg
+	install -d $(DESTDIR)/$(PREFIX)/sbin
+	cp -a swim $(DESTDIR)/$(PREFIX)/sbin/swim
+	install -d $(DESTDIR)/$(PREFIX)/lib/SWIM/bin 
+	perl -pe '$$_="\$$pre=\"$(PREFIX)\";\n" \
+        if /AUTOREPLACE/' Conf.pm.alternative \
+		> $(DESTDIR)/$(PREFIX)/lib/SWIM/Conf.pm
+	chmod 644 $(DESTDIR)/$(PREFIX)/lib/SWIM/Conf.pm
+	cp -fa lib/* $(DESTDIR)/$(PREFIX)/lib/SWIM
+	cp -fa bin/* $(DESTDIR)/$(PREFIX)/lib/SWIM/bin
+	install -d $(DESTDIR)/$(PREFIX)/man/man8
+	cp -f swim.8 $(DESTDIR)/$(PREFIX)/man/man8
+	install -d $(DESTDIR)/$(PREFIX)/man/man5
+	cp -f swimrc.5 $(DESTDIR)/$(PREFIX)/man/man5	
+	install -d $(DESTDIR)/usr/doc/swim/swim.html
+	cp -fa swim.html/* $(DESTDIR)/usr/doc/swim/swim.html
+	install -d $(DESTDIR)/usr/doc/swim/swimrc.html
+	cp -fa swimrc.html/* $(DESTDIR)/usr/doc/swim/swimrc.html
+	cp -f QUICKSTART.html $(DESTDIR)/usr/doc/swim
+	cp -f REQUIREMENTS.html $(DESTDIR)/usr/doc/swim
+ 	cp -f swim_by_example.html $(DESTDIR)/usr/doc/swim
+	install -d $(DESTDIR)/usr/doc/swim/examples
+	cp -fa examples/*  $(DESTDIR)/usr/doc/swim/examples
+	install -d $(DESTDIR)/etc/swim
+	cp -f swimz.list $(DESTDIR)/etc/swim
+	cp -f swimrc $(DESTDIR)/etc/swim
+
+installdoc:
+	install -d $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a QUICKSTART.text $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a REQUIREMENTS.text $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a swim_by_example.html $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a THEMES $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a TODO $(DESTDIR)/$(PREFIX)/doc/swim 
+	cp -a BUGS $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a TODO $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a COPYING $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a contact_and_website $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a changelog $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a swim.text $(DESTDIR)/$(PREFIX)/doc/swim
+	cp -a swimrc.text $(DESTDIR)/$(PREFIX)/doc/swim
+remove:
+	rm -rf $(PREFIX)/lib/SWIM/*
+	rmdir $(PREFIX)/lib/SWIM
+	rm $(PREFIX)/sbin/swim
+	rm /usr/doc/swim/swim.html/*
+	rmdir /usr/doc/swim/swim.html
+	rm /usr/doc/swim/swimrc.html/*
+	rmdir /usr/doc/swim/swimrc.html
+	rm /usr/doc/swim/examples/*
+	rmdir /usr/doc/swim/examples
+	rm /usr/doc/swim/*
+	rmdir /usr/doc/swim
+	rm $(PREFIX)/man/man5/swimrc.5
+	rm $(PREFIX)/man/man8/swim.8
+
+debian:
+	dpkg-buildpackage -tc -rfakeroot
+
+
+dist: debian localdist stampede rpm
+
+.PHONY: debian
