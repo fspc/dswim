@@ -239,7 +239,7 @@ $longswim = "$pre/lib/dswim/longswim";
 # /usr/src/kernel-source.version/Documentation.  Whether this will speed
 # things up is a subject of experimentation.
 my $tmp_home = substr($main::home,1,);
-$tmp = "/tmp/.gbootroot_$tmp_home";
+$tmp = "/tmp/.dswim_$tmp_home";
 home_builder($tmp);
 
 ##################
@@ -249,7 +249,7 @@ home_builder($tmp);
 # if configuration files are not kept in /etc change this
 # and set up the directories by hand.
 
-$swim_conf = '/etc/swim';
+$swim_conf = '/etc/dswim';
 
 
 #############
