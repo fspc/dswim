@@ -16,7 +16,6 @@ install:
 	cp -a QUICKSTART.text /share/doc/swim
 	cp -a REQUIREMENTS.text /share/doc/swim
 	cp -a swim_by_example.html /share/doc/swim
-	cp -a THEMES /share/doc/swim
 	cp -a TODO /share/doc/swim 
 	cp -a BUGS /share/doc/swim
 	cp -a TODO /share/doc/swim

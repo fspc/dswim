@@ -16,7 +16,6 @@ install:
 	cp -a QUICKSTART.text $(DESTDIR)/share/doc/swim
 	cp -a REQUIREMENTS.text $(DESTDIR)/share/doc/swim
 	cp -a swim_by_example.html $(DESTDIR)/share/doc/swim
-	cp -a THEMES $(DESTDIR)/share/doc/swim
 	cp -a TODO $(DESTDIR)/share/doc/swim 
 	cp -a BUGS $(DESTDIR)/share/doc/swim
 	cp -a TODO $(DESTDIR)/share/doc/swim
