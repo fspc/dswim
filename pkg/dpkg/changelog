@@ -15,12 +15,18 @@ dswim (0.4.0-1) unstable; urgency=high
     Manager.  Changed "Package administration and research tool for Debian" to 
     DSWIM.
 
+  * Changed --nz to --no-download and now works properly with simulate.
+
   * --rebuilddb automatically when noticing a change near the beginning of 
     command() after --db --check runs  Added $no_rebuilddb configuration option 
     to allow users to override this behavior.
 
   * --remove and --purge are now handled by apt-get and apt's new --reinstall 
     added.
+
+  * --source (-b, --diff-only, --tar-only) and --build-deb are new options to
+    replace the old --ftp options because all this stuff is now handled by
+    apt-get.
 
   * Added --config and --templates to the query options.
 
@@ -31,9 +37,14 @@ dswim (0.4.0-1) unstable; urgency=high
   * Fixed many of the defined bugs and a few of the regexp bugs ..
     these were just the complaints of the newer Perl.
 
+  * Fixed undef values when scripts() was called more than once when used with
+    -qf, --scripts, -d|-l and -T.
+
   * Added swim_pkg to CVS to simplify packaging dswim.
 
- -- Jonathan Rosenbaum <freesource@users.sourceforge.net>  Tue, 16 Oct 2001 16:25:51 -0400
+  * The control dependencies have been improved.
+
+ -- Jonathan Rosenbaum <freesource@users.sourceforge.net>  Tue, 23 Oct 2001 00:06:54 -0400
 
 swim (0.3.6-1) unstable; urgency=low
 
