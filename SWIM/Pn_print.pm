@@ -26,7 +26,7 @@ use Exporter;
 
 
 # There are times when it is good to print out the "package name_version"
-# and there are times when it is unecessary.  This sub tries to resolve
+# and there are times when it is unnecessary.  This sub tries to resolve
 # these situations, basically it's printme()
 sub singular {
 
