@@ -805,16 +805,16 @@ sub purge {
 	 if (!$commands->{"download-only"}) {
 
 	     if ($commands->{"purge"}) {
-		 system "$apt_get -s --purge remove $arg";  
+		 system "$apt_get -y --purge remove $arg";  
 	     }
 	     elsif ($commands->{"remove"} || $commands->{"r"}) {
-		 system "$apt_get -s remove $arg";  
+		 system "$apt_get -y remove $arg";  
 	     }
 	     elsif ($commands->{"reinstall"}) {
-		 system "$apt_get -s --reinstall install $arg";
+		 system "$apt_get -y --reinstall install $arg";
 	     }
 	     elsif ($commands->{"build-dep"}) {
-		 system "$apt_get -s build-dep $arg";
+		 system "$apt_get -y build-dep $arg";
 	     }
 
 	 }
@@ -822,16 +822,16 @@ sub purge {
 	 else {
 
 	     if ($commands->{"purge"}) {
-		 system "$apt_get -sd --purge remove $arg";  
+		 system "$apt_get -yd --purge remove $arg";  
 	     }
 	     elsif ($commands->{"remove"} || $commands->{"r"}) {
-		 system "$apt_get -sd remove $arg";  
+		 system "$apt_get -yd remove $arg";  
 	     }
 	     elsif ($commands->{"reinstall"}) {
-		 system "$apt_get -sd --reinstall install $arg";
+		 system "$apt_get -yd --reinstall install $arg";
 	     }
 	     elsif ($commands->{"build-dep"}) {
-		 system "$apt_get -sd build-dep $arg";
+		 system "$apt_get -yd build-dep $arg";
 	     }
 
 	 }
