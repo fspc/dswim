@@ -239,6 +239,10 @@ sub command {
     if ($commands{"testmenu"}) {
 	menuindex();
     }
+
+
+    # makes dpkg-deb happy
+    $ENV{"TMPDIR"} = $tmp;
  
 
     if ($#ARGV == -1 && !defined %commands){
