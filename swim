@@ -4,7 +4,7 @@
 #
 #    Debian System Wide Information Manager                       
 #
-#    Copyright (C) 1999-2001 Jonathan Rosenbaum 
+#    Copyright (C) 1998-2005 Jonathan Rosenbaum 
 #                            Yahshua Mashiyach
 #                                                                             
 #
@@ -1769,11 +1769,11 @@ sub command {
 sub usage {
 
 print "DSWIM version $version
-Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+Copyright (C) 1998-2005 - by Jonathan Rosenbaum <freesource\@freesoftwarepc.com>
 This may be freely redistributed under the terms of the GNU General Public License\n";
 
 $save = "DSWIM version $version
-Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+Copyright (C) 1998-2005 - by Jonathan Rosenbaum <freesource\@freesoftwarepc.com>
 This may be freely redistributed under the terms of the GNU General Public License
 
 Usage: swim [--nopager -n]
@@ -1851,7 +1851,7 @@ Quit?:press q here\n";
 sub nusage {
 
 $save = "DSWIM version $version
-Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@freesoftwarepc.com>
 This may be freely redistributed under the terms of the GNU General Public License
 
 Usage: swim [--nopager -n]
@@ -1929,7 +1929,7 @@ Hints: Searches -                        equiv.   negated [^...]
 sub help {
 
 $save = "DSWIM version $version
-Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+Copyright (C) 1998-2005 - by Jonathan Rosenbaum <freesource\@freesoftwarepc.com>
 This may be freely redistributed under the terms of the GNU General Public License
 
 usage:
