@@ -113,8 +113,9 @@ sub db {
 		# PURGED #
 		##########
 		if (defined $db{$package[1]}) {
-		    #push(@gone,"$db{$package[1]}");
-		    print "$db{$package[1]}\n";
+		    #print "$db{$package[1]}\n";
+		    $db{$package[1]} =~ m,(^.*)_.*$,;
+		    push(@GONE,$1);
 		}	          
 	    }
 	}
@@ -145,7 +146,7 @@ sub db {
               # CR #
               ######
               elsif ("$package[1]_$1" eq $db{$package[1]} &&
-                     $statusname ne $status) {
+                     $statusname ne $status ) {
                  push(@changed_packages, "$package[1]");
                  $compare{$package[1]} = "$package[1]_$1";
               }
@@ -158,7 +159,7 @@ sub db {
                  $compare{$package[1]} = "$package[1]_$1";
                  push(@gone,"$package[1]_$1");
              }
-        }
+         }
       }
       close(DIFFERENCE);
       
