@@ -29,7 +29,7 @@
 
 =pod
 
-Description:  System Wide Information System
+Description:  Debian System Wide Information System
 
 SWIM is a program which adds rpm-like quering capabilities to the Debian
 system.  Information for an installed Debian system is extracted from the
