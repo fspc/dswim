@@ -27,7 +27,7 @@ use Exporter;
              $sort $md5sum $zcat $tar $grep $gzip $fastswim $slowswim $longswim
              $mount $umount $mke2fs $copy $pager $base $pwd $parent $library
              $splt $mv $imswim $swim_conf $debug $port $timeout
-             $firewall $passive $apt_sources $HISTORY $alt);
+             $firewall $passive $apt_sources $HISTORY $alt $no_rebuilddb);
 %EXPORT_TAGS = (
                Path => [ qw($tmp $parent $base $library $default_directory) ],
                Deb => [ qw($pwd $dpkg_deb $ar $tar $grep $tmp $md5sum $cat $mv) ],
@@ -52,6 +52,10 @@ $my_number = 23;
 
 # Just like a shell, you can keep a history of whatever length you want.  
 $HISTORY = 10;
+
+# Set to 1 if you don't want the swim to automatically rebuild its
+# databases everytime there is a change. 
+$no_rebuilddb = 0;
 
 # For not-installed:
 # This part supplies the default value for --arch.

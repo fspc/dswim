@@ -784,6 +784,31 @@ sub command {
         initndb(\%commands);
     }    
 
+    # Automatic rebuilding - assuming the first time
+    if (!-f "$main::home$parent$library/status") {
+	system "cp -fa $parent$library/status $main::home$parent$library";
+    }
+    else {
+	if ( $no_rebuilddb == 0 ) {
+	    my $diff = `diff $parent$library/status $main::home$parent$library/status`;
+	    if ( $diff ) {
+		$commands{"check"} = 1;
+		require SWIM::DB;
+	      SWIM::DB->import(qw(db));
+		db(\%commands);	    
+		require SWIM::DB_Init;
+
+		$commands{"rebuilddb"} = 1;
+	      SWIM::DB_Init->import(qw(database));
+		database(\%commands);	    
+
+		system "cp -fa $parent$library/status $main::home$parent$library";
+	    }
+
+	}
+
+    }
+
 
   # *deb packages -p querys can be handled separately because they a particular to 
   # *debs.
