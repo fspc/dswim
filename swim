@@ -805,6 +805,28 @@ sub command {
     my $dpkg_status = "$parent$library/status";
     my $my_status = "$main::home$parent$library/status";
    if (!-f $my_status) {
+       if ( 
+	    (!-x $tmp && !-w $tmp) ||
+	    
+	    !-x $tmp ||
+
+	    !-w $tmp
+
+	   ) {
+	   print STDERR "swim: $tmp is not ";
+	   print STDERR "writable" if !-w $tmp;
+	   print STDERR "/" if !-w $tmp;
+	   print STDERR "executable" if !-x $tmp;
+	   print STDERR " by your effective uid/gid\n";
+
+	   print STDERR "swim: set \$tmp to a directory ";
+	   print STDERR "writable" if !-w $tmp;
+	   print STDERR "/" if !-w $tmp;
+	   print STDERR "executable" if !-x $tmp;
+	   print STDERR " by your effective uid/gid " . 
+	       "in $ENV{HOME}/.swimrc\n";
+	   return "tmp not-writable";
+       }
        $commands{"check"} = 1;
        require SWIM::DB;
      SWIM::DB->import(qw(db));
@@ -829,6 +851,29 @@ sub command {
 	    if ( (stat($dpkg_status))[9] != (stat($my_status))[9] ) {
 		my $diff = `diff $dpkg_status $my_status`;
 		if ( $diff ) {
+		    if ( 
+			 (!-x $tmp && !-w $tmp) ||
+			 
+			 !-x $tmp ||
+
+			 !-w $tmp
+
+			 ) {
+			print STDERR "swim: $tmp is not ";
+			print STDERR "writable" if !-w $tmp;
+			print STDERR "/" if !-w $tmp;
+			print STDERR "executable" if !-x $tmp;
+			print STDERR " by your effective uid/gid\n";
+			
+			print STDERR "swim: set \$tmp to a directory ";
+			print STDERR "writable" if !-w $tmp;
+			print STDERR "/" if !-w $tmp;
+			print STDERR "executable" if !-x $tmp;
+			print STDERR " by your effective uid/gid " . 
+			    "in $ENV{HOME}/.swimrc\n";
+			return "tmp not-writable";
+		    }
+
 		    $commands{"check"} = 1;
 		    require SWIM::DB;
 		  SWIM::DB->import(qw(db));
