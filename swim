@@ -4,8 +4,8 @@
 #
 #    Package administration and research tool for Debian                       
 #
-#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum 
-#
+#    Copyright (C) 1999-2001 Jonathan D. Rosenbaum 
+#                            Yahshua Mashiyach
 #                                                                             
 #
 #    This program is free software; you can redistribute it and/or modify 
@@ -113,109 +113,111 @@ Getopt::Long::config("bundling","no_auto_abbrev"); # will use pass_through
 
 my($result) = 
     GetOptions (\%commands,
-	       "query", "q",     # query 
-	       "b",              # build 
-	       "a",              # all packages = /.
-	       "f",              # file query
-	       "dir",            # same as "f", but verifies dir  
-	       "i",              # information
-	       "l",              # file listing
-	       "df",             # file/directory listing w/-l
-	       "v",              # verbose listing
-	       "p",              # package query  
-	       "extract=s",      # extract all files/file from package
-	       "remove", "r",    # remove all, but conf.
-	       "purge",          # remove it all
-	       "apt",            # apt-get
-	       "update",         # using sources.list
-	       "clean",          # remove archives or apt2ftp
-	       "autoclean",      # remove some archives
-	       "upgrade",        # currently installed packages
-	       "dist_upgrade",   # whole dist. upgrade   
-	       "x",              # simulate apt's actions
-	       "y",              # automatic yes for -z
-	       "z",              # apt install
-	       "nz",             # apt download
-	       "source",         # ftp source and package
-	       "source_only",    # ftp only source for package
-	       "diff",           # just grab diff for source 
-	       "stdin",          # read in from stdin
-	       "md5sum",         # show md5sum    
-	       "c",              # configuration files
-	       "d",              # show documentation
-	       "g",              # packages belonging to group (27)
-	       "allgroups",      # show all groups
-	       "n",              # not-installed
-	       "pre_depends",    # required before installation
-	       "depends",        # like requires, def. needed
-	       "recommends",     # packages important to this one
-	       "suggests",       # complimentary packages
-	       "replaces",       # package(s) being replaces
-	       "provides",       # capabilities provided (virtual)
-	       "conflicts",      # package(s) which conflict
-	       "T",              # all characteristics
-	       "shlibs",         # provided shared libraries
-	       "total", "t",     # when there is more than one 
-	       "no",             # no output on searches
-	       "scripts",        # the scripts
-	       "preinst",        # before inst. script
-	       "postinst",       # after inst. script
-	       "prerm",          # before removal script
-	       "postrm",         # after removal script
-	       "menu", "m",      # menu script
-	       "copyright",      # copyright
-	       "changelog",      # changelog.Debian.gz changelog.gz 
-	       "root=s",         # use alternative db & root dir
-	       "db",             # update the database
-	       "initdb",         # make the databases
-	       "rebuilddb",      # remake the database
-	       "lowmem",         # lowmem method
-	       "initndb",        # make not-installed database
-	       "ndb",            # update not-installed database
-	       "report",         # report for --ndb
-	       "check",          # show changes|update cache
-	       "rebuildndb",     # remake not-installed database
-	       "cron",           # intelligent cron
-	       "Contents=s",     # Contents file required
-	       "onec",           # download only 1 Contents
-	       "nue",            # non-US or Exp. in Contents
-	       "main",           # this section and/or 
-	       "contrib",        # this section and/or
-	       "non-free",       # this section and/or
-	       "non-us",         # this section and/or
-	       "arch=s",         # architecture - i386 ...
-	       "dists=s",        # distribution - stable ...
-	       "alt=s",          # alternative base for dist
-	       "dbpath=s",       # override default db location
-	       "split_data=s",   # make things faster          
-	       "rebuildflatdb",  # rebuild flat databases 
-	       "rebuildflatndb", # rebuild n-flat databases
-	       "nopager", "n",   # no pager
-	       "search=s",       # search database for package
-	       "powersearch=s",  # match files, directories, and
-	       "ps=s",           # packages.
-	       "research=s",     # search the results
-	       "refinesearch=s", # refine the existing search
-	       "searchfile",     # search databases
-	       "cs",             # case sensitive search
-	       "S",              # query packages from search
-	       "C", "audit",     # dpkg standard options
-	       "status",         # clues one in about -C  
-	       "status_only",    # n* update
-	       "ramdiskon",      # turn on the thing
-	       "ramdiskoff",     # turn it off 
-	       "ftp",            # ftp client protocol                           
-	       "apt2ftp",        # mv archives to DF
-	       "ftp2apt",        # install DF with apt-get 
-	       "Packages=s",     # Packages file
-	       "Release_only",   # grab Release files only
-	       "version",        # program version
-	       "history",        # swim history
-	       "h",              # ""
-	       "testmenu",       # tmp test for menuindex.deb   
-	       "help"            # it better
-	       
-	       );
+		"query", "q",     # query 
+		"b",              # build 
+		"a",              # all packages = /.
+		"f",              # file query
+		"dir",            # same as "f", but verifies dir  
+		"i",              # information
+		"l",              # file listing
+		"df",             # file/directory listing w/-l
+		"v",              # verbose listing
+		"p",              # package query  
+		"extract=s",      # extract all files/file from package
+		"remove", "r",    # remove all, but conf.
+		"purge",          # remove it all
+		"apt",            # apt-get
+		"update",         # using sources.list
+		"clean",          # remove archives or apt2ftp
+		"autoclean",      # remove some archives
+		"upgrade",        # currently installed packages
+		"dist_upgrade",   # whole dist. upgrade   
+		"x",              # simulate apt's actions
+		"y",              # automatic yes for -z
+		"z",              # apt install
+		"nz",             # apt download
+		"source",         # ftp source and package
+		"source_only",    # ftp only source for package
+		"diff",           # just grab diff for source 
+		"stdin",          # read in from stdin
+		"md5sum",         # show md5sum    
+		"c",              # configuration files
+		"d",              # show documentation
+		"g",              # packages belonging to group (27)
+		"allgroups",      # show all groups
+		"n",              # not-installed
+		"pre_depends",    # required before installation
+		"depends",        # like requires, def. needed
+		"recommends",     # packages important to this one
+		"suggests",       # complimentary packages
+		"replaces",       # package(s) being replaces
+		"provides",       # capabilities provided (virtual)
+		"conflicts",      # package(s) which conflict
+		"T",              # all characteristics
+		"shlibs",         # provided shared libraries
+		"total", "t",     # when there is more than one 
+		"no",             # no output on searches
+		"scripts",        # the scripts
+		"preinst",        # before inst. script
+		"postinst",       # after inst. script
+		"prerm",          # before removal script
+		"postrm",         # after removal script
+		"config",        # debconf
+		"templates",     # debconf
+		"menu", "m",      # menu script
+		"copyright",      # copyright
+		"changelog",      # changelog.Debian.gz changelog.gz 
+		"root=s",         # use alternative db & root dir
+		"db",             # update the database
+		"initdb",         # make the databases
+		"rebuilddb",      # remake the database
+		"lowmem",         # lowmem method
+		"initndb",        # make not-installed database
+		"ndb",            # update not-installed database
+		"report",         # report for --ndb
+		"check",          # show changes|update cache
+		"rebuildndb",     # remake not-installed database
+		"cron",           # intelligent cron
+		"Contents=s",     # Contents file required
+		"onec",           # download only 1 Contents
+		"nue",            # non-US or Exp. in Contents
+		"main",           # this section and/or 
+		"contrib",        # this section and/or
+		"non-free",       # this section and/or
+		"non-us",         # this section and/or
+		"arch=s",         # architecture - i386 ...
+		"dists=s",        # distribution - stable ...
+		"alt=s",          # alternative base for dist
+		"dbpath=s",       # override default db location
+		"split_data=s",   # make things faster          
+		"rebuildflatdb",  # rebuild flat databases 
+		"rebuildflatndb", # rebuild n-flat databases
+		"nopager", "n",   # no pager
+		"search=s",       # search database for package
+		"powersearch=s",  # match files, directories, and
+		"ps=s",           # packages.
+		"research=s",     # search the results
+		"refinesearch=s", # refine the existing search
+		"searchfile",     # search databases
+		"cs",             # case sensitive search
+		"S",              # query packages from search
+		"C", "audit",     # dpkg standard options
+		"status",         # clues one in about -C  
+		"status_only",    # n* update
+		"ramdiskon",      # turn on the thing
+		"ramdiskoff",     # turn it off 
+		"ftp",            # ftp client protocol                           
+		"apt2ftp",        # mv archives to DF
+		"ftp2apt",        # install DF with apt-get 
+		"Packages=s",     # Packages file
+		"Release_only",   # grab Release files only
+		"version",        # program version
+		"history",        # swim history
+		"h",              # ""
+		"testmenu",       # tmp test for menuindex.deb   
+		"help"            # it better
+		
+		);
 
 
 command();
@@ -1190,7 +1192,7 @@ sub command {
             #print "$argument\n";
             if ($commands{"scripts"} || $commands{"preinst"} ||
                 $commands{"postinst"} || $commands{"prerm"} ||
-                $commands{"postrm"}) {
+                $commands{"postrm"} || $commands{"config"} || $commands{"templates"}) {
               scripts(\%commands);
             }
            #copyright() if $commands{"copyright"}; 
@@ -1262,7 +1264,7 @@ sub command {
            version(\%commands);
             if ($commands{"scripts"} || $commands{"preinst"} ||
                 $commands{"postinst"} || $commands{"prerm"} ||
-                $commands{"postrm"}) {
+                $commands{"postrm"} || $commands{"config"} || $commands{"templates"}) {
               scripts(\%commands);
             }
            menu(\%commands) if $commands{"menu"} || $commands{"m"};
@@ -1444,7 +1446,7 @@ sub command {
             print "$argument\n" if $commands{"S"};
             if ($commands{"scripts"} || $commands{"preinst"} ||
                 $commands{"postinst"} || $commands{"prerm"} ||
-                $commands{"postrm"}) {
+                $commands{"postrm"} || $commands{"config"} || $commands{"templates"}) {
               scripts(\%commands);
             }
            menu(\%commands) if $commands{"menu"} || $commands{"m"};
@@ -1554,7 +1556,7 @@ sub command {
             print "$argument\n" if $commands{"S"};
             if ($commands{"scripts"} || $commands{"preinst"} ||
                 $commands{"postinst"} || $commands{"prerm"} ||
-                $commands{"postrm"}) {
+                $commands{"postrm"} || $commands{"config"} || $commands{"templates"}) {
               scripts(\%commands);
             }
             menu(\%commands) if $commands{"menu"} || $commands{"m"};
@@ -1649,11 +1651,11 @@ sub usage {
 # Shameless publication of the ThE_* Project, and also shameless self
 # agrandizing....
 print "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License\n";
 
 $save = "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
 
 Usage: swim [--nopager -n]
@@ -1681,7 +1683,8 @@ Usage: swim [--nopager -n]
                         [--df2apt] [--purge] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
-                        [--prerm] [--postrm] [-v] [--dbpath <dir>] [--menu -m] 
+                        [--prerm] [--postrm] [--config] [--templates] 
+                        [-v] [--dbpath <dir>] [--menu -m] 
                         [--shlibs] [-T] [--pre_depends] [--depends] 
                         [--recommends] [--suggests] [--conflicts] 
                         [--replaces] [--provides] [--md5sum] [--root <dir>] 
@@ -1692,28 +1695,8 @@ Usage: swim [--nopager -n]
                         [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df] 
                         [--df2apt] [targets | -S ? <\\d{1,}>]
        swim {--audit --status -C}
-       swim {--ftp} [--Contents <DF|directory>] [--Packages <DF|directory>]
-                        [--arch <architecture>] [--dists <distribution>]
-                        [--onec] [--Release_only]
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
        swim {--apt} [-xyz] [--upgrade] [--dist_upgrade]  
-       swim {--initndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>] 
-                        [--main] [--contrib] [--non-free] [--non-us] [--alt] 
-                        [--arch <architecture>] [--dists <distribution>] 
-                        [--dbpath <dir>] [--root <dir>] [--split_data <lines>]  
-                        [-v] [--cron] [targets|APT|DF]
-       swim {--ndb ? <[--report]>} [--main] [--contrib] [--non-free] [--non-us]
-                        [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
-                        [--arch <architecture>] [--dists <distribution>]
-                        [--dbpath <dir>] [--root <dir>] [--check] [--alt]
-                        [--status_only] [-v] [--cron] [targets|APT|DF] 
-       swim {--rebuildndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
-                        [--main] [--contrib] [--non-free] [--non-us] [--alt]
-                        [--arch <architecture>] [--dists <distribution>] 
-                        [--dbpath <dir>] [--root <dir>] [-v] [--cron] 
-                        [--split_data <lines>] [targets|APT|DF]
-       swim {--rebuildflatndb} [--dbpath <dir>] [--root <dir>]
-                        [--arch <architecture>] [--dists <distribution>]
        swim {--ramdiskon} [-n] [--searchfile] [--arch <architecture>] 
                         [--dists <distribution>] [--dbpath] [--root]
        swim {--ramdiskoff}
@@ -1743,13 +1726,353 @@ Hints: Searches -                        equiv.   negated [^...]
 Quit?:press q here\n";
 }
 
-
 # nusage
 sub nusage {
 
 $save = "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
+
+Usage: swim [--nopager -n]
+       swim {--help} [--nopager -n]
+       swim {--version}
+       swim {--history -h} [--arch <architecture>] [--dists <distribution>]
+                        [-n] [--dbpath <dir>] [--root <dir>] 
+       swim {--initdb} [--dbpath <dir>] [--root <dir>] [--lowmem]
+                        [--split_data <lines>]
+       swim {--db} [--dbpath <dir>] [--root <dir>] [--check]
+       swim {--rebuilddb} [--dbpath <dir>] [--root <dir>] [--lowmem]
+                        [--split_data <lines>]
+       swim {--rebuildflatdb} [--dbpath <dir>] [--root <dir>]
+       swim {--search ? (--research || --refinesearch) <pattern(s)>} 
+                        [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only ? <[--diff]>] 
+                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [--df2apt] [--purge] [<\\d{1,}>] 
+       swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
+                        [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only <[--diff]>] 
+                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+                        [--df2apt] [--purge] [<\\d{1,}>]  
+       swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
+                        [-d] [-c] [--scripts] [--preinst] [--postinst] 
+                        [--prerm] [--postrm] [--config] [--templates] 
+                        [-v] [--dbpath <dir>] [--menu -m] 
+                        [--shlibs] [-T] [--pre_depends] [--depends] 
+                        [--recommends] [--suggests] [--conflicts] 
+                        [--replaces] [--provides] [--md5sum] [--root <dir>] 
+                        [--copyright] [--changelog] [--allgroups] 
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--ftp ? --source | --source_only ? <[--diff]>] 
+                        [--stdin] [--extract <ALL|archive|PWD!archive>]
+                        [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df] 
+                        [--df2apt] [targets | -S  ? <\\d{1,}>]
+       swim {--audit --status -C}
+       swim {--apt} [--update] [--clean] [--autoclean] [--check] 
+       swim {--apt} [-xyz] [--upgrade] [--dist_upgrade]  
+       swim {--ramdiskon} [-n] [--searchfile] [--arch <architecture>] 
+                        [--dists <distribution>] [--dbpath] [--root]
+       swim {--ramdiskoff}
+
+Hints: Searches -                        equiv.   negated [^...]
+                escapes: word boundaries - \\b        \\B
+                         [0-9]           - \\d        \\D
+                         [a-zA-Z0-9_]    - \\w        \\W
+                         [ \\r\\t\\n\\f]     - \\s        \\S 
+       case insensitive: \"pattern/i\"
+   string = multi lines: \"pattern/m\"
+       string beginning: \^, \\A
+             string end: \$, \\Z
+       single character: \.
+            quantifiers: \*, \?, \+
+           alternatives: \"pattern|pattern\"
+        
+       Groups - subject(below) or contrib\/subject or non-free\/subject 
+                               or non-us\/subject or swim -q --allgroups
+                exceptions - no contrib\/contrib or non-free\/non-free       
+                   contrib, non-free, admin, base, comm, devel, doc, 
+                   editors, electronics, experimental, games, graphics,
+                   hamradio, interpreters, libs, mail, math, misc, net,
+                   news, oldlibs, otherosfs, shells, sound, tex, text,
+                   utils, web, x11\n";
+} # end sub nusage
+
+
+# Tries to emulate rpm --help, but rather futile, because of the great
+# differnces between swim and rpm.
+sub help {
+
+$save = "SWIM version $version
+Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
+This may be freely redistributed under the terms of the GNU General Public License
+
+usage:
+   --help                   - print this message
+   --nopager -n             - no pager wanted
+   --version                - print the version of swim being used
+
+   --history                - print the search and stdin history
+
+   --query
+   -q                       - query mode
+   -S                       - search result argument
+   -t                       - override output suppressor
+   --allgroups              - display all groups to which packages belong 
+      --dbpath <dir>        - use <dir> as the directory for the database
+      --root <dir>          - use <dir> as the top level directory
+      --arch <architecture> - database architecture
+      --dist <distribution> - database distribution
+      Package specification options:
+        -a                 - query all packages
+        -g                 - query all packages belong to a group
+        -f <file|dir>      - query package owning <file|dir>
+        --dir <dir>        - query package owning <dir>
+        -p <packagefile>   - query debian package <packagefile>
+        -n <file|dir|-agf> - query not-installed system package
+      Information selection options:
+        -i                 - display package information
+        -l                 - display package file list
+        --df               - display package directories (used with -l)
+        -v                 - ls -l listing (-p only)
+        -d                 - list documentation files (overrides -l)
+        -c                 - list configuration files and MD5 checksums
+        --scripts          - print the various scripts 
+        -t can be used to show title for an individual script
+        --preinst          - display pre-installation scripts
+        --postinst         - display post-installation scripts
+        --prerm            - display pre-removal scripts
+        --postrm           - display post-removal scritps
+        --changelog        - display the package's changelog
+        --copyright        - display the package's copyright 
+        --menu
+        -m                 - display menufile for package
+        --shlibs           - display shared libraries file for package
+        -T                 - display all package relationships
+        --pre_depends      - display any pre-depends package
+        --depends          - display any real or virtual depends package
+        --recommends       - display any real or virtual recommends package
+        --suggests         - display any real or virtual suggests package
+        --conflicts        - display any real or virtual conflict package
+        --replaces         - display packages this package can replace 
+        --provides         - display any declared virtual package
+        --config           - display config for debconf
+        --templates        - display templates for debconf
+      MD5 checksum option
+        --md5sum           - display result for MD5 checksum for -l, -d,
+                              -c, or -p
+      Extraction option
+         --extract 
+         <ALL|archive|PWD!archive> - extract archive, choice (-l), or
+                                     choice (-l) in pwd (-p only)
+
+      Virtual options
+        -x                 - simulate apt-get installation
+        -y                 - answer yes to all apt-get prompts
+        -z                 - get and install package using apt-get
+        --nz               - only download package when using apt-get
+        --ftp              - download package 
+        --source           - download source package
+        --source_only      - only download source package
+        --diff             - only download the source package's diff file
+        --purge            - remove the installed package, and the
+                             package's configuration files
+        --remove
+        -r                 - remove the installed package, but not the
+                             package's configuration files  
+        --apt2df           - not implemented
+        --df2apt           - not implemented
+      Editing Option
+        --stdin            - allows readline editing capabilities when
+                             used with virtual options 
+      Arguments
+         <targets>         - package, packagename, packagename_version,
+                             files/dirs, group
+         -S <\\d{1,}>       - results from search/stdin history, 1 is
+                             default.
+   
+   --search <pattern(s)>       - search package information
+   --powersearch <pattern(s)>  
+   --ps <pattern(s)>           - search package information and all files 
+   --research <pattern(s)>     - research a previous search without making
+                                 the new results permanent
+   --refinesearch <pattern(s)> - research a previous search making the new
+                                 results permanent
+      --dbpath <dir>           - use <dir> as the directory for the
+      --root <dir>             - use <dir> as the top level directory
+                                  database
+      --arch <architecture>    - database architecture
+      --dist <distribution>    - database distribution
+      Package specification options:
+        -g                     - search all packages belong to a group
+        -n <-g>                - search not-installed system package
+      Database selection option:
+        --dir                  - search all directories (powersearch only)
+      Virtual options
+        -x                     - simulate apt-get installation
+        -y                     - answer yes to all apt-get prompts
+        -z                     - get and install package using apt-get
+        --nz                   - only download package when using apt-get
+        --ftp                  - download package 
+        --source               - download source package
+        --source_only          - only download source package
+        --diff                 - only download the source package's diff file
+        --purge                - remove the installed package, and the
+                                 package's configuration files
+        --remove
+        -r                     - remove the installed package, but not the
+                                 package's configuration files  
+        --apt2df               - not implemented
+        --df2apt               - not implemented
+      Editing Option
+        --stdin                - allows readline editing capabilities when
+                                 used with virtual options 
+      Output
+        --no                   - no output during search
+      Argument
+         <\\d{1,}>              - search/stdin history, 1 is
+                                 default.
+
+    --ramdiskon                - create and mount ramdisk 
+    --ramdiskoff               - unmount ramdisk
+      --dbpath <dir>           - use <dir> as the directory for the
+      --root <dir>             - use <dir> as the top level directory
+                                  database
+      --arch <architecture>    - database architecture
+      --dist <distribution>    - database distribution
+      Database selection options
+        -n                     - use not-installed system databases
+        --searchfile           - use search databases
+                        
+   --audit 
+   --status 
+   -C                     - audit package statuses
+
+   --apt                  - important apt-get options        
+      --update            - retrieve Package databases, update cache, and
+                            update Release version 
+      --clean             - removes packages from archives directory
+      --autoclean         - remove only packages not found in cache
+      --check             - check and update cache 
+
+   --apt                  - apt-get options allowing major changes to
+                            installed system 
+      --upgrade           - install newest versions of the packages
+                            installed on the system
+      --dist_upgrade      - do an upgrade as well as intelligently
+                            installing new packages
+      Control options
+        -x               - simulate apt-get installation
+        -y               - answer yes to all apt-get prompts
+        -z               - get and install package using apt-get
+
+   --initdb               - make databases for installed system
+   --db                   - update databases for installed system
+   --rebuilddb            - rebuild databases for installed system
+   --rebuildflatdb        - rebuild the search databases
+     --dbpath <dir>       - use <dir> as the directory for the database
+     --root <dir>         - use <dir> as the top level directory
+     --lowmem              - use low memory method to make databases
+     --split_data <lines>  - change size of database making files by
+                             altering the amount of lines 
+     --check                  - check what will be updated (--db)
+
+      Alternative Sections
+        --main                - extract main section
+        --contrib             - extract contrib section
+        --non-free            - extract non-free section
+        --non-us              - extract non-us section          
+      Automate 
+        --cron                - automate database production
+      Test
+        -v                    - check built-in comparison function
+
+\n";
+
+} # end sub help
+
+
+# Pulled this from dftp, but I like "less" (the default) !
+sub pager {                                                                 
+  my($text) = @_;                                                               
+  open(PAGER, "| $ENV{PAGER}") or                                               
+        die "Couldn't open your pager ($ENV{PAGER})";                           
+  print PAGER $text;                                                            
+  close PAGER;                                                                  
+} # end sub pager
+
+
+# Pulled this from *_pkg from the gbootroot project.
+sub home_builder {
+
+    my ($home_builder) = @_; 
+
+    if (!-d $home_builder) {
+	if (-e $home_builder) {
+	    print "ERROR: A file exists where $home_builder should be.\n";
+	}	 
+	else {
+	    my @directory_parts = split(m,/,,$home_builder);
+	    my $placement = "/";
+	    for (1 .. $#directory_parts) {
+		$_ == 1 ? ($placement = "/$directory_parts[$_]")
+		    : ($placement = $placement . "/" . $directory_parts[$_]);
+		-d $placement or mkdir $placement;
+	    }
+	}
+    }
+
+} # end home_builder
+
+
+
+=pod
+# Will be returned someday when apt cache control is added.
+
+       swim {--ftp} [--Contents <DF|directory>] [--Packages <DF|directory>]
+                        [--arch <architecture>] [--dists <distribution>]
+                        [--onec] [--Release_only]
+       swim {--initndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>] 
+                        [--main] [--contrib] [--non-free] [--non-us] [--alt] 
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--dbpath <dir>] [--root <dir>] [--split_data <lines>]  
+                        [-v] [--cron] [targets|APT|DF]
+       swim {--ndb ? <[--report]>} [--main] [--contrib] [--non-free] [--non-us]
+                        [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
+                        [--arch <architecture>] [--dists <distribution>]
+                        [--dbpath <dir>] [--root <dir>] [--check] [--alt]
+                        [--status_only] [-v] [--cron] [targets|APT|DF] 
+       swim {--rebuildndb} [--Contents <target|FDBtarget|DF|FDBDF> ? <[--nue]>]
+                        [--main] [--contrib] [--non-free] [--non-us] [--alt]
+                        [--arch <architecture>] [--dists <distribution>] 
+                        [--dbpath <dir>] [--root <dir>] [-v] [--cron] 
+                        [--split_data <lines>] [targets|APT|DF]
+       swim {--rebuildflatndb} [--dbpath <dir>] [--root <dir>]
+                        [--arch <architecture>] [--dists <distribution>]
+
+
+# To be returned someday.
+
+
+   --initndb                  - make database for not-installed system
+   --ndb                      - update not-installed system
+   --rebuildndb               - rebuild database for not-installed system
+   --rebuildflatndb           - rebuild the search databases
+     --dbpath <dir>           - use <dir> as the directory for the database
+     --root <dir>             - use <dir> as the top level directory
+     --arch <architecture>    - database architecture
+     --dist <distribution>    - database distribution
+     --alt <alt. Deb. dist.>  - alternative Debian archival distribution
+     --lowmem                 - use low memory method to make databases
+     --split_data <lines>     - change size of database making files by
+                                altering the amount of lines 
+     --check                  - check what will be updated (--ndb)
+     --status_only            - update status only (--ndb)
+     --report                 - not implemented (--ndb)
+
+
+# BEFORE
 
 Usage: swim [--nopager -n]
        swim {--help} [--nopager -n]
@@ -1834,15 +2157,11 @@ Hints: Searches -                        equiv.   negated [^...]
                    hamradio, interpreters, libs, mail, math, misc, net,
                    news, oldlibs, otherosfs, shells, sound, tex, text,
                    utils, web, x11\n";
-} # end sub nusage
 
-# Tries to emulate rpm --help, but rather futile, because of the great
-# differnces between swim and rpm.
-sub help {
 
-$save = "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
-This may be freely redistributed under the terms of the GNU General Public License
+$save = "SWIM version $swim_version
+Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+This may be freely redistributed under the terms of the GNU Public License
 
 usage:
    --help                   - print this message
@@ -2067,41 +2386,6 @@ usage:
 
 \n";
 
-} # end sub help
 
-# Pulled this from dftp, but I like "less" (the default) !
-sub pager {                                                                 
-  my($text) = @_;                                                               
-  open(PAGER, "| $ENV{PAGER}") or                                               
-        die "Couldn't open your pager ($ENV{PAGER})";                           
-  print PAGER $text;                                                            
-  close PAGER;                                                                  
-} # end sub pager
-
-
-# Pulled this from *_pkg from the gbootroot project.
-sub home_builder {
-
-    my ($home_builder) = @_; 
-
-    if (!-d $home_builder) {
-	if (-e $home_builder) {
-	    print "ERROR: A file exists where $home_builder should be.\n";
-	}	 
-	else {
-	    my @directory_parts = split(m,/,,$home_builder);
-	    my $placement = "/";
-	    for (1 .. $#directory_parts) {
-		$_ == 1 ? ($placement = "/$directory_parts[$_]")
-		    : ($placement = $placement . "/" . $directory_parts[$_]);
-		-d $placement or mkdir $placement;
-	    }
-	}
-    }
-
-} # end home_builder
-
-
-
-
+=cut
 
