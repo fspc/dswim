@@ -2,15 +2,15 @@
 all: install
 
 install:	
-	install -d $(DESTDIR)/var/lib/dpkg
-	install -d $(DESTDIR)/usr/bin
-	cp -a swim $(DESTDIR)/usr/bin/swim
-	install -d $(DESTDIR)/usr/share/perl5/SWIM
-	cp -fa SWIM/*pm $(DESTDIR)/usr/share/perl5/SWIM
-	install -d $(DESTDIR)/usr/lib/SWIM 
-	cp -fa bin/* $(DESTDIR)/usr/lib/SWIM
-	install -d $(DESTDIR)/etc/swim
-	cp -f swimrc $(DESTDIR)/etc/swim
+	install -d /var/lib/dpkg
+	install -d /usr/bin
+	cp -a swim /usr/bin/swim
+	install -d /usr/share/perl5/SWIM
+	cp -fa SWIM/*pm /usr/share/perl5/SWIM
+	install -d /usr/lib/SWIM 
+	cp -fa bin/* /usr/lib/SWIM
+	install -d /etc/swim
+	cp -f swimrc /etc/swim
 
 remove:
 	rm /usr/lib/perl5/SWIM/*
