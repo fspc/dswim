@@ -1,13 +1,5 @@
 #!/usr/bin/perl -w
 
-require 5.004;
-use strict;
-use Getopt::Long;
-use SWIM::Conf;
-use SWIM::Global;
-use SWIM::Library;
-my $version = "0.3.7";
-
 ############################################################################
 #
 #    Package administration and research tool for Debian                       
@@ -81,11 +73,36 @@ capabilities.  This information will come from the ThE_* Project
 database, and will be able to be used by other packaging systems or
 programs.  Swim will have editing capabilities, and will be linked via 
 cgi to html files.  And that's just the beginning, the possiblities
-are enormous!  Goal: Guru knowledge about an Open Source system for
+are enormous!  Goal: Guru knowledge about a Free Software system for
 anyone, find the program to do the job easily.  
 
 =cut
 
+
+# For distributions that don't adhere to the most recent FHS.
+BEGIN {
+
+    my $fhs = grep(/\/usr\/share\/perl5/,@INC);
+
+    if ($fhs == 0) {
+	unshift(@INC,"/usr/share/perl5");
+    }
+
+    my $sbin = grep(/\/usr\/sbin/,$ENV{'PATH'});
+    if ($sbin == 0) {
+	$ENV{'PATH'} = "/usr/sbin:" . $ENV{'PATH'};
+    }
+
+}
+
+
+require 5.004;
+use strict;
+use Getopt::Long;
+use SWIM::Conf;
+use SWIM::Global;
+use SWIM::Library;
+my $version = "0.3.7";
 
 # The MAIN 
 # First let's determine what options are being used.
@@ -1630,11 +1647,11 @@ sub usage {
 # Shameless publication of the ThE_* Project, and also shameless self
 # agrandizing....
 print "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License\n";
 
 $save = "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
 
 Usage: swim [--nopager -n]
@@ -1729,7 +1746,7 @@ Quit?:press q here\n";
 sub nusage {
 
 $save = "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
 
 Usage: swim [--nopager -n]
@@ -1822,7 +1839,7 @@ Hints: Searches -                        equiv.   negated [^...]
 sub help {
 
 $save = "SWIM version $version
-Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
+Copyright (C) 2000 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
 
 usage:
