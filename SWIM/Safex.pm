@@ -577,138 +577,141 @@ sub xyz {
 	################################
 	# INSTALL SOURCE DOWNLOAD-ONLY #
         ################################
-	if (!$commands->{"y"}) {
-	    if (!$commands->{"download-only"}) {
+	if ( $commands->{"x"} ) {
+	    if (!$commands->{"y"}) {
+		if (!$commands->{"download-only"}) {
 
-		if ( !$commands->{"source"} ) {
-		    system "$apt_get install $arg";
-		}
-		elsif ( $commands->{"source"} ) {
-
-		    if ( $commands->{"tar-only"} || 
-			 $commands->{"diff-only"} ||
-	       
-			 ($commands->{"tar-only"} &&
-			  $commands->{"diff-only"})
-			 ) {
-			if ( $commands->{"tar-only"} ) {
-			    system "$apt_get source --tar-only $arg";
-			}
-			if ( $commands->{"diff-only"} ) {
-			    system "$apt_get source --diff-only $arg";
-			}
-		    }	      
-		    else {
-			if ( $commands->{"b"} ) {
-			    system "$apt_get source -b $arg";
-			}
-			else {
-			    system "$apt_get source $arg";
-			}
+		    if ( !$commands->{"source"} ) {
+			system "$apt_get install $arg";
 		    }
+		    elsif ( $commands->{"source"} ) {
 
+			if ( $commands->{"tar-only"} || 
+			     $commands->{"diff-only"} ||
+	       
+			     ($commands->{"tar-only"} &&
+			      $commands->{"diff-only"})
+			     ) {
+			    if ( $commands->{"tar-only"} ) {
+				system "$apt_get source --tar-only $arg";
+			    }
+			    if ( $commands->{"diff-only"} ) {
+				system "$apt_get source --diff-only $arg";
+			    }
+			}	      
+			else {
+			    if ( $commands->{"b"} ) {
+				system "$apt_get source -b $arg";
+			    }
+			    else {
+				system "$apt_get source $arg";
+			    }
+			}
+			
+		    }
 		}
+		else {
+
+		    if ( !$commands->{"source"} ) {
+			system "$apt_get -d install $arg";
+		    }
+		    elsif ( $commands->{"source"} ) {
+			
+			if ( $commands->{"tar-only"} || 
+			     $commands->{"diff-only"} ||
+			     
+			     ($commands->{"tar-only"} &&
+			      $commands->{"diff-only"})
+			     ) {
+			    if ( $commands->{"tar-only"} ) {
+				system "$apt_get source -d --tar-only $arg";
+			    }
+			    if ( $commands->{"diff-only"} ) {
+				system "$apt_get source -d --diff-only $arg";
+			    }
+			}	      
+			else {
+			    if ( $commands->{"b"} ) {
+				system "$apt_get source -bd $arg";
+			    }
+			    else {
+				system "$apt_get source -d $arg";
+			    }
+			}
+			
+		    }
+		} 
 	    }
+	    #####
+	    # Y #
+	    #####
 	    else {
-
-		if ( !$commands->{"source"} ) {
-		    system "$apt_get -d install $arg";
-		}
-		elsif ( $commands->{"source"} ) {
-
-		    if ( $commands->{"tar-only"} || 
-			 $commands->{"diff-only"} ||
-	       
-			 ($commands->{"tar-only"} &&
-			  $commands->{"diff-only"})
-			 ) {
-			if ( $commands->{"tar-only"} ) {
-			    system "$apt_get source -d --tar-only $arg";
-			}
-			if ( $commands->{"diff-only"} ) {
-			    system "$apt_get source -d --diff-only $arg";
-			}
-		    }	      
-		    else {
-			if ( $commands->{"b"} ) {
-			    system "$apt_get source -bd $arg";
-			}
-			else {
-			    system "$apt_get source -d $arg";
-			}
+		if (!$commands->{"download-only"}) {
+		    
+		    if ( !$commands->{"source"} ) {
+			system "$apt_get install -y $arg";
 		    }
-
-		}
-	    } 
-	}
-	#####
-	# Y #
-	#####
-	else {
-	    if (!$commands->{"download-only"}) {
-
-		if ( !$commands->{"source"} ) {
-		    system "$apt_get install -y $arg";
-		}
-		elsif ( $commands->{"source"} ) {
-
-		    if ( $commands->{"tar-only"} || 
-			 $commands->{"diff-only"} ||
-	       
-			 ($commands->{"tar-only"} &&
-			  $commands->{"diff-only"})
-			 ) {
-			if ( $commands->{"tar-only"} ) {
-			    system "$apt_get source -y --tar-only $arg";
-			}
-			if ( $commands->{"diff-only"} ) {
-			    system "$apt_get source -y --diff-only $arg";
-			}
-		    }	      
-		    else {
-			if ( $commands->{"b"} ) {
-			    system "$apt_get source -by $arg";
-			}
+		    elsif ( $commands->{"source"} ) {
+			
+			if ( $commands->{"tar-only"} || 
+			     $commands->{"diff-only"} ||
+			     
+			     ($commands->{"tar-only"} &&
+			      $commands->{"diff-only"})
+			     ) {
+			    if ( $commands->{"tar-only"} ) {
+				system "$apt_get source -y --tar-only $arg";
+			    }
+			    if ( $commands->{"diff-only"} ) {
+				system "$apt_get source -y --diff-only $arg";
+			    }
+			}	      
 			else {
-			    system "$apt_get source -y $arg";
+			    if ( $commands->{"b"} ) {
+				system "$apt_get source -by $arg";
+			    }
+			    else {
+				system "$apt_get source -y $arg";
+			    }
 			}
+			
+		    }
+		}
+		else {
+
+		    if ( !$commands->{"source"} ) {
+			system "$apt_get install -y -d $arg";
+		    }
+		    elsif ( $commands->{"source"} ) {
+			
+			if ( $commands->{"tar-only"} || 
+			     $commands->{"diff-only"} ||
+			     
+			     ($commands->{"tar-only"} &&
+			      $commands->{"diff-only"})
+			     ) {
+			    if ( $commands->{"tar-only"} ) {
+				system "$apt_get source -yd --tar-only $arg";
+			    }
+			    if ( $commands->{"diff-only"} ) {
+				system "$apt_get source -yd --diff-only $arg";
+			    }
+			}	      
+			else {
+			    if ( $commands->{"b"} ) {
+				system "$apt_get source -byd $arg";
+			    }
+			    else {
+				system "$apt_get source -y -d $arg";
+			    }
+			}
+
 		    }
 
 		}
 	    }
-	    else {
-
-		if ( !$commands->{"source"} ) {
-		    system "$apt_get install -y -d $arg";
-		}
-		elsif ( $commands->{"source"} ) {
-
-		    if ( $commands->{"tar-only"} || 
-			 $commands->{"diff-only"} ||
-	       
-			 ($commands->{"tar-only"} &&
-			  $commands->{"diff-only"})
-			 ) {
-			if ( $commands->{"tar-only"} ) {
-			    system "$apt_get source -yd --tar-only $arg";
-			}
-			if ( $commands->{"diff-only"} ) {
-			    system "$apt_get source -yd --diff-only $arg";
-			}
-		    }	      
-		    else {
-			if ( $commands->{"b"} ) {
-			    system "$apt_get source -byd $arg";
-			}
-			else {
-			    system "$apt_get source -y -d $arg";
-			}
-		    }
-
-		}
-
-	    }
-	}
+	} # if -x
+	
     }
     #######
     # FTP #
