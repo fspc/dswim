@@ -621,7 +621,7 @@ sub make_conf {
             if (conf(\%commands) ne 0) {
               $conf = conf(\%commands);
               @conf = split(/\n/, $conf);
-              open(PACKCONF,">$parent$base/info/$orig_argument-conf.md5sums");
+              open(PACKCONF,">$main::home$parent$base/info/$orig_argument-conf.md5sums");
               foreach (@conf) {
                $_ =~ m,( \/)(.*$),;
                ($dir, $m5)  = split(/ /, $2, 2);
@@ -630,7 +630,7 @@ sub make_conf {
               }
               close(PACKCONF);
               $md5sums_conf =
-              "$parent$base/info/$orig_argument-conf.md5sums";
+              "$main::home$parent$base/info/$orig_argument-conf.md5sums";
               return $md5sums_conf;
             } 
             else {
