@@ -1,9 +1,19 @@
+dswim (0.4.3-1) unstable; urgency=low
+
+  * Stricter checking in Perl 5.8 caused the db not to be built if
+    fastswim noticed non-existent files because this is considered a
+    fatal error.  Removed the die function and now check for non-
+    existent files in fastswim, imswim also produced some related error
+    output that was fixed.
+
+ -- Jonathan Rosenbaum <freesource@freesoftwarepc.com>  Wed,  5 Jan 2005 22:48:34 -0500
+
 dswim (0.4.2-1) unstable; urgency=low
 
   * Fixes error output caused by repetitive opts found by the recent
     Getopt::Long. Rebuild db if you've updated to the newest DB_File.
 
- -- Jonathan Rosenbaum <root@funhouse.domain.com>  Wed,  6 Nov 2002 08:16:49 -0500
+ -- Jonathan Rosenbaum <freesource@users.sourceforge.net>  Wed,  6 Nov 2002 08:16:49 -0500
 
 dswim (0.4.1-1) unstable; urgency=low
 

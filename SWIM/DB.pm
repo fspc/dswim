@@ -31,7 +31,7 @@ use Exporter;
 # --db --rebuildflatdb  db() rebuildflatdb()
 
 # The goal here is to save some time by just updating the database rather
-# than rebuilding it.  Generally, though, swim -i <package> would be the
+# than rebuilding it.  Generally, though, swim -i <package> would be the 
 # favorable way of doing this, and ultimately may become the primary way of
 # setting up the databases after the required packages for this program are 
 # set-up.  This is because --db has to check the status file, whereas -i
@@ -107,19 +107,23 @@ sub db {
         elsif (/^Status:/) {
             chomp;
             $status = substr($_,8);
-            # a test
-            #if ($status eq "purge ok not-installed") {
-            #  if (defined $db{$package[1]}) {
-            #   print "$db{$package[1]}\n";
-            #  }
-            #}
-        }
+            # a test and now a solution
+            if ($status eq "purge ok not-installed") {
+		##########
+		# PURGED #
+		##########
+		if (defined $db{$package[1]}) {
+		    #push(@gone,"$db{$package[1]}");
+		    print "$db{$package[1]}\n";
+		}	          
+	    }
+	}
         # hold ok not-installed - may want to change this just to
         # non-installed.
         ###########
         # VERSION #
         ###########
-        elsif (/^Version:/ && $status !~ /not-installed/) {
+        elsif ( /^Version:/ && $status !~ /not-installed/ ) {
              my $version = $_; chomp $version;
              my $ver = m,Version:\s(.*),; my $statusname;
              if (defined $sb{$package[1]}) { 
@@ -131,8 +135,8 @@ sub db {
               ######## 
               if (defined $db{$package[1]}) {
                  push(@gone,"$package[1]_$1");
-               if ("$package[1]_$1" ne $db{$package[1]}) {
-                  $compare{$package[1]} = "$package[1]_$1";
+             if ( "$package[1]_$1" ne $db{$package[1]} ) {
+                 $compare{$package[1]} = "$package[1]_$1";
                }
               # Version remained the same, but status changed
               # even though $statusname may be undefined..this
@@ -162,7 +166,7 @@ sub db {
     # taken care of beforehand, because this ignores those here.  Some time
     # may have been saved by using a separate database rather than /., but,
     # this keeps things clean.
-    if ($ib{$rootsky}){
+   if ($ib{$rootsky}){
       @before  = split(/\s/,$ib{$rootsky});
       my %tracker;
       grep($tracker{$_}++,@gone);
@@ -220,6 +224,7 @@ sub db {
     undef %db;
     untie %ib;
     undef %ib;
+
 
     # Going to be adding some stuff to nsearchindex.deb and ndirindex.deb
     # so better remove any compressed versions if they exist
@@ -329,8 +334,8 @@ sub db {
     # files for *.list are in ./info/backup/*.list.bk.  We will also have to
     # deal with those rare cases that forget /. (smail 2.0v).  We should remove
     # this file as well as the packagename-conf.md5sums file below.
-    my $file = "$parent$base/info/backup/$_.list.bk";
-    my $md5sum_file = "$parent$base/info/$_-conf.md5sums";
+    my $file = "$main::home$parent$base/info/backup/$_.list.bk";
+    my $md5sum_file = "$main::home$parent$base/info/$_-conf.md5sums";
      open(LIST,"$file");
      while (<LIST>) {
        chomp;
@@ -355,7 +360,7 @@ sub db {
        #######################
        my $yit = (split(/\s/,$sb{$orig_argument}))[3];
        if ($yit eq "deinstall:ok:config-files" || 
-           $yit eq "purge:ok:config-files") {
+           $yit eq "purge:ok:config-files" ) {
         if (defined $ib{"/."}) {
           my $status = ($ib{"/."} =~ s,$packname_version ,,);
           if ($status eq "") {
@@ -797,26 +802,28 @@ sub db {
    # made, might as well use this.  There is a possibility this can be
    # used instead of fastswim for initial fileindex.deb.
      my $package_name;
-     if (!-d "$parent$base/info/backup") {
-        mkdir("$parent$base/info/backup",0666);
+     if (!-d "$main::home$parent$base/info/backup") {
+        mkdir("$main::home$parent$base/info/backup",0666);
      }
      print STDERR "\n" if $#NEW != -1; $x = 1;
 
   foreach $package_name (@NEW) {
-     open(FILENAME,"$parent$base/info/$package_name.list");
-     open(CP,">$parent$base/info/backup/$package_name.list.bk");
-       while (<FILENAME>) {
-         print CP $_;
-       }
-     close(FILENAME);
-     close(CP);
+      open(FILENAME,"$main::home$parent$base/info/$package_name.list");
+      open(CP,">$main::home$parent$base/info/backup/$package_name.list.bk");
+      if ( -e "$main::home$parent$base/info/$package_name.list" ) {
+	  while (<FILENAME>) {
+	      print CP $_;  
+	  }
+      }
+      close(FILENAME);
+      close(CP);
 
-     my $file = "$parent$base/info/backup/$package_name.list.bk";
-     print STDERR "#$x"; print STDERR " N|C $package_name.list             \r";
-     $x++;
-     open(LIST,"$file");
-     while (<LIST>) {
-       chomp;
+      my $file = "$main::home$parent$base/info/backup/$package_name.list.bk";
+      print STDERR "#$x"; print STDERR " N|C $package_name.list             \r";
+      $x++;
+      open(LIST,"$file");
+      while (<LIST>) {
+	  chomp;
 
        # Better add the new stuff to the flat files first
        if (!defined $ib{$_}) {
@@ -865,7 +872,7 @@ sub db {
 
      my $zit; my ($nit,$yit) = (split(/\s/,$sb{$package_name}))[0,3];
      if ($yit eq "deinstall:ok:config-files" ||
-         $yit eq "purge:ok:config-files") {
+         $yit eq "purge:ok:config-files" ) {
       ($zit = $nit) =~ s,\+,\\\+,;
       if ($ib{"/."} !~ m,$zit,) {
        $ib{"/."} = $ib{"/."} . " $zit"; 
