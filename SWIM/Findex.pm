@@ -73,7 +73,9 @@ sub findexer {
 	   $commands->{"r"} ||
 	   $commands->{"purge"} || 
 	   $commands->{"reinstall"} || 
-	   $commands->{"build-dep"}) {
+	   $commands->{"build-dep"} ||
+	   $commands->{"source"}
+	   ) {
 
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));
@@ -269,7 +271,9 @@ sub findexer {
 	$commands->{"r"} ||
 	$commands->{"purge"} || 
 	$commands->{"reinstall"} || 
-	$commands->{"build-dep"} )) {
+	$commands->{"build-dep"} ||
+	$commands->{"source"}
+	)) {
 
       if ($commands->{"x"} || 
 	  $commands->{"ftp"} || 
@@ -279,7 +283,10 @@ sub findexer {
 	  $commands->{"r"} || 
 	  $commands->{"purge"} || 
 	  $commands->{"reinstall"} || 
-	  $commands->{"build-dep"} ) {
+	  $commands->{"build-dep"} ||
+	  $commands->{"source"}
+	  ) {
+
            require SWIM::Safex;
 
            SWIM::Safex->import(qw(safex));
@@ -341,7 +348,9 @@ sub qindexer {
 	   $commands->{"r"} ||
 	   $commands->{"purge"} || 
 	   $commands->{"reinstall"} || 
-	   $commands->{"build-dep"}) { 
+	   $commands->{"build-dep"} ||
+	   $commands->{"source"}
+	   ) { 
 
            require SWIM::Safex;
            SWIM::Safex->import(qw(safex));

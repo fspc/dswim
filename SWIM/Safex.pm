@@ -37,13 +37,13 @@ sub safex {
 
  if ($commands->{"x"} || 
      $commands->{"ftp"} ||
-     $commands->{"source"} ||
-     $commands->{"source_only"} || 
      $commands->{"remove"} || 
      $commands->{"r"} ||
      $commands->{"purge"} || 
      $commands->{"reinstall"} || 
-     $commands->{"build-dep"}) {
+     $commands->{"build-dep"} ||
+     $commands->{"source"}
+     ) {
  
   
      if (!defined @PACKAGES) {
@@ -77,7 +77,10 @@ sub safex {
 		 $commands->{"remove"} ||
 		 $commands->{"r"}  || 
 		 $commands->{"reinstall"} ||
-		 $commands->{"build-dep"} ) {
+		 $commands->{"build-dep"} ||
+		 $commands->{"source"}
+		 ) {
+
 		 if ($PACKAGES[$#PACKAGES] =~ /_/) {
 		     $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
 		     $aptor = $1;
@@ -100,7 +103,10 @@ sub safex {
 	     $commands->{"remove"} ||
 	     $commands->{"r"}  || 
 	     $commands->{"reinstall"} || 
-	     $commands->{"build-dep"}) {
+	     $commands->{"build-dep"} ||
+	     $commands->{"source"}
+	     ) {
+
 	     if ($PACKAGES[$#PACKAGES] =~ /_/) {
 		 $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
 		 $aptor = $1;
@@ -193,7 +199,9 @@ sub xyz {
        $commands->{"remove"} ||
        $commands->{"purge"}  || 
        $commands->{"reinstall"} || 
-       $commands->{"build-dep"}) ) {
+       $commands->{"build-dep"} ||
+       $commands->{"source"}
+       ) ) {
 
     print "swim: --ftp cannot be used with ";  
     print "-r " if defined $commands->{"r"};
@@ -201,6 +209,7 @@ sub xyz {
     print "--purge " if defined $commands->{"purge"};
     print "--reinstall " if defined $commands->{"reinstall"};
     print "--build-dep " if defined $commands->{"build-dep"};
+    print "--source " if defined $commands->{"source"};
     print "\n";
     exit;
   }
@@ -208,24 +217,38 @@ sub xyz {
 
       (($commands->{"r"} || 
 	$commands->{"remove"}) && 
-       $commands->{"purge"}) ||
-
-      (($commands->{"r"} || 
-	$commands->{"remove"}) && 
-       $commands->{"build-dep"}) ||
-      
-      (($commands->{"r"} || 
-	$commands->{"remove"}) && 
-       $commands->{"reinstall"}) || 
-	   
-      ($commands->{"reinstall"} && 
-       $commands->{"purge"}) ||
+       ($commands->{"purge"} ||
+       $commands->{"reinstall"} || 
+       $commands->{"build-dep"} ||
+	$commands->{"source"})) ||
 
       ($commands->{"reinstall"} && 
-       $commands->{"build-dep"}) ||
+       (($commands->{"r"} || 
+	 $commands->{"remove"}) || 
+	$commands->{"purge"} ||
+       $commands->{"build-dep"} ||
+       $commands->{"source"})) ||
 
       ($commands->{"purge"} && 
-       $commands->{"build-dep"})
+       (($commands->{"r"} || 
+	 $commands->{"remove"}) || 
+	$commands->{"reinstall"} ||
+       $commands->{"build-dep"} ||
+       $commands->{"source"})) ||
+
+      ($commands->{"build-dep"} && 
+       (($commands->{"r"} || 
+	 $commands->{"remove"}) || 
+	$commands->{"reinstall"} ||
+       $commands->{"purge"} ||
+       $commands->{"source"})) ||
+
+      ($commands->{"source"} && 
+       (($commands->{"r"} || 
+	 $commands->{"remove"}) || 
+	$commands->{"reinstall"} ||
+       $commands->{"build-dep"} ||
+       $commands->{"purge"})) 
 
 	   ) {
 
@@ -235,6 +258,7 @@ sub xyz {
     print "--purge " if defined $commands->{"purge"};
     print "--reinstall " if defined $commands->{"reinstall"};
     print "--build-dep " if defined $commands->{"build-dep"};
+    print "--source " if defined $commands->{"source"};
     print "cannot be used together\n";
     exit;
   }
@@ -256,21 +280,23 @@ sub xyz {
     print "\n";
     exit;
   }
-  if (($commands->{"source"} && $commands->{"source_only"})) {
-    print "swim: --source and --source_only cannot be used together\n";
-    exit;
-  }
-  if (($commands->{"source"} || 
-       $commands->{"source_only"}) &&
 
-      !$commands->{"ftp"}) {
+  #if (($commands->{"source"} && $commands->{"source_only"})) {
+  #  print "swim: --source and --source_only cannot be used together\n";
+  #  exit;
+  #}
+  #if (($commands->{"source"} || 
+  #     $commands->{"source_only"}) &&
 
-    print "swim: --";
-    print "source" if $commands->{"source"};
-    print "source_only" if $commands->{"source_only"};
-    print " cannot be used without --ftp\n";
-    exit;
-  }  
+  #    !$commands->{"ftp"}) {
+
+  # print "swim: --";
+  #  print "source" if $commands->{"source"};
+  #  print "source_only" if $commands->{"source_only"};
+  #  print " cannot be used without --ftp\n";
+  #  exit;
+  #}  
+
   if (($commands->{"y"} || $commands->{"z"} || $commands->{"download-only"}) &&
        !$commands->{"x"}) {
     print "swim: requires -x option\n";
@@ -365,6 +391,31 @@ sub xyz {
       elsif ( $commands->{"build-dep"} ) {
 	  system "$apt_get build-dep -qs $arg";
       }
+      elsif ( $commands->{"source"} ) {
+
+	  if ( $commands->{"tar-only"} || 
+	       $commands->{"diff-only"} ||
+	       
+	       ($commands->{"tar-only"} &&
+		$commands->{"diff-only"})
+	       ) {
+	      if ( $commands->{"tar-only"} ) {
+		  system "$apt_get source --tar-only -qs $arg";
+	      }
+	      if ( $commands->{"diff-only"} ) {
+		  system "$apt_get source --diff-only -qs $arg";
+	      }
+	  }	      
+	  else {
+	      if ( $commands->{"b"} ) {
+		  system "$apt_get source -qbs $arg";
+	      }
+	      else {
+		  system "$apt_get source -qs $arg";
+	      }
+	  }
+
+      }
       else {
 	  system "$apt_get install -qs $arg";
       }
@@ -424,6 +475,41 @@ sub xyz {
       elsif ( $commands->{"reinstall"} ) {
 	  system "$apt_get --reinstall install -qds $arg";
       }
+      elsif ( $commands->{"source"} ) {
+	  if ( $commands->{"tar-only"} ) {
+	      system "$apt_get source --tar-only -qds $arg";
+	  }
+	  elsif ( $commands->{"diff-only"} ) {
+	      system "$apt_get source --diff-only -qds $arg";
+	  }
+	  else {
+	      system "$apt_get source -qds $arg";
+	  }
+      }
+      elsif ( $commands->{"source"} ) {
+
+	  if ( $commands->{"tar-only"} || 
+	       $commands->{"diff-only"} ||
+	       
+	       ($commands->{"tar-only"} &&
+		$commands->{"diff-only"})
+	       ) {
+	      if ( $commands->{"tar-only"} ) {
+		  system "$apt_get source --tar-only -qds $arg";
+	      }
+	      if ( $commands->{"diff-only"} ) {
+		  system "$apt_get source --diff-only -qds $arg";
+	      }
+	  }	      
+	  else {
+	      if ( $commands->{"b"} ) {
+		  system "$apt_get source -qdbs $arg";
+	      }
+	      else {
+		  system "$apt_get source -qds $arg";
+	      }
+	  }
+      }
       elsif ( $commands->{"build-dep"} ) {
 	  system "$apt_get build-dep -qds $arg";
       }
@@ -482,37 +568,145 @@ sub xyz {
 	!($commands->{"ftp"} || 
 	  $commands->{"purge"} || 
 	  $commands->{"reinstall"} ||
-	  $commands->{"build-dep"} )
+	  $commands->{"build-dep"} ||
+	  $commands->{"remove"} ||
+	  $commands->{"r"} )
 
 	) {
 
+	################################
+	# INSTALL SOURCE DOWNLOAD-ONLY #
+        ################################
 	if (!$commands->{"y"}) {
 	    if (!$commands->{"download-only"}) {
 
-		!($commands->{"r"} || $commands{"remove"}) ?
-		    system "$apt_get install $arg" :
-			system "$apt_get remove $arg";
+		if ( !$commands->{"source"} ) {
+		    system "$apt_get install $arg";
+		}
+		elsif ( $commands->{"source"} ) {
+
+		    if ( $commands->{"tar-only"} || 
+			 $commands->{"diff-only"} ||
+	       
+			 ($commands->{"tar-only"} &&
+			  $commands->{"diff-only"})
+			 ) {
+			if ( $commands->{"tar-only"} ) {
+			    system "$apt_get source --tar-only $arg";
+			}
+			if ( $commands->{"diff-only"} ) {
+			    system "$apt_get source --diff-only $arg";
+			}
+		    }	      
+		    else {
+			if ( $commands->{"b"} ) {
+			    system "$apt_get source -b $arg";
+			}
+			else {
+			    system "$apt_get source $arg";
+			}
+		    }
+
+		}
 	    }
 	    else {
 
-		!($commands->{"r"} || $commands{"remove"}) ?
-		    system "$apt_get -d install $arg" :
-			system "$apt_get  remove $arg";
+		if ( !$commands->{"source"} ) {
+		    system "$apt_get -d install $arg";
+		}
+		elsif ( $commands->{"source"} ) {
+
+		    if ( $commands->{"tar-only"} || 
+			 $commands->{"diff-only"} ||
+	       
+			 ($commands->{"tar-only"} &&
+			  $commands->{"diff-only"})
+			 ) {
+			if ( $commands->{"tar-only"} ) {
+			    system "$apt_get source -d --tar-only $arg";
+			}
+			if ( $commands->{"diff-only"} ) {
+			    system "$apt_get source -d --diff-only $arg";
+			}
+		    }	      
+		    else {
+			if ( $commands->{"b"} ) {
+			    system "$apt_get source -bd $arg";
+			}
+			else {
+			    system "$apt_get source -d $arg";
+			}
+		    }
+
+		}
 	    } 
 	}
+	#####
+	# Y #
+	#####
 	else {
 	    if (!$commands->{"download-only"}) {
 
-		!($commands->{"r"} || $commands{"remove"}) ?
-		    system "$apt_get install -y $arg" :
-			system "$apt_get remove -y $arg";
+		if ( $commands->{"install"} ) {
+		    system "$apt_get install -y $arg";
+		}
+		elsif ( $commands->{"source"} ) {
+
+		    if ( $commands->{"tar-only"} || 
+			 $commands->{"diff-only"} ||
+	       
+			 ($commands->{"tar-only"} &&
+			  $commands->{"diff-only"})
+			 ) {
+			if ( $commands->{"tar-only"} ) {
+			    system "$apt_get source -y --tar-only $arg";
+			}
+			if ( $commands->{"diff-only"} ) {
+			    system "$apt_get source -y --diff-only $arg";
+			}
+		    }	      
+		    else {
+			if ( $commands->{"b"} ) {
+			    system "$apt_get source -by $arg";
+			}
+			else {
+			    system "$apt_get source -y $arg";
+			}
+		    }
+
+		}
 	    }
 	    else {
 
-		# not that the y does anything or d for that matter
-		!($commands->{"r"} || $commands{"remove"}) ?
-		    system "$apt_get install -y -d $arg" :
-			system "$apt_get remove -y $arg";
+		if ( $commands->{"install"} ) {
+		    system "$apt_get install -y -d $arg";
+		}
+		elsif ( $commands->{"source"} ) {
+
+		    if ( $commands->{"tar-only"} || 
+			 $commands->{"diff-only"} ||
+	       
+			 ($commands->{"tar-only"} &&
+			  $commands->{"diff-only"})
+			 ) {
+			if ( $commands->{"tar-only"} ) {
+			    system "$apt_get source -yd --tar-only $arg";
+			}
+			if ( $commands->{"diff-only"} ) {
+			    system "$apt_get source -yd --diff-only $arg";
+			}
+		    }	      
+		    else {
+			if ( $commands->{"b"} ) {
+			    system "$apt_get source -byd $arg";
+			}
+			else {
+			    system "$apt_get source -y -d $arg";
+			}
+		    }
+
+		}
+
 	    }
 	}
     }
@@ -525,14 +719,15 @@ sub xyz {
       qftp($arg,\%commands);
     }
   
-    ##########################################
-    # PURGE & REMOVE & REINSTALL & BUILD-DEP #
-    #########################################
-    elsif ($commands->{"purge"} || $
-	   commands->{"remove"} || 
+    ########################################################
+    # PURGE & REMOVE & REINSTALL & BUILD-DEP DOWNLOAD-ONLY #
+    ########################################################
+    elsif ($commands->{"purge"} || 
+	   $commands->{"remove"} || 
 	   $commands->{"r"} ||
 	   $commands->{"reinstall"} ||
-	   $commands->{"build-dep"} ) {        
+	   $commands->{"build-dep"}
+	   ){        
 
       purge($arg,\%commands);
 
@@ -560,30 +755,97 @@ sub purge {
 
  my ($arg,$commands) = @_;
 
-    if (!$commands->{"n"}) {
-     if ($commands->{"purge"}) {
-       system "$apt_get --purge remove $arg";  
+
+ if (!$commands->{"n"}) {
+
+     # not yes 
+     if (!$commands->{"y"}) {
+	 # not download-only
+	 if (!$commands->{"download-only"}) {
+
+	     if ($commands->{"purge"}) {
+		 system "$apt_get --purge remove $arg";  
+	     }
+	     elsif ($commands->{"remove"} || $commands->{"r"}) {
+		 system "$apt_get remove $arg";  
+	     }
+	     elsif ($commands->{"reinstall"}) {
+		 system "$apt_get --reinstall install $arg";
+	     }
+	     elsif ($commands->{"build-dep"}) {
+		 system "$apt_get build-dep $arg";
+	     }
+
+	 }
+	 # download-only
+	 else {
+
+	     if ($commands->{"purge"}) {
+		 system "$apt_get --purge -d remove $arg";  
+	     }
+	     elsif ($commands->{"remove"} || $commands->{"r"}) {
+		 system "$apt_get -d remove $arg";  
+	     }
+	     elsif ($commands->{"reinstall"}) {
+		 system "$apt_get -d --reinstall install $arg";
+	     }
+	     elsif ($commands->{"build-dep"}) {
+		 system "$apt_get -d build-dep $arg";
+	     }
+
+	 }
+	  
+     }
+     # yes
+     else {
+	 # not download-only
+	 if (!$commands->{"download-only"}) {
+
+	     if ($commands->{"purge"}) {
+		 system "$apt_get -s --purge remove $arg";  
+	     }
+	     elsif ($commands->{"remove"} || $commands->{"r"}) {
+		 system "$apt_get -s remove $arg";  
+	     }
+	     elsif ($commands->{"reinstall"}) {
+		 system "$apt_get -s --reinstall install $arg";
+	     }
+	     elsif ($commands->{"build-dep"}) {
+		 system "$apt_get -s build-dep $arg";
+	     }
+
+	 }
+	 # download
+	 else {
+
+	     if ($commands->{"purge"}) {
+		 system "$apt_get -sd --purge remove $arg";  
+	     }
+	     elsif ($commands->{"remove"} || $commands->{"r"}) {
+		 system "$apt_get -sd remove $arg";  
+	     }
+	     elsif ($commands->{"reinstall"}) {
+		 system "$apt_get -sd --reinstall install $arg";
+	     }
+	     elsif ($commands->{"build-dep"}) {
+		 system "$apt_get -sd build-dep $arg";
+	     }
+
+	 }
 
      }
-     elsif ($commands->{"remove"} || $commands->{"r"}) {
-        system "$apt_get remove $arg";  
-     }
-     elsif ($commands->{"reinstall"}) {
-	 system "$apt_get --reinstall install $arg";
-     }
-     elsif ($commands->{"build-dep"}) {
-	 system "$apt_get build-dep $arg";
-     }
-    }
-    else {
-      print "swim: ";
-      print "-r " if defined $commands->{"r"};
-      print "--remove " if defined $commands->{"remove"};
-      print "--purge " if defined $commands->{"purge"};
-      print "--reinstall " if defined $commands->{"reinstall"};
-      print "--build-dep " if defined $commands->{"build-dep"};
-      print "can only be used with installed packages\n";
-    }
+
+ }
+ # if commands = -n
+ else {
+     print "swim: ";
+     print "-r " if defined $commands->{"r"};
+     print "--remove " if defined $commands->{"remove"};
+     print "--purge " if defined $commands->{"purge"};
+     print "--reinstall " if defined $commands->{"reinstall"};
+     print "--build-dep " if defined $commands->{"build-dep"};
+     print "can only be used with installed packages\n";
+ }
 
 
 } # end sub purge
