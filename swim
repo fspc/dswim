@@ -107,7 +107,7 @@ use Getopt::Long;
 use SWIM::Conf;
 use SWIM::Global;
 use SWIM::Library;
-my $version = "0.4.1";
+my $version = "0.4.2";
 
 # The MAIN 
 # First let's determine what options are being used.
@@ -144,7 +144,6 @@ my($result) =
 		"y",              # automatic yes for -z
 		"z",              # apt install
 		"download-only",    # apt download
-		"source",         # ftp source and package
 		"source_only",    # ftp only source for package
 		"diff",           # just grab diff for source 
 		"stdin",          # read in from stdin
@@ -153,7 +152,6 @@ my($result) =
 		"d",              # show documentation
 		"g",              # packages belonging to group (27)
 		"allgroups",      # show all groups
-		"n",              # not-installed
 		"pre_depends",    # required before installation
 		"depends",        # like requires, def. needed
 		"recommends",     # packages important to this one
