@@ -39,6 +39,7 @@ sub T_indexer {
    my %commands = %$commands;
 
    foreach (@$alot) {
+
        $argument = $_;
 
        if ($commands->{"scripts"} || 
@@ -64,8 +65,8 @@ sub T_indexer {
 	   file(\%commands);
        }
        print "\n";
-       return;
    }
+
 } # end sub T_indexer
 
 
@@ -171,155 +172,203 @@ sub c_indexer {
   require SWIM::File;
   SWIM::File->import(qw(file));
 
-          foreach (@$alot) {
-           $argument = $_;           
-           if (conf(\%commands) ne 0) {
-             if ($commands->{"T"}) {
+  foreach (@$alot) {
+      $argument = $_;           
+      if (conf(\%commands) ne 0) {
+
+	  if ($commands->{"T"}) {
               # covers first argument, but not the rest.
-              if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
-                 scripts(\%commands);
+              if (
+		  $commands->{"scripts"} || 
+		  $commands->{"preinst"} ||
+		  $commands->{"postinst"} || 
+		  $commands->{"prerm"} ||
+		  $commands->{"postrm"} || 
+		  $commands->{"config"} || 
+		  $commands->{"templates"}) {
+		  scripts(\%commands);
               }
               menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
               copyright(\%commands) if $commands->{"copyright"}; 
               changelog(\%commands) if $commands->{"changelog"}; 
-                print "$argument\n"; 
-                character(\%commands);   
-                shlibs(\%commands) if $commands->{"shlibs"};               
-                print conf(\%commands) if !$commands->{"md5sum"};
-                file(\%commands);
-                #file(\%commands) if $commands->{"md5sum"};
-                 if (($commands->{"c"} && (!$commands->{"d"} || !$commands->{"l"}))) {
-                     print "\n";
-                 }
+	      print "$argument\n"; 
+	      character(\%commands);   
+	      shlibs(\%commands) if $commands->{"shlibs"};               
+	      print conf(\%commands) if !$commands->{"md5sum"};
+	      file(\%commands);
+	      #file(\%commands) if $commands->{"md5sum"};
+
+	      if (
+		  ($commands->{"c"} && 
+
+		   (!$commands->{"d"} || 
+		    !$commands->{"l"}))
+
+		  ) {
+		  print "\n";
+	      }
               $arg_save = $argument;
-             } # end "T" 
+	  } # end "T" 
  
-             elsif (which_character(\%commands)) {
-                 my %store_commands = %commands;
-                 $argument = $_;           
-                 if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                     $commands->{"postinst"} || $commands->{"prerm"} ||
-                     $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
-                    scripts(\%commands);
-                 }
-                 menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
-                 copyright(\%commands) if $commands->{"copyright"}; 
-                 changelog(\%commands) if $commands->{"changelog"}; 
-                 if  (the_character(\%commands) ne "ok") {
-                   print "$argument\n";
-                 }
-                 if (defined s_character(\%commands)) {}   
-                 shlibs(\%commands) if $commands->{"shlibs"};
-                 print conf(\%commands) if !$commands->{"md5sum"};
-                 file(\%commands);
-                 #file(\%commands) if $commands->{"md5sum"};
-                 if (($commands->{"c"} && (!$commands->{"d"} || !$commands->{"l"}))) {
-                     print "\n";
-                 }
-                 %commands = %store_commands;
-                 undef %store_commands;
+	  elsif (which_character(\%commands)) {
+	      my %store_commands = %commands;
+	      $argument = $_;           
+	      if (
+		  $commands->{"scripts"} || 
+		  $commands->{"preinst"} ||
+		  $commands->{"postinst"} || 
+		  $commands->{"prerm"} ||
+		  $commands->{"postrm"} || 
+		  $commands->{"config"} || 
+		  $commands->{"templates"}
+		  ) {
+		  scripts(\%commands);
+	      }
+	      menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
+	      copyright(\%commands) if $commands->{"copyright"}; 
+	      changelog(\%commands) if $commands->{"changelog"}; 
+	      if  (the_character(\%commands) ne "ok") {
+		  print "$argument\n";
+	      }
+	      if (defined s_character(\%commands)) {}   
+	      shlibs(\%commands) if $commands->{"shlibs"};
+	      print conf(\%commands) if !$commands->{"md5sum"};
+	      file(\%commands);
+	      #file(\%commands) if $commands->{"md5sum"};
+	      if (
+		  ($commands->{"c"} && 
+
+		   (!$commands->{"d"} || 
+		    !$commands->{"l"}))
+
+		  ) {
+		  print "\n";
+	      }
+	      %commands = %store_commands;
+	      undef %store_commands;
               $arg_save = $argument;
-             }
-
-             # no Ts.
-             else {
-                if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                    $commands->{"postinst"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"prerm"} ||
-                    $commands->{"postrm"}) {
-                    scripts(\%commands);
-                }
-                menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
-                copyright(\%commands) if $commands->{"copyright"}; 
-                changelog(\%commands) if $commands->{"changelog"}; 
-                print "$argument\n";
-                shlibs(\%commands) if $commands->{"shlibs"};
-                print conf(\%commands) if !$commands->{"md5sum"};
-                file(\%commands);
-                print "\n";
-             }
-           $arg_save = $argument;
-           } # end if (conf(\%commands)   
-
-           # this spot here can determine whether or not -c overrides l&d
-           # in packages which don't have conf files.  it's nicer to view
-           # everything.  watch this..these are packages which don't have
-           # conf files 
-           if ($commands->{"d"} || $commands->{"l"}) {
-            if ($arg_save) {
-            if ($argument ne $arg_save) { 
-            #if (!$arg_save) {
-            if (conf(\%commands) ne 0) {
-               shlibs(\%commands) if $commands->{"shlibs"};
-               file(\%commands);
-               print "\n";
-             } 
-
-             # no conf files
-             elsif (conf(\%commands) eq 0) { 
-              if ($commands->{"T"}) {
-                $argument = $_;           
-              if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                  $commands->{"postinst"} || $commands->{"prerm"} ||
-                  $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
-                 scripts(\%commands);
-              }
-              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
-              copyright(\%commands) if $commands->{"copyright"}; 
-              changelog(\%commands) if $commands->{"changelog"}; 
-                print "$argument\n"; 
-                character(\%commands);   
-                shlibs(\%commands) if $commands->{"shlibs"};
-                file(\%commands) if $commands->{"md5sum"};
-                 print "\n";
-              } # end "T" 
-
-              elsif (which_character(\%commands)) {
-                 my %store_commands = %commands;
-                 $argument = $_;           
-                 if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                     $commands->{"postinst"} || $commands->{"prerm"} ||
-                     $commands->{"postrm" || $commands->{"config"} || $commands->{"templates"}}) {
-                    scripts(\%commands);
-                 }
-                 menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
-                 copyright(\%commands) if $commands->{"copyright"}; 
-                 changelog(\%commands) if $commands->{"changelog"}; 
-                 if  (the_character(\%commands) ne "ok") {
-                   print "$argument\n";
-                 }
-                 if (defined s_character(\%commands)) {}   
-                 shlibs(\%commands) if $commands->{"shlibs"};
-                 %commands = %store_commands;
-                 undef %store_commands;
-                 file(\%commands);
-                 print "\n";
-              }
-
-              # no Ts. 
-              else {
-                 if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                    $commands->{"postinst"} || $commands->{"prerm"} ||
-                    $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} ) {
-                     scripts(\%commands);
-                 }
-                 menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
-                 copyright(\%commands) if $commands->{"copyright"}; 
-                 changelog(\%commands) if $commands->{"changelog"}; 
-                 singular(\%commands);
-                 if ($commands->{"scripts"}) {
-                     print "\n";
-                 }
-                 shlibs(\%commands) if $commands->{"shlibs"}; 
-                 file(\%commands);
-                 print "\n";
-              }
-             } 
-            }
-            }
-           } # end if ($commands->{"d"} || 
-          } # end foreach
+	  }
+	  
+	  # no Ts.
+	  else {
+	      if (
+		  $commands->{"scripts"} || 
+		  $commands->{"preinst"} ||
+		  $commands->{"postinst"} || 
+		  $commands->{"config"} || 
+		  $commands->{"templates"} || 
+		  $commands->{"prerm"} ||
+		  $commands->{"postrm"}) {
+		  scripts(\%commands);
+	      }
+	      menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
+	      copyright(\%commands) if $commands->{"copyright"}; 
+	      changelog(\%commands) if $commands->{"changelog"}; 
+	      print "$argument\n";
+	      shlibs(\%commands) if $commands->{"shlibs"};
+	      print conf(\%commands) if !$commands->{"md5sum"};
+	      file(\%commands);
+	      print "\n";
+	  }
+	  $arg_save = $argument;
+      } # end if (conf(\%commands)   
+      
+      # this spot here can determine whether or not -c overrides l&d
+      # in packages which don't have conf files.  it's nicer to view
+      # everything.  watch this..these are packages which don't have
+      # conf files 
+      if ($commands->{"d"} || $commands->{"l"}) {
+	  if ($arg_save) {
+	      if ($argument ne $arg_save) { 
+		  #if (!$arg_save) {
+		  if (conf(\%commands) ne 0) {
+		      shlibs(\%commands) if $commands->{"shlibs"};
+		      file(\%commands);
+		      print "\n";
+		  } 
+		  
+		  # no conf files
+		  elsif (conf(\%commands) eq 0) { 
+		      if ($commands->{"T"}) {
+			  $argument = $_;           
+			  if (
+			      $commands->{"scripts"} || 
+			      $commands->{"preinst"} ||
+			      $commands->{"postinst"} || 
+			      $commands->{"prerm"} ||
+			      $commands->{"postrm"} || 
+			      $commands->{"config"} || 
+			      $commands->{"templates"}) {
+			      scripts(\%commands);
+			  }
+			  menu(\%commands) if $commands->{"menu"} || 
+			      $commands->{"m"};
+			  copyright(\%commands) if $commands->{"copyright"}; 
+			  changelog(\%commands) if $commands->{"changelog"}; 
+			  print "$argument\n"; 
+			  character(\%commands);   
+			  shlibs(\%commands) if $commands->{"shlibs"};
+			  file(\%commands) if $commands->{"md5sum"};
+			  print "\n";
+		      } # end "T" 
+		      
+		      elsif (which_character(\%commands)) {
+			  my %store_commands = %commands;
+			  $argument = $_;           
+			  if (
+			      $commands->{"scripts"} || 
+			      $commands->{"preinst"} ||
+			      $commands->{"postinst"} || 
+			      $commands->{"prerm"} ||
+			      $commands->{"postrm"} || 
+			      $commands->{"config"} || 
+			      $commands->{"templates"}) {
+			      scripts(\%commands);
+			  }
+			  menu(\%commands) if $commands->{"menu"} || 
+			      $commands->{"m"};
+			  copyright(\%commands) if $commands->{"copyright"}; 
+			  changelog(\%commands) if $commands->{"changelog"}; 
+			  if  (the_character(\%commands) ne "ok") {
+			      print "$argument\n";
+			  }
+			  if (defined s_character(\%commands)) {}   
+			  shlibs(\%commands) if $commands->{"shlibs"};
+			  %commands = %store_commands;
+			  undef %store_commands;
+			  file(\%commands);
+			  print "\n";
+		      }
+		      
+		      # no Ts. 
+		      else {
+			  if (
+			      $commands->{"scripts"} || 
+			      $commands->{"preinst"} ||
+			      $commands->{"postinst"} || 
+			      $commands->{"prerm"} ||
+			      $commands->{"postrm"} || 
+			      $commands->{"config"} || 
+			      $commands->{"templates"} ) {
+			      scripts(\%commands);
+			  }
+			  menu(\%commands) if $commands->{"menu"} || 
+			      $commands->{"m"};
+			  copyright(\%commands) if $commands->{"copyright"}; 
+			  changelog(\%commands) if $commands->{"changelog"}; 
+			  singular(\%commands);
+			  if ($commands->{"scripts"}) {
+			      print "\n";
+			  }
+			  shlibs(\%commands) if $commands->{"shlibs"}; 
+			  file(\%commands);
+			  print "\n";
+		      }
+		  } 
+	      }
+	  }
+      } # end if ($commands->{"d"} || 
+  } # end foreach
 
 } # end sub c_indexer
 
@@ -396,6 +445,8 @@ sub indexer {
          # -t BUT NOT -C,-D,-L #
          #######################
          elsif (!$commands->{"c"} && (!$commands->{"d"} || !$commands->{"l"})) {     
+
+
           if ($commands->{"T"}) {
             T_indexer(\@alot,\%commands);
           }
@@ -422,7 +473,6 @@ sub indexer {
                 ($commands->{"c"} && 
 		 ($commands->{"d"} || 
 		  $commands->{"l"}))) {
-
 	     c_indexer(\@alot,\%commands);        
 
          } # end elsif         
