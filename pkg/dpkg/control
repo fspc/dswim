@@ -11,12 +11,12 @@ Depends: perl5, dpkg, apt (>=0.3.2)
 Suggests: gcc
 Recommends: libnet-perl, libterm-readline-gnu-perl | libterm-readline-perl-perl
 Description: Debian System Wide Information Manager
- SWIM is a powerful package information and distribution research tool
+ DSWIM is a powerful package information and distribution research tool
  for both an installed Debian distribution or not-installed virtual
  Debian distribution(s) allowing querying of software packages with a
  variety of package information options, and powerful searches. Virtual
  options which include ftp, installation, and package removal capabilities
- can be seamlessly combined with querying or searches. SWIM can be used on
+ can be seamlessly combined with querying or searches. DSWIM can be used on
  computer systems which either have, or do not have a Debian distribution
  installed.
  .
@@ -30,3 +30,16 @@ Description: Debian System Wide Information Manager
  The latest and greatest swim can be retrieved from here: 
  .	
  deb http://prdownloads.sourceforge.net/avd ./
+
+
+
+
+
+
+
+
+
+
+
+
+
