@@ -1,3 +1,40 @@
+dswim (0.4.0-1) unstable; urgency=high
+
+  * Dswim now creates databases for non-root users.  All db are now created in
+    $HOME/default_directory/var/lib/dpkg rather than /var/lib/dpkg, and 
+    .swim_history is put here, too.
+
+  * Separated the documentation into a separate package, but keep man pages 
+    around for backwards and current compatibility, and wrote a warning at top.
+
+  * Removed lots of the -n db options from help because they are broken in 
+    relation to major changes in the Debian archive.  Left some just as 
+    reminders of dswims inherent ability for older Debian archives.
+
+  * Updated copylet and swim is now DSWIM .. Debian System Wide Information 
+    Manager.  Changed "Package administration and research tool for Debian" to 
+    DSWIM.
+
+  * --rebuilddb automatically when noticing a change near the beginning of 
+    command() after --db --check runs  Added $no_rebuilddb configuration option 
+    to allow users to override this behavior.
+
+  * --remove and --purge are now handled by apt-get and apt's new --reinstall 
+    added.
+
+  * Added --config and --templates to the query options.
+
+  * --initdb and --rebuilddb STDOUT output are now STDERR mostly to make debconf
+    happy, and both of these options return their corresponding names via their
+    functions.
+
+  * Fixed many of the defined bugs and a few of the regexp bugs ..
+    these were just the complaints of the newer Perl.
+
+  * Added swim_pkg to CVS to simplify packaging dswim.
+
+ -- Jonathan Rosenbaum <freesource@users.sourceforge.net>  Tue, 16 Oct 2001 16:25:51 -0400
+
 swim (0.3.6-1) unstable; urgency=low
 
   * Made swim perl-5.6 happy.  Thanks to Douglas du Boulay
