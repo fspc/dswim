@@ -1945,11 +1945,11 @@ usage:
         -r                 - remove the installed package, but not the
                              package's configuration files  
         --reinstall        - reinstall the installed package      
-        --build-dep            - satisfy package build dependencies
-        --source               - fetch source packages
-          -b                   - compile source packages
-          --tar-only           - download tar file only
-          --diff-only          - download diff file only
+        --build-dep        - satisfy package build dependencies
+        --source           - fetch source packages
+          -b                  - compile source packages
+          --tar-only          - download tar file only
+          --diff-only         - download diff file only
 
       Editing Option
         --stdin            - allows readline editing capabilities when
@@ -1994,9 +1994,9 @@ usage:
         --reinstall            - reinstall the installed package      
         --build-dep            - satisfy package build dependencies
         --source               - fetch source packages
-          -b                   - compile source packages
-          --tar-only           - download tar file only
-          --diff-only          - download diff file only
+          -b                      - compile source packages
+          --tar-only              - download tar file only
+          --diff-only             - download diff file only
 
       Editing Option
         --stdin                - allows readline editing capabilities when
