@@ -4,11 +4,11 @@
 # "How about non-us?".
 
 # Which do you have on your system?  Pick dpkg if Debian, ar if non-Debian.
-#$package_tool = "/usr/bin/dpkg";
+$package_tool = "/usr/bin/dpkg";
 #$package_tool = "/usr/bin/ar";
 
 # Do you have apt installed?
-#$apt = "yes";
+$apt = "yes";
 
 # Pick one.
 #$architecture = "alpha";
