@@ -940,6 +940,7 @@ sub rebuildflatdb {
    }
   }
   untie %ib;
+  print STDERR "swim: searchindex.deb and fileindex.deb have been rebuilt\n";
   print scalar(localtime), "\n";
 
 } # end sub rebuildflatdb
