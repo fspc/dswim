@@ -1,0 +1,1622 @@
+
+                                   swim
+                                   ----
+            Jonathan D. Rosenbaum<mttrader@access.mountain.net>
+                               15 June 1999
+
+0.1 Contents
+------------
+
+     1.        DESCRIPTION 
+
+     2.        COMMAND LINE OPTION SYNTAX 
+
+     3.        VERSION 
+
+     4.        HISTORY 
+
+     5.        MAKING INSTALLED SYSTEM DATABASES 
+     5.1.      Initial database making, and Rebuilding for an Installed
+               system. 
+     5.2.      UPDATING 
+     5.3.      REBUILDING THE SEARCH 
+     5.4.      FILES 
+
+     6.        IMPORTANT DEBIAN DATABASES FOR NOT-INSTALLED DATABASES 
+     6.1.      A. downloading the important databases with --ftp. 
+     6.2.      OVERVIEW 
+     6.3.      DISTRIBUTION DEFINED 
+     6.4.      SECTIONS 
+     6.5.      ARCHITECTURES 
+     6.6.      SWIMZ.LIST 
+     6.7.      SWIMZ.LIST EXAMPLES 
+     6.8.      FTP OR APT? 
+     6.9.      OPTIONS 
+     6.10.     B. downloading the important databases with apt, and
+               maintenance options. 
+
+     7.        MAKING NOT-INSTALLED DATABASES 
+     7.1.      OVERVIEW 
+     7.2.      OPTIONS 
+     7.3.      UPDATING 
+     7.4.      REBUILDING THE SEARCH 
+     7.5.      FILES 
+
+     8.        PREPARING YOUR INSTALLATION FOR APT 
+
+     9.        QUERYING THE INSTALLED AND NOT-INSTALLED DATABASES 
+     9.1.      MINOR MODES 
+     9.2.      SPECIFYING THE DATABASES TO USE 
+     9.3.      OPTIONS 
+     9.4.      PACKAGE RELATIONSHIPS 
+     9.5.      FORMAT 
+     9.6.      FTP - VIRTUAL OPTIONS 
+     9.7.      APT - VIRTUAL OPTIONS 
+     9.8.      REMOVING AN INSTALLED PACKAGE - VIRTUAL OPTIONS 
+     9.9.      STDIN - VIRTUAL OPTIONS 
+     9.10.     PACKAGE MANIPULATION - VIRTUAL OPTIONS 
+     9.11.     DATABASE LOCATIONS 
+
+     10.       UPGRADING WITH APT 
+
+     11.       SEARCHING 
+     11.1.     OVERVIEW 
+     11.2.     NARROWING A PREVIOUS SEARCH 
+     11.3.     MINOR MODES 
+     11.4.     OTHER OPTIONS 
+     11.5.     EXAMPLES 
+
+     12.       RAMDISK 
+     12.1.     OVERVIEW 
+
+     13.       FILES 
+
+     14.       SEE ALSO 
+
+     15.       BUGS
+
+0.2 Copyright Notice
+--------------------
+
+     Copyright © 1999 Jonathan D. Rosenbaum 
+
+     SWIM, including this manual, is free software; you may redistribute it
+     and/or modify it under the terms of the GNU General Public License as
+     published by the Free Software Foundation; either version 2, or (at
+     your option) any later version. 
+
+     This is distributed in the hope that it will be useful, but *without
+     any warranty*; without even the implied warranty of merchantability or
+     fitness for a particular purpose. See the GNU General Public License
+     for more details. 
+
+     You should have received a copy of the GNU General Public License with
+     the swim source as the file `COPYING'. If not, write to the Free
+     Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
+
+
+-------------------------------------------------------------------------------
+
+
+1. DESCRIPTION 
+---------------
+
+     *swim* is a powerful *package administration* and *research tool* for
+     both an *installed Debian distribution*, and/or *not-installed virtual
+     Debian distribution(s)* allowing querying of software packages with a
+     variety of package information options, and powerful searches. Virtual
+     options which include ftp, installation, and package removal
+     capabilities can be seamlessly combined with querying or searches.
+     *swim* can be used on computer systems which either have, or do not
+     have a Debian distribution installed. 
+
+
+-------------------------------------------------------------------------------
+
+
+2. COMMAND LINE OPTION SYNTAX 
+------------------------------
+
+     When you press ``*swim* <*enter*>`` you will see a listing of command
+     line options in a particular syntax. This is to help you understand
+     under what context to use the options. When you enter the options on
+     the command line, the brackets, parentheses, braces, diamonds, and
+     question marks are not actually used. 
+
+     *Major Mode Option* 
+
+     All command line options for *swim* always start with a *major mode
+     option*, except for ``swim <enter>`` which will show the whole listing
+     of options. A major mode option is surrounded in braces *{ major mode
+     option }*. In the case of {--search} there are the alternative major
+     mode options {--refinesearch} and {--research}, but because --search
+     needs to be used first before either of these two options,
+     --refinesearch and --research are surrounded in parentheses (). 
+
+     Note: Through the other chapters of this manual *{}* is assumed for
+     the *major modes* in the *usage:* section shown at the beginning of
+     every chapter. 
+
+     Let's take a closer look at this situation: 
+
+     `{--search ? (--research || --refinesearch)<pattern(s)>}' 
+
+     `*||*' or `*|*' are used to indicate `*or*', `*?*' indicates
+     `*optional*', <diamond> indicates an *argument* (a required argument -
+     see Arguments below), (parenthesis) means `if used, must be used after
+     the previous required option was used'. Note: for readability
+     `--research' and -`-refinesearch' are not surrounded in `{}'. 
+
+     *Normal Options* 
+
+     Options to the major mode options are enclosed in brackets *[ option
+     to major mode ]*. `swim [-n]' <`enter'> (assume enter from here on
+     out), for instance, will show all the command line options without
+     using the pager. The pager which swim uses can be set in *swimrc* (see
+     *swimrc(8)*). ```swim {--help} [-n]''' will provide brief explanations
+     of all of swim's options without using the pager. In this case the
+     major mode option *{--help}*, and the option *[-n]* were used. 
+
+     *Dashes* 
+
+     Options which have a single dash can be combined with other single
+     dashed options *(-qaint)*. Double dashed options need to be entered by
+     themselves *(--help --nopager)*, many double dashed options have an
+     alternative single dash option *(-n for --nopager)*. The meaning of
+     options is related to the major mode they are being used with. *[-n]*
+     means no pager when called with *{--help}*, but it's a reference to
+     the not-installed databases when used with *{-q --query}*, fortunately
+     most options do not have double meanings. 
+
+     *Arguments* 
+
+     Many options require an argument. Arguments are enclose in diamonds <
+     *argument* >. An argument to an option may also be optional in which
+     case a question mark ``*?*'' will be placed between the option and the
+     argument. *[-l ? <[--df]>]* illustrates such a situation. *[-l]* shows
+     a file listings, and optionally the option *[--df]* can be use with
+     *[-l]* to show an expanded listing. 
+
+     *[--dbpath* <*dir>]* requires an argument, this time the argument
+     would not be another option, but rather it is a directory. 
+
+     Rule: When an option is an argument to another option it can be
+     written anywhere, but when a non-option is an argument <*dir*>
+     *(notice no brackets)* it has to be placed directly after the option.
+     Sometimes, there may be alternative arguments divided with ``*|*''.
+     <*argument1|argument2*> means use argument1 or argument2, but not
+     both. 
+
+     Based on what we now know, let's compare this situation to the
+     *{--search}* situation shown above: 
+
+     `[--ftp ? --source | --source_only ? <[--diff]>]' 
+
+     In this case *--source* or alternatively *--source_only* can be
+     optionally used along with *--ftp* because they aren't in parentheses
+     *()* (also notice: | was used instead of ||, but means the same thing
+     ``or''). *--diff* can optionally be provided as an argument to either
+     *--source* or *--source_only*. For readability --source and
+     --source_only weren't enclosed in brackets. 
+
+     *Global Arguments* 
+
+     A *global argument* can be typed anywhere on the command line, and can
+     be an option or text. If global arguments exist they are placed last
+     after the list of normal options that can be used with a major mode
+     option. 
+
+     [targets | -S] and [targets|APT|DF] are examples. {-q}, {--initndb},
+     and {--rebuildndb} all use global arguments. 
+
+     *Minor Mode Options* 
+
+     {-q --query} will generally use zero or more minor mode options
+     [-afpgn --dir], with one exception (see chapter 9, `QUERYING THE
+     INSTALLED AND NOT-INSTALLED DATABASES '). 
+
+
+-------------------------------------------------------------------------------
+
+
+3. VERSION 
+-----------
+
+     usage: *swim --version* 
+
+     This shows the version for the swim program. 
+
+
+-------------------------------------------------------------------------------
+
+
+4. HISTORY 
+-----------
+
+          usage: swim --history
+                 swim -h
+          
+          options: [--arch <architecture>] [--dists <distribution>]
+                   [--n] [--dbpath <dir>] [--root <dir>]
+
+     This shows a shell-like history of searches and the most recent
+     --stdin edit. History is numbered with the most recent action being 1,
+     and the earlier actions being of a higher number until the maximum
+     amount of lines set in the HISTORY variable in `swimrc(5)'. A separate
+     history is kept for each architecture-distribution. 
+
+
+-------------------------------------------------------------------------------
+
+
+5. MAKING INSTALLED SYSTEM DATABASES 
+-------------------------------------
+
+
+
+5.1. Initial database making, and Rebuilding for an Installed system. 
+----------------------------------------------------------------------
+
+          usage: swim --initdb
+                 swim --rebuilddb
+          
+          options:  [--dbpath <dir>] [--root <dir>] [--lowmem]
+                    [--split_data <lines>]
+
+     An *installed Debian distribution* is one in which packages are
+     installed using *dpkg* or some front-end to *dpkg* like *apt* or
+     *dselect*; *swim* supports installation through *apt*. These major
+     modes are for a computer with an *installed Debian distribution* and
+     make the databases which allow querying and searching capabilities for
+     the installed distribution. 
+
+     *--initdb* is run when the databases do not exist yet, *--rebuilddb*
+     is run if the databases have become corrupt, or you want to rebuild
+     the databases instead of updating them. 
+
+     *--dbpath* can be specified as an alternative location for where the
+     databases will be made. The default location is ``*/var/lib/dpkg*''.
+     An argument like ``*/otherstuff*'' could be provided, and then the
+     databases would be made here instead. 
+
+     *--root* allows a database to be made for a Debian distribution
+     installed on a different partition. If the distribution is mounted on
+     */New_Debian*, ``*/New_Debian*'' would be the argument to root. The
+     databases would be made for the Debian distribution installed on the
+     ``*/New_Debian*'' partition. 
+
+     *--dbpath* and *--root* can be used together. Given the previous two
+     examples, the databases would be made on ``*/New_Debian/otherstuff*'',
+     assuming ``*/New_Debian/otherstuff*'' actually existed. 
+
+     *--lowmem* uses a method which uses a small amount of memory to make
+     the databases. By default *--initdb* and *--rebuilddb* use a method
+     which fully takes advantage of memory, this is a good thing, because
+     it means the databases are made in a quicker manner. On a computer
+     with a K6-200 CPU, 64MB of memory, and 1500 installed packages, the
+     databases can be made in 4.5 minutes using the default method, and 11
+     minutes using the low memory method. The high memory method is the
+     default because in general the size of a distribution is related to
+     how much resources a computer has, and probably a large installation
+     is unusual. If you get an ``out of memory'' when you use the default
+     method, or if your system is overloaded to begin with, the *--lowmem
+     method* is the prefered way. 
+
+     *--split_data* determines the size of the files in the temporary
+     directory used to contruct the database. The default is 25000 lines
+     per file. If you are using the *--lowmem method* you may want to
+     provide a different argument to *--split_data*, like ``*--split_data
+     10000*''. This is a subject of experimentation. 
+
+
+
+5.2. UPDATING 
+--------------
+
+     usage: *swim --db* 
+
+     options: *[--dbpath* <*dir*>*] [--root* <*dir*>*] [--check]* 
+
+     *--db* allows you to update the databases by hand when packages have
+     been removed, added, or changed. swim will automatically run *--db*
+     under certain conditions. 
+
+     *--check* prints out the changes to STDERR, and the total to STDOUT
+     without proceeding with the update. 
+
+     See section 5.1, `Initial database making, and Rebuilding for an
+     Installed system. ' for options *--dbpath* and *--root*. 
+
+
+
+5.3. REBUILDING THE SEARCH 
+---------------------------
+
+     usage: *swim --rebuildflatdb* 
+
+     options: *[--dbpath* <*dir*>*] [--root* <*dir*>*]* 
+
+     swim makes the flat databases *searchindex.deb* and *dirindex.deb* for
+     doing *powersearches*. Instead of rebuilding these databases everytime
+     *--db* is run, new information is just appended to these databases,
+     and old information is kept. Generally, this is not a problem because
+     only files and directories which the other databases actually know
+     something about will be refered to. But in a situation where a file
+     has changed into a directory, the *powersearch* may not work properly,
+     because the old file name remains in *searchindex.deb*, and the new
+     directory name is now in *dirindex.deb* directory. In general, it
+     takes a lot of changes to the installed system before it is really
+     becomes necessary to rebuild the flat databases. This process takes
+     less than a minute on a K6-200 with 1500 packages. 
+
+     See section 5.1, `Initial database making, and Rebuilding for an
+     Installed system. ' for options *--dbpath* and *--root*. 
+
+
+5.4. FILES 
+-----------
+
+     Databases which are made: 
+
+           packages.deb
+           fileindex.deb
+           statusindex.deb
+           groupindex.deb
+           searchindex.deb
+           dirindex.deb
+
+
+-------------------------------------------------------------------------------
+
+
+6. IMPORTANT DEBIAN DATABASES FOR NOT-INSTALLED DATABASES 
+----------------------------------------------------------
+
+
+
+6.1. A. downloading the important databases with --ftp. 
+--------------------------------------------------------
+
+          usage: swim --ftp
+          
+          options: --Contents <DF|directory>
+                   --Packages <DF|directory>
+                   [--dists <distribution>] [--arch <architecture>]
+                   [--onec] [--Release_only]
+
+
+6.2. OVERVIEW 
+--------------
+
+     *swim* provides a method so that all information about an existing
+     Debian distribution is quickly accessible through databases. Debian
+     already provides flat file databases for all its distributions. One
+     database called ``*Contents-(architecture)*'' provides a complete
+     listing of all the files associated with each package, the other much
+     more important database called ``*Packages*'' provides everything from
+     the Package's description, to all the dependencies for that package.
+     The Packages database is a crucial database for other important Debian
+     administrative tools like *dpkg* and *apt*. 
+
+
+6.3. DISTRIBUTION DEFINED 
+--------------------------
+
+     Debian Distributions choose a name which reflect the development state
+     of that distribution. The distribution named ``*unstable*'' is where
+     the majority of the development processing occurs, after *unstable*
+     has reached a certain level of maturity, it's copied over to a new
+     distribution called ``*frozen*'' which is tested extensively before
+     becoming the new ``*stable*'' distribution. The *frozen distribution*
+     retains the *Release version number* of the *unstable distribution*,
+     and the *unstable distribution* receives a new *Release version
+     number*. Eventually, *frozen* becomes *stable*, and at this point both
+     *frozen*, and the older *stable distribution* are removed. Code names
+     are associated with the *Release Version number* given for each of the
+     distributions. This is much better for mirroring Debian sites. 
+
+     *swim* was designed to ignore these code names, and instead shows the
+     user the *Release version number* associated with the distribution.
+     Swim users must always use the real distribution name, or swim will
+     not work properly. This is a nice feature because it allows user to
+     make decisions related to the management of their databases, and makes
+     research much more easier. 
+
+     The other Debian distribution which swim recognizes is *experimental*.
+     This distribution *does not have any Release version number*, and
+     contains packages which are considered risky because of their
+     development level. 
+
+
+
+6.4. SECTIONS 
+--------------
+
+     Each Debian distribution has sections related to the relationship of
+     each of the packages to the *Debian's Policy Manual*. In ``*main*''
+     there are packages which have a correct relationship with these
+     Policies. Packages in ``*contrib*'' comply with the *DFSG* (*Debian
+     Free Software Guidelines* found in the *Debian Policy Manual*) but
+     have various limitations like requiring a package which is found in
+     non-free, or is not in the Debian archive. Packages in ``*non-free*''
+     do not comply with the *DFSG* but are electronically distributable
+     across international borders. The ``*non-us*'' section is found
+     outside of the United States and exists for packages which have export
+     restrictions. 
+
+
+
+6.5. ARCHITECTURES 
+-------------------
+
+     Distributions also have architecture specific sections since not all
+     packages compiled for one architecture can run on all other
+     archictectures, however, there are a large percentage of packages
+     which do run on all architectures. The architectures are *alpha*,
+     *arm*, *i386*, *m68k*, *powerpc*, *sparc*, and more recently
+     *hurd-i386* which represents packages for the hurd GNU kernel for the
+     i386 architecture. 
+
+
+
+6.6. SWIMZ.LIST 
+----------------
+
+     *--ftp* uses a file called *swimz.list* which has the same type of
+     format (see format below) as the *sources.list(5)* which *apt* uses.
+     There are some differences. The *first difference* mentioned above
+     (see section 6.3, `DISTRIBUTION DEFINED ') requires that the
+     distribution names never should be the code names for the *Release
+     version*. *Secondly*, *apt* only retrieves databases specific to one
+     archictecture, normally the one you are running *apt* on. With *swim*
+     though you can fetch databases for any, or every architecture by
+     adding the architecture to ``deb'' with a hyphen (deb-hurd-i386). If
+     deb has no architecture appended it is assumed that the architecture
+     you want is the same as the system you are running *swim* on.
+     *Thirdly*, at this time *swim* only supports the ftp method.
+     *Fourthly*, you can change *swimz.list* as often as you want without
+     worrying about databases being removed so that that the *swimz.list*
+     and the downloaded databases match. This would occur with *apt's*
+     *sources.list(5)* if you removed a site. *Fifthly*, databases are kept
+     in a compressed state. *Sixthly* because the list is used for both
+     Contents and Packages, more flexibility is provided by only allowing
+     the default distribution/archictecture or distribution/architecture
+     provided on the commandline to be downloaded. 
+
+     For *apt* users: If you are using *apt*, and *swim* together it is a
+     good strategy to use the real distribution name in the *sources
+     list(8)*, and to have an exact copy of the *sources.list(5)* ftp sites
+     in the *swimz.list*. Packages databases specific to the architecture
+     *apt* is using can be retrieved using *swim --apt --update* (this also
+     will keep track of the Release version), and then *swim* can be used
+     to fetch the architecture specific *Contents database* as shown below.
+     It should also be of interest to note that Packages downloaded by
+     either swim or apt can be used interchangeably by using 'cp -a' and
+     'gzip -d' or 'gzip -9'. 
+
+     Here is a brief outline of the format required by *swimz.list*. 
+
+     *deb uri distribution [section ... ]* 
+
+     *deb* - represents a standard Debian distribution. And is simply
+     written as deb or with the architecture appended (*deb* or
+     *deb-alpha*). 
+
+     *uri* - Universal Resource Identifier is exactly how you would enter
+     an address into a web browser. This address is the base of a Debian
+     distribution, generally this is right before the directory called
+     ``*dists*''. So if *dists* is found in */stuff/pub/debian/dists*, and
+     the site is *somewhere.com* then the uri would be
+     *ftp://somewhere.com/stuff/pub/debian*. 
+
+     *distribution* - This can be *unstable*, *frozen*, *stable*,
+     *experimental*. Distribution can also be a path which must end with a
+     slash like *unstable/binary-i386/*. This is used when there is no
+     section as in the experimental distribution or in sites which do not
+     have symlinks to the non-us section. No section would be mentioned in
+     this situation. 
+
+     *section* - *main*, *contrib*, *non-free*, *non-US* (write it this
+     way). 
+
+
+
+6.7. SWIMZ.LIST EXAMPLES 
+-------------------------
+
+     Examples (each on one line): 
+
+     *deb-alpha ftp://somewhere.com/stuff/pub/debian unstable main contrib
+     non-US* 
+
+     This will fetch the alpha databases from somewhere.com for the
+     unstable distribution for the main, contrib and non-US sections. 
+
+     Note: In these next two examples you can not append any architecture
+     to deb with a hyphen. 
+
+     *deb ftp://somewhere.com/stuff/pub/debian project/experimental/* 
+
+     This will fetch the experimental database, but there is not a
+     Contents-(architecture) database for this distribution. Notice that it
+     ends with a slash. 
+
+     *deb ftp://somewhere.com/stuff/pub/debian-non-US stable/binary-i386/* 
+
+     This will fetch the i386 databases for the stable distribution for
+     non-us, 
+
+
+6.8. FTP OR APT? 
+-----------------
+
+     How you use major mode *--ftp* depends on your goals. Even if you are
+     using *apt*, you may be interested in keeping tabs on different
+     architectures. In this case you would have to download the *Packages
+     databases* specific to these architectures. If you are only interested
+     in the architecture which *apt* is interested in, then you only need
+     to use *--ftp* to fetch the *Contents database(s)*. But, because it
+     isn't a requirement to set up a virtual filesystem, you are not
+     required to fetch the Contents database. The *advantages* of fetching
+     the Contents database is determined by the method you choose to make
+     the database (see chapter 7, `MAKING NOT-INSTALLED DATABASES '). These
+     advantages include the ability to *view a listing of the files and
+     directories* associated with a package, the ability to *query files
+     and directories* to find out which packages relate to them, and the
+     ability to perform a *powersearch* on all the files and directories to
+     find the associated packages. 
+
+
+
+6.9. OPTIONS 
+-------------
+
+     *Remember:* If you want to download a different
+     distribution/architecture other than the default specified in your
+     configuration file, you must specify this on the commandline. 
+
+     *--Packages* determines where you want the Packages database as well
+     as the Release data put when they are downloaded. The *DF argument*
+     implies that the databases will be put in your default directory (see
+     `swimrc(5)).' These databases can later be located by the major modes
+     *--initndb and --rebuildndb* just by using *DF* as an argument.
+     Alternatively, these databases can be put in any directory you choose
+     by providing a *directory as an argument*. 
+
+     *--Contents* determines where you want the *Content-(architecture)*
+     `database(s)' put. (see --Packages). 
+
+     *--onec* will download only one Contents-arch per
+     distribution/architecture specified on the commandline or by default. 
+
+     *--Release_only* will download only the Release data for the
+     *swimz.list* or particular *Package(s)* mentioned on the command line.
+
+     *--dists* will only find the distribution which corresponds to the
+     argument provided this option. 
+
+     *--arch* will only find the architecture which corresponds to the
+     argument provided this option. The different architecture needs to be
+     specified in swimz.list with a hyphen and the architecture appended to
+     deb (deb-(arch)). 
+
+
+6.10. B. downloading the important databases with apt, and maintenance
+options. 
+----------------------------------------------------------------------------
+
+     usage: *swim --apt* 
+
+     options: *[--update] [--clean] [--autoclean] [--check]* 
+
+     Please read section 6.1, `A. downloading the important databases with
+     --ftp. ' for more information. 
+
+     *--update* calls *apt* to download the Packages databases. 
+
+     *--clean* is a call to an *apt* option to remove any packages stored
+     in *apt's* storage area for downloaded packages. The default for this
+     storage area is */var/cache/apt/arhives* 
+
+     *--autoclean* will only clean out packages which are not found in
+     apt's cache. 
+
+     *--check* tests and updates apt's cache. 
+
+
+-------------------------------------------------------------------------------
+
+
+7. MAKING NOT-INSTALLED DATABASES 
+----------------------------------
+
+          usage:  swim --initndb
+                  swim --ndb
+                  swim --rebuildndb
+          
+          options: [--Contents <target|FDBtarget|DF|FDBDF>]
+                   [--main] [--contrib] [--non-free] [--non-us]
+                   [--arch <architecture>]  [--dists <distribution>]
+                   [--dbpath <dir>] [--root <dir>] [--alt]
+                   [--split_data <lines>] [-v] [--cron]
+                   [targets|APT|DF]
+
+
+
+7.1. OVERVIEW 
+--------------
+
+     The *not-installed database* provides swim with many capabilities like
+     the searching, and querying of packages which do not actually exist on
+     the live filesystem, as well as the ability to seamlessly install
+     packages while searching or quering, or the ability to fetch the
+     packages source code. The *virtual filesystem* is optional, but it is
+     highly recommended. These two major mode options set up these
+     databases, after determining the level of interaction which you want. 
+
+     Whenever *swim* makes databases it thinks only in terms of one
+     distribution and one architecture. This keeps things logical. *swim*
+     does have the ability to take Packages files with multiple
+     architectures, and distributions, and to extract information for one
+     distribution and one archictecture to make its databases. This could
+     provide interesting information from dumps from *apt* (`apt-cache
+     dumpavail'). 
+
+     *--initndb* creates the initial not-installed databases for a
+     particular architecture and distribution, and *--rebuildndb* remakes
+     the not-installed databases for that same architecure and
+     distribution. If not otherwise specified *swim* *will use the values*
+     it finds in *swimrc* to determine what architecture and distribution
+     you want to use to make *swim's* databases. Otherwise... 
+
+
+7.2. OPTIONS 
+-------------
+
+     *--arch* allows an argument to override the *architecture* found in
+     *swimrc*. 
+
+     *--dists* allows an argument to override the *distribution* found in
+     *swimrc*. 
+
+     *--alt* is used for a distribution with a Debian archival structure,
+     but which has a different name. This allows for alternative
+     distributions. 
+
+     When *APT* or *DF* are provided as arguments (see below), by default
+     the *Packages* which pertain to the sections found in *swimrc* will be
+     shown. If you only want certain sections you may specify them on the
+     command line. If you are not using *APT* or *DF*, it is a good idea to
+     make sure that either the sections found in *swimrc* or the sections
+     you put on the command line match the *Packages* you a targetting
+     because this is much more effecient. 
+
+     *--main* will override the sections found in *swimrc*, and will use
+     this section. 
+
+     *--contrib* will override the sections found in *swimrc*, and will use
+     this section 
+
+     *--non-free* will override the sections found in *swimrc*, and will
+     use this section 
+
+     *--non-us* will override the sections found in *swimrc*, and will use
+     this section 
+
+     Global arguments *targets|APT|DF* must be used with either of these
+     two major modes to find the *Packages* databases. targets can be a
+     full path to one or a set of *Packages*. *APT* will use the *Packages*
+     found in */var/state/apt/lists*, and *DF* will use the Packages found
+     in the default directory for *swim* (see `--ftp'). If you use either
+     *APT* or *DF* you will be given an *interface* which allows you to
+     choose one *Packages* database for each section you would like to use
+     from the various sites. This *interface* shows the *site*, *date*,
+     *size* and *Release version* for each *Packages*. 
+
+     *--cron* allows you to override the *interface* produced when *APT* or
+     *DF* is provided as an argument. This is useful if you want to
+     automate the database making process. *--cron* will choose the newest
+     `database(s),' if cron notices that the Release version has changed,
+     cron will not proceed, but will provide a warning instead. This allows
+     you to make the appropriate changes and choices. 
+
+     *--Contents* can be give one of four arguments: 
+
+     *1).* If you have a *Contents-(architecture)* database in a target
+     location you know about you may provide a path to the location. The
+     *Contents* database can be compressed. 
+
+     *2).* If you prepend the path with the letters *FDB* (meaning flat
+     database) when the databases for swim are made, instead of using the
+     Contents database to make: 
+           nfileindex-arch-dists.deb
+           nsearchindex-arch-dists.deb
+           ndirindex-arch-dists.deb
+
+     Only the *ncontentsindex-arch-dists.deb.gz* database will be made
+     which allows the ability to view file/dir listing for not-installed
+     packages, but does not provide the virtual file system or powersearch
+     capabilities which the other databases would have provided. 
+
+     *3).* The argument *DF* may be used if you have used *--ftp* with the
+     *DF* argument to the option *--Contents* (see `--ftp'). In this case
+     it is assumed you are also using global arguments *DF* or *APT* for
+     the Packages databases. This will give you an *interface* (if --cron
+     isn't used) allowing you to choose one *Contents* database for the
+     particular distribution you want to make the databases for. 
+
+     *4).* *FDB* does the same exact thing with *DF* as it does with the
+     before mentioned *FDBtarget*, and provides the *interface*. 
+
+     *-v* will only work if you have dpkg installed. It allows swim to
+     verify *swim's* own built-in version comparison function with *dpkg's
+     version comparison function*. This is good for debugging purposes, and
+     produces a report called *.version_compare* in the same location that
+     *swim's* databases are made. 
+
+     *--split_data* is only advantageous if *--Contents* is being used. See
+     *--initdb* for more information about the *--split_data* option. 
+
+     See section 5.1, `Initial database making, and Rebuilding for an
+     Installed system. ' for options `--dbpath' and `--root'. 
+
+
+7.3. UPDATING 
+--------------
+
+     `--ndb' has the same options as --initndb and --rebuildndb except for
+     --split_data. It also has a new option `--nue' which will never have
+     to be used unless the experimental distribution or non-us section are
+     found in Contents (which presently isn't the case). `--check' prints
+     out the changes to STDERR, and the total to STDOUT without proceeding
+     with the update. `--status_only' can be used after a new package has
+     been installed to update the status, after which -qni and -qi will
+     correlate properly. 
+
+
+7.4. REBUILDING THE SEARCH 
+---------------------------
+
+     `--rebuildflatndb' serves the same purpose as --rebuildflatdb. See
+     section 5.3, `REBUILDING THE SEARCH ' 
+
+
+7.5. FILES 
+-----------
+
+     Databases and reports which are made (arch = architecture dists =
+     distribution): 
+
+           npackages-arch-dists.deb
+           nfileindex-arch-dists.deb requires <--Contents>
+           nstatusindex-arch-dists.deb
+           ngroupindex-arch-dists.deb
+           nsearchindex-arch-dists.deb
+           ndirindex-arch-dists.deb
+           .packagesdiff-arch-dists.deb requires <--Contents>
+
+
+
+-------------------------------------------------------------------------------
+
+
+8. PREPARING YOUR INSTALLATION FOR APT 
+---------------------------------------
+
+          usage: swim --audit
+                 swim --status
+                 swim -C
+
+     If you are using *apt* with *swim*, and this is the first time you are
+     using it with your installation, check your live installation with
+     this major mode. This is a call to *dpkg -C (--audit)*, and will show
+     any packages which are not properly configured or installed. If you
+     get any output, make corrections. The goal is to get absolutely no
+     output whatsoever because it is under these conditions that apt will
+     work properly. See the section 9.8, `REMOVING AN INSTALLED PACKAGE -
+     VIRTUAL OPTIONS ' with *-q* to remove the offending packages. You may
+     have to remove the package by hand under unusual situations like when
+     it is not just dependencies (see `-T') between packages keeping the
+     package from being removed perhaps due to a broken script (see
+     `--scripts'). In an extreme case you could manually remove the entry
+     for this package from the */var/lib/dpkg/status* database, and hunt
+     down and remove all the files associated with the package with *swim's
+     -l* option. When you are done if you still want some of the packages
+     you removed, use *apt* to reinstall them with *swim's -xyz* option.
+     Also, *apt* provides its own built-in method to clean up your system,
+     and will provide instructions, but you still may have to do some of
+     the cleaning yourself as discussed above. 
+
+
+-------------------------------------------------------------------------------
+
+
+9. QUERYING THE INSTALLED AND NOT-INSTALLED DATABASES 
+------------------------------------------------------
+
+          usage: swim -q [-fpgn --dir] [targets | -S]
+                 swim --query [-fpgn --dir] [targets | -S]
+                 swim -qa || swim --query -a 
+
+          options: [--total -t] [-i] [-l ? <[--df]>] [-d] [-c]
+                   [--scripts] [--preinst] [--postinst] [--prerm]
+                   [--postrm] [-v] [--dbpath <dir>] [--menu -m]
+                   [--shlibs] [-T] [--pre_depends] [--depends]
+                   [--recommends] [--suggests] [--conflicts]
+                   [--replaces] [--provides] [--md5sum] [--root <dir>]
+                   [--copyright] [--changelog] [--allgroups]
+                   [--arch <architecture>] [--dists <distribution>]
+                   [--ftp ? --source | --source_only ? <[--diff]>]
+                   [--stdin] [--extract] <ALL|archive|PWD!archive>]
+                   [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df]
+                   [--df2apt] 
+
+     global arguments: *[targets | -S ? <\d{1,}>]* 
+
+     Quering almost always involves using *-q or --query* with zero or one
+     or a combination of the *minor mode options* (package specification
+     options), and one or more (only one for `-g') targets specific to the
+     minor mode, or the results of a search (`-S'). [`-S' can be provided a
+     numerical argument pertaining to the past history.] This can be
+     combined with one or more options. The one exception is ``*swim -q
+     --allgroups*''. 
+
+     *--query or -q* can be used by itself or with *-n* to query known
+     package names or package names with versions. ``*swim -q test1
+     test2_0.3-1*'' would produce the output: 
+
+          test1_1.0-2
+          test2_0.3-1
+
+
+9.1. MINOR MODES 
+-----------------
+
+     *-n* is the minor mode option to access the *not-installed system*, it
+     can be combined with the minor mode options *-a*, *-g*, *-f*, or it
+     can be used by itself. 
+
+     *-a* allows *every package* on an installed or not-installed (*-n*)
+     system to be queried. ``*swim -qan*'' will show all the package names
+     with versions for the not-installed system 
+
+     *-f* allows *files or directories* to be queried, when used without
+     any options the package name with version is shown. *--dir* will only
+     query directories, this is useful if you are not sure whether what you
+     are quering is a directory or a file. When a directory is queried,
+     swim shows all packages which exist below the queried directory.
+     ``*swim -qf /*'' is exactly the same as ``*swim -qa*''. Hint: ``*swim
+     -qf .*'' and ``*swim -qf **'' are quite different, the first shows all
+     packages which exist below the current directory, and the second will
+     show the package which each file in the current directory comes from. 
+
+     *-g* will query a *group* (also called a section, see subsection
+     9.5.3, `SECTION AND PRIORITY ')) of packages. Groups represent
+     subjects which packages with similiar characteristics are catagorized
+     by. To view all the groups found in an installed or not-installed
+     system use ``*swim -q --allgroups*'' or ``*swim -qn --allgroups*''.
+     ``*swim -qg hamradio*'' or ``*swim -qng hamradio*'' shows all the
+     package names for the hamradio group. 
+
+     *-p* is used to query a *Debian package*, these packages are
+     distinguished by their ``deb'' ending, but swim can tell whether a
+     file is a debian package even without the ending. Called without any
+     options the package name with version will be shown. 
+
+
+9.2. SPECIFYING THE DATABASES TO USE 
+-------------------------------------
+
+     *--dists* will use the databases for the argument given, otherwise the
+     databases pertaining to the value found in swimrc will be used. 
+
+     *--arch* will use the databases for the argument given, otherwise the
+     databases pertaining to the value found in swimrc will be used. 
+
+     Example: *swim -qat --arch hurd-i386 --dists unstable* 
+
+     Assuming these databases exist this will show all packages and their
+     versions for the unstable distribution and architecture hurd-i386 even
+     if the values in *swimrc* are i386 and stable. 
+
+     see section 6.1, `A. downloading the important databases with --ftp. '
+     and chapter 7, `MAKING NOT-INSTALLED DATABASES ' for more information
+     about the databases. 
+
+
+9.3. OPTIONS 
+-------------
+
+     *--total or -t* are *used to override the output suppressor*. The
+     output suppressor will not show output if a certain number of packages
+     is exceeded, instead it will show the number of packages you are
+     querying. This is useful for two reasons, first, knowing the number of
+     packages you are quering can be very informative, second, it gives you
+     a chance to add to the command line a pipe to a pager, ex: ``*swim
+     -qat | less*''. You can set the number that the output suppressor
+     works at as high or low as you want in the *swimrc(8)* file. By design
+     the *-t* option will have to be used if the *-i* option is used and
+     more than one package is being queried. This option can also be used
+     to alter the output of the various script options (--scripts,
+     --preinst, --postinst, --prerm, and --postrm). 
+
+     *-i* provides *information* about each package being queried. The
+     format differs slightly for the installed packages versus the
+     not-installed packages. see section 9.5, `FORMAT ': 
+
+     *-l* provides a listing of the files associated with a package. If the
+     option *--df* is provided as an argument, all the directories
+     associated with package will be shown. It is important to remember
+     that many packages provide directories which become important to them
+     after they are installed, so the option *--df* often provides
+     necessary information which *-l* called by itself would have not. 
+
+     *-d* shows the documentation which the package provides found in
+     */usr/doc/**, */usr/man/**, */usr/info/**. Other documentation which
+     the package may provide in a non-standard location will not be shown.
+     *-d* takes precedence over *-l*, so if *-l* is used on the command
+     line with *-d*, only the output for *-d* will be shown. 
+
+     *-v* is a special option which works only with the minor mode *-p*. It
+     can be used with *-l*, *--df*, *-d*, to show the packages files and/or
+     directories in long format (`ls - l'). 
+
+     *-c* will show the configuration files packages use. If the package
+     does not have a configuration file then nothing will be shown. The
+     output will show the file and its path indented one space with the
+     *MD5 checksum*. This will not work with *-n*. 
+
+     *--scripts* shows all scripts associated with a package with the name
+     of the script presented before each script in this way
+     *#####scriptname######*. If the scripts are called individually by
+     using the script options *--preinst*, *--postinst*, *--prerm*, or
+     *--postrm* no title is shown, this is nice for writing to a file. If
+     *-t* is used with the individual script options a title will be shown,
+     this makes sense because normally only individual packages would be
+     queried to write a script to a file, and *-t* wouldn't be used in this
+     situation. Scripts are the soul of Debianized packages allowing
+     packages to be installed, configured, and removed seamlessly and
+     cleanly under all kinds of conditions. These options do no work with
+     *-n*. 
+
+     *--menu or -m* is used to view menufiles which belong to various
+     packages. If the package does not have a menufile nothing will be
+     shown. This option can be useful in troubleshooting a menu entry which
+     does not seem to work, or in finding out where the menu entry is.
+     *Joost Witteveen's Debian menu system* is a centralized program which
+     interacts with all kinds of menus. *Please read the documentation*
+     ``*swim -qd menu*'' which comes with the menu package to find out
+     more. This will not work with *-n*. 
+
+     *--shlibs* shows a list of shared libraries certain packages supply.
+     The *Debian Packaging Manual* (packaging-manual) provides detailed
+     information about the format of a shlibs file. This will not work with
+     *-n*. 
+
+     *--md5sum* checks *MD5 checksums*. It can be used with *-l*, *-d*,
+     *-c*, or *-p*. If there are checksums available the md5sum result will
+     be either *OK*, *FAILED*, or *MISSING*. *MISSING* means that although
+     a checksum exists, the file can not be found. The result is put after
+     the file and its path and the *MD5 checksum* or the package name and
+     version and the *MD5 checksum*. 
+
+     *--copyright* does a case insensitive search for copy or license in
+     the */usr/doc/packagename* directory. This should show how the package
+     relates to *Debian's Policy Manual*. 
+
+     *--changelog* searches for any files in */usr/doc/packagename* which
+     look like changelogs. Debian packages always have a *Maintainer's*
+     changelog for the package. There may be a separate changelog kept by
+     the author of the program. 
+
+
+9.4. PACKAGE RELATIONSHIPS 
+---------------------------
+
+     *-T* shows all the package relationships of packages. Individual
+     package relationships can be viewed using *--pre_depends*,
+     *--depends*, *--recommends*, *--suggests*, *--replaces*, *--conflicts*
+     or *--provides*. Package relationships are the spirit of Debian
+     packages, here is a quick overview briefly reiterating what can be
+     found in the *Debian Packaging Manual*. *Package Maintainers* set
+     these relationships in control file fields of the same name. 
+
+     *Dependencies* *Pre-depends* - means that the pre-depended package or
+     packages must be installed before the queried package can be
+     installed. Most packages which have pre-dependencies are usually
+     essential and required packages. 
+
+     *Depends* - declares an absolute dependency to another package or
+     packages either *real or virtual*. The queried package cannot function
+     without this other package. 
+
+     *Recommends* - declares a strong, but not absolute dependency to
+     another package or packages either *real or virtual*. You would
+     usually find the recommended package together with the queried package
+     in a normal installation. 
+
+     *Suggests* - can be one or more packages either *real or virtual*
+     which would be useful to the queried package, but are not necessary.
+     *Alternative Packages* 
+
+     *Conflicts* - is a package or packages either *real or virtual* which
+     would cause problems with the queried package, and would not be
+     allowed to be installed while the queried package was installed. 
+
+     *Overwriting files and Replacing Packages* 
+
+     *Replaces* - allows the queried package to replace another package or
+     packages by overwriting their files, after which the previous package
+     would be considered to have disappeared. Essentially this allows the
+     queried package to take over the package or packages. In a situation
+     where there was a Conflict between the queried package and these
+     packages this field would help determine which packages should be
+     removed. 
+
+     *Virtual Packages* 
+
+     *Provides* - declares a virtual package which may be mentioned in
+     *Depends*, *Recommends*, *Suggests*, or *Conflicts*. *Virtual
+     packages* allow one or more packages to share the same name of another
+     package, which means if the queried package has a reference to a
+     virtual package in one of the before mentioned package relationship
+     fields, then whatever packages provide the virtual package are also
+     being listed. 
+
+
+9.5. FORMAT 
+------------
+
+     *1). Installed system* 
+
+           Package: name                        Status: hold ok installed
+           Version: 1.1-1                       Essential: no
+           Section: namers                      Priority: extra
+           Installed-Size: 10                   Source: generatename (2.0-1)
+           Maintainer: name <name@name.org>
+           Description: hostname maker
+            A nice way to figure out a hostname nobody
+            else has.
+
+     *2) Not-installed system* 
+
+ Package: name                        Status: r> hold ok installed (1.1-1)
+ Version: 1.1-2                       Essential: no
+ Section: names                       Priority: extra
+ Installed-Size: 11                   Source: generatename (2.0-1)
+ Size: 43000                          Architecture: i386
+ Distribution: experimental
+ Maintainer: name <name@name.org>
+ Description: hostname maker
+  A nice way to figure out a hostname nobody
+  else has.
+
+     There are several things to point out. The difference between the two
+     outputs relates to the addition of the Distribution, Size, and
+     Architecture fields for the not-installed query. Installed-Size is how
+     many kilobytes the package will occupy when it is unpacked, whereas
+     Size is the size in bytes of the package. 
+
+9.5.1. STATUS FIELD 
+--------------------
+
+     The Status field provides the installation status of the package, this
+     holds true for the not-installed query as well. In a sense, the
+     not-installed database isn't always not-installed. If the
+     not-installed package is actually already installed, and the version
+     numbers are exactly the same, then the status will be the same for
+     either query. If the not-installed package is not installed then the
+     status will be ``not-installed''. In cases where the not-installed
+     package is already installed, swim uses it's comparison function to
+     figure out whether it is a newer of older package which is installed.
+     In the above example, swim realizes the same package is installed, and
+     only the debian-revision has changed, hence the only difference is
+     that the revision number is greater ``r>'' for the not-installed
+     package. When only the debian-revision has changed it can safely be
+     assumed that the author (creator, programmer) of the same program has
+     not made any changes to the same program, but the Debian maintainer
+     has made a change to an aspect of the package like a change in the
+     script the package uses to properly install. You may have also noticed
+     that the status field shows the version number of the installed
+     package enclosed in parenthesis. 
+
+9.5.2. SOURCE FIELD 
+--------------------
+
+     The Source field is present in these examples, but the Source field
+     will not always be present for packages. In cases where the name of
+     the source package is the same as the the name found in the Package
+     field, and the version number of the source package is also the same
+     as found in the Version field, then there will be no Source field. In
+     the above examples there is a Source field. In this case name was
+     probably one of many packages generated from the source package called
+     generatename. In this particular example generatename also has its own
+     unique version number 2.0-1 enclosed in parentheses, if no version
+     number had been mentioned then the source package would have the same
+     version number as found in the Version field. 
+
+9.5.3. SECTION AND PRIORITY 
+----------------------------
+
+     Section shows the subject which a package is categorized with (see
+     `-g'). Priority shows how important the package is to have installed.
+     In the case of the not-installed databases the information for these
+     fields is almost always available from the Packages databases, but
+     this is not always the case for Debian packages. For packages which do
+     no provide this information swim will do its best to fill in the
+     blanks from information found in the installed and not-installed
+     databases. If proper information can not be found it will be indicated
+     as ``unavailable'' or ``unknown.'' Unavailable would indicate that
+     information about the package exists, but it is from a different
+     version (includes debian-revision), and no information exists for this
+     version. Unknown means no similiar package exists, and there is
+     absolutely no information about this package in the databases. 
+
+     When a Debian package is queried using the *-p* option you will get
+     output like the first example shows, the status field is also
+     calculated. 
+
+
+9.6. FTP - VIRTUAL OPTIONS 
+---------------------------
+
+     For ftp capabilities swim uses the *swimz.list* to determine which
+     sites it will check for the requested packages. The first site which
+     fills the request will be used, otherwise *swim* will go through all
+     the sites avoiding repeats, and if no sites can fill the request,
+     *swim* will either quit or proceed on to check for another request. 
+
+     *--ftp* allows the queried package, its source package, or just the
+     source package diff to be downloaded while being queried. This is
+     refered to as virtual downloading because the quering and the
+     downloading are seamless as though the package already exists locally.
+     This has to be used with the option *-n* because packages which which
+     are not part of the not-installed database are considered to already
+     have been downloaded. Packages which are already installed can be
+     downloaded or their source retrieved by setting up a database which
+     corresponds to these packages; if the installed packages belong to the
+     stable distribution, set-up the not-installed stable databases. 
+
+     Packages or source code are placed in an area below the default
+     directory mirroring the remote directory they were downloaded from
+     after their size and modification times are checked for correct
+     values. This area is called the *DF* directory, and although this
+     directory mirrors remote directories, it is not an exact mirror, but
+     specific to the requirements of swim because code names for Release
+     versions are not taken into account. For real mirroring capabilities
+     there exist many excellent programs. If a package has a *MD5
+     checksum*, *--md5sum* will automatically be run and the value shown.
+     Regardless of whether or not the md5sum check is *OK* or not, the
+     package will still be put in the *DF* directory to allow the package
+     to be looked at, so watch the output from *--ftp* to check for *FAILED
+     md5sums*. 
+
+     Packages or source code packages will not be downloaded again if they
+     are found in the *DF* directory unless their *upstream-version* has
+     changed in the not-installed database, if the packages are not in the
+     DF directory and the remote *upstream-version* is different than the
+     not-installed *upstream-version* then the packages will not be
+     downloaded until the not-installed database is updated or rebuilt to
+     reflect the version change. Changes in the package's
+     *upstream-version* indicates that the `author(s)' of the program have
+     made changes to the computer code for the program contained in the
+     package or the source code package. On the other hand, swim will check
+     for a *debian-revision* change at the remote site if the package can
+     not immediately be found. If the package's *debian-revision* has
+     changed and the package does not exist locally in the *DF* directory,
+     it will be downloaded. This is a nice feature, especially for the
+     unstable distribution, because it tends to extend the time needed
+     before the not-installed database has to be updated or rebuilt to
+     match the changes at remote sites. 
+
+     *--source* is used with *--ftp* to download the source code package.
+     *--source_only* will download the source code package without the deb
+     package. *Source packages consist of three files*. The *source control
+     file* which ends in ``dsc'', the *original source archive* which is a
+     compressed tar file, and the *unified context diff* showing the
+     changes necessary to make the original source into Debian source. The
+     diff can be downloaded by itself if *--diff* is provided as an
+     argument to *--source or --source_only*. 
+
+     For *apt* users: *apt* allows packages to be downloaded, but if more
+     than one package is required for the package relationships to be
+     proper, *apt* will download all these packages. *--ftp* allows
+     specific packages to be downloaded, packages from other architectures,
+     and source packages to be downloaded, here lies the advantage of this
+     option over using *-xyz --nz* (see below). If a particular package has
+     been dowloaded into the *DF* directory and it is needed by *apt* for
+     installation, simply copy or move the package from the *DF* directory
+     to */var/cache/apt/archives* before running *apt*, and the package
+     will not be downloaded by *apt* again; future versions of *swim* will
+     have an option to automatically accomplish this (see `--df2apt'). 
+
+
+9.7. APT - VIRTUAL OPTIONS 
+---------------------------
+
+     apt-get(8) is a nice package relationship checker from the *apt*
+     package which figures out what needs to be done to properly install a
+     package or packages when one or more package names are provided to it.
+     *apt-get* will get all packages which are needed using a variety of
+     methods, and then *apt-get* interacts with *dpkg* in a way which
+     allows for a successful installation. 
+
+     *-xyrz, --remove, and --nz* can be used if *apt-get* from the *apt*
+     package is installed. These options allow for what is refered to as
+     virtual installation/removal. It is prudent to always test what will
+     happen by using the *-x* option alone before actually proceeding with
+     the installation with the *-z* option. *-x* will actually simulate
+     what would happen in an installation, showing which and how many
+     packages will be changed, which and how many new packages will need to
+     be installed, which and how many packages will need to be removed, any
+     conflicts, and what needs to be configured. *-y* will automatically
+     answer yes to any prompts *apt-get* may produce allowing *apt-get* to
+     run non-interactively. *-z* as mentioned before actually proceeds with
+     the installation using *dpkg* after the *apt-get* gets the packages.
+     You can append a minus sign to a package name to cause it to be
+     removed. *--nz* when used as an optional argument with *-xz or -xyz*
+     will only download the packages into */var/cache/apt/archives* or into
+     whatever directory you configured for holding archives for *apt*. 
+
+     *IMPORTANT*: *apt* makes it so easy to make changes to your
+     installation that it is highly recommended to do your research with
+     swim first. This can be done by checking package relationships,
+     file/dir listings, comparing the not-installed package to an installed
+     package if such exists, checking *--md5sum* and *-c* for the installed
+     package, and checking the Source field by running a *--search* (see
+     chapter 11, `SEARCHING ') to check to see how the source package has
+     been split into binary packages for the not-installed package versus
+     an installed package if such exists. Ofcourse, there are many other
+     things you could look at, and you can always do your research after
+     the fact. Presently *--db* is run only by hand, so you can check the
+     old state after an installation if you have not already run *--db*,
+     yourself. 
+
+
+9.8. REMOVING AN INSTALLED PACKAGE - VIRTUAL OPTIONS 
+-----------------------------------------------------
+
+     *--purge* uses *dpkg* to remove an installed package or packages and
+     the configuration files as shown with ``*swim -qc packagename*''. 
+
+     *-r or --remove* removes an installed package or packages with *apt*,
+     but not the configuration files as shown with ``*swim -qc
+     packagename*''. You may also append a plus sign to a package name to
+     cause it to be installed. This option is used with -x or -x(y)z. 
+
+
+9.9. STDIN - VIRTUAL OPTIONS 
+-----------------------------
+
+     *--stdin* works with either *--ftp*, *-x*, *-xyz*, *-xz*, *--purge*,
+     *-r*, or *--remove*. 
+
+     *--stdin* provides the *readline capabilities* commonly found in
+     shells allowing you to edit what is on the command line. You can edit
+     the command line, press enter and then recall the history, and make
+     more changes, or *type in exit to process the changed or unchanged
+     command line*. To find out more about what readline commands your
+     shell supports please read the man pages which apply to your shell.
+     Information for the bash shell can be found in `bash(1)' under the
+     title ``*Readline Command Names*''. 
+
+     Example: ``*swim -qgnx --stdin hamradio*'' will list all the packages
+     from the not-installed hamradio group on the command line, this list
+     can be edited then submitted to *apt-get* for a simulated
+     installation. Another instance of *swim* can be run at the same time,
+     perhaps ``*swim -qinTg hamradio*'' to help in making editing decisions
+     for *--stdin*. 
+
+
+9.10. PACKAGE MANIPULATION - VIRTUAL OPTIONS 
+---------------------------------------------
+
+     *--extract* only works with the *minor mode -p* to extract parts or
+     all of a Debian package. If the *argument ALL* is provided then
+     *everything found in the package will be extracted* below the current
+     directory in the exact directories found in the package. A particular
+     *file may be extracted in its exact location* below the current
+     directory by *entering the exact path for the file* as shown by
+     ``*swim -qpl*'' or ``*swim -qpd*'' as the argument. Alternativily, a
+     *file may be extracted in the current directory* regardless of its
+     proper location by *prepending PWD\! before the path* shown by ``*swim
+     -qpl*'' or ``*swim -qpd*''. Notice the backslash before the
+     exclamation point, this is because shells consider ! a special
+     character, so it has to be backslashed so that the shell knows that it
+     is not such a special character. Example: ``*swim -qpi --extract
+     PWD\!usr/bin/name --scripts name_1.1-2.deb*'' will extract the binary
+     name in the current directory from the name package, show information
+     for the name package, and show any scripts for the name package. 
+
+
+9.11. DATABASE LOCATIONS 
+-------------------------
+
+     *--dbpath* can be specified as an alternative location for where the
+     databases would be found. The default location is ``*/var/lib/dpkg*''.
+     An argument like ``*/otherstuff*'' can be provided, and then the
+     databases would be found here instead. 
+
+     *--root* allows a database to be found for a Debian distribution
+     installed on a different partition. If the distribution is mounted on
+     */New_Debian*, ``*/New_Debian*'' would be the argument to root. The
+     databases would be found for the Debian distribution installed on the
+     ``*/New_Debian*'' partition. 
+
+     *--dbpath and --root* can be used together. Given the previous two
+     examples, the databases would be found on
+     ``*/New_Debian/otherstuff*'', assuming ``*/New_Debian/otherstuff*''
+     actually existed. 
+
+
+-------------------------------------------------------------------------------
+
+
+10. UPGRADING WITH APT 
+-----------------------
+
+     usage: *swim --apt* 
+
+     options: *[-xyz] [--upgrade] [--dist_upgrade]* 
+
+     *apt-get* provides powerful methods to change an installion. When
+     these methods are called using *--apt*, *swim* will not allow you to
+     proceed until you are absolutely sure this is what you want to do.
+     Before using these methods do a ``*swim --apt --update*'' so that
+     *apt-get* knows the newest versions of available packages. This major
+     mode requires a combination of *-x*, *-xz* or *-xyz* to be used along
+     with either *--upgrade* or *--dist_upgrade*. *-x* used alone will
+     simulate what would happen if *-xz or -xyz* were used (also see `-xyz'
+     above). 
+
+     *--upgrade* is somewhat similiar to doing ``*swim -qatxz*'' except
+     that it is a more intelligent method because *apt* does some behind
+     the scene calculations in regards to package relationships, in fact
+     the ``*swim -qatxz*'' approach will provide totally different results,
+     or maybe these were the results you really wanted. ``*swim --apt
+     --upgrade -xz*'' is the prefered, proper, and built-in way provided by
+     *apt-get* to install the newest versions for all packages installed on
+     your system. This method will not install any newer versions of
+     packages which would change the install status of other packages.
+     Note: It is not recommended to combine the query option *-a* with *-xz
+     or -xyz*, but combining the query option *-a* just with *-x* can be
+     educational. 
+
+     *--dist_upgrade* combines an *--upgrade* with the installation of
+     packages which are not installed. This method carefully examines
+     dependencies, and resolves conflicts, and given these factors it will
+     upgrade the most important packages before considering the
+     installation of less important packages. Less important packages will
+     be installed only if there are not any conflicts. 
+
+
+-------------------------------------------------------------------------------
+
+
+11. SEARCHING 
+--------------
+
+usage: swim --search ? (--research || --refinesearch) <pattern(s)>
+       swim --powersearch ? (--research || --refinesearch) <pattern(s)>
+       swim --ps ? (--research || --refinesearch) <pattern(s)>
+
+options: [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
+         [--arch <architecture>] [--dists <distribution>
+         [--ftp ? --source | --source_only <[--diff]>]
+         [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
+         [--no] [--df2apt] [--purge] [<\d{1,}>]
+
+         [--dir] and no [-g]for --powersearch or --ps
+
+
+
+11.1. OVERVIEW 
+---------------
+
+     *swim* provides two major types of searches. A search with *--search*
+     *searches package information* (see section 9.5, `FORMAT '), and a
+     search with *--powersearch or --ps* *searches package information, and
+     all files and/or directories associated with each package*. 
+
+     The results of either of these searches can be *narrowed down* by
+     running a test search with *--research* (this step can be skipped)
+     and/or setting the results in stone with *--refinesearch*. *--search*
+     can be *narrowed down* initially by specifying a particular *group*,
+     and *--powersearch* can be *expanded* initially by specifying that
+     *directories* be searched as well as files. Both searches can *use the
+     same virtual options* which the major mode *-q or --query* use.
+     Generally, it is preferable to run a search, and then to provide the
+     results of a search (*using -S*) as an argument to *-q or --query*;
+     this allows the results of a search to be queried. Every time a search
+     is run the results are appended to the history, past searches can be
+     refined or researched by providing the numerical argument pertaining
+     to the history. \d{1,} is simply Perl notation meaning a number with
+     one of more digits. 
+
+     *Perl regexps* (see `perlre(1p))' can be used to define the pattern
+     (string) provided as an argument to a search. Do not surround a
+     pattern in slashes, a slash is only used after all patterns and before
+     the *modifiers i and/or m* (swim supports these two modifiers). To
+     search for more than one pattern, patterns are separated with *bars
+     (|)*. Patterns may include *quatifiers, and metacharacters*, also
+     found in `egrep(1).' 
+
+     If a search finds any packages which match the search, the package
+     information will be displayed as the package is found. The package
+     will only be shown once regardless of how many times it is found while
+     the search progresses. When the search is over the number of packages
+     found is shown. 
+
+     *--search* provides a search of package information. This is similiar
+     to grepping ``*swim -qait*'' or ``*swim -qaint*'', but it is
+     significantly faster. A search can be performed on a particular group
+     by using *-g* with a group as an argument 
+
+     *--powersearch* is somewhat similiar to ``*dpkg --search*'' which
+     searches all files and directories on an installed system, but it
+     combines *--search* with the file and/or directory search, and can
+     also be performed on a not-installed system. A *powersearch* is
+     significantly faster than the search which *dpkg* provides (even more
+     so when ```swim --ramdiskon --searchfile''' is used) and even more
+     importantly provides a logical output of the search (like ```swim -qi
+     packagename'''). By default a search of all directories is not
+     performed because usually this is redundant except in rare cases. To
+     enable a search of all directories use the *--dir* option. 
+
+
+11.2. NARROWING A PREVIOUS SEARCH 
+----------------------------------
+
+     *--research* allows the results of a previous search to be researched
+     without making the new results permanent. 
+
+     *--refinesearch* allows the results of a previous search to be
+     researched while making the new results permanent. 
+
+     *\d{1,}* is a numerical argument to refine or research a past search
+     from the history. 
+
+
+11.3. MINOR MODES 
+------------------
+
+     *-n* allows the not-installed databases to be searched. These
+     databases will not exist if the not-installed databases were made with
+     the FDB argument (see `--initndb'). 
+
+     *-g* (see -g above and section 9.1, `MINOR MODES '). 
+
+
+11.4. OTHER OPTIONS 
+--------------------
+
+     *--no* prevents normal output from a search, but does show how many
+     packages were found. 
+
+     See the section ``section 9.2, `SPECIFYING THE DATABASES TO USE '''
+     for options *--arch*, *-dists*. 
+
+     See the section ``section 9.6, `FTP - VIRTUAL OPTIONS ''' for *--ftp*,
+     *--source*, *--source_only*, *--diff*, 
+
+     See the section ``section 9.7, `APT - VIRTUAL OPTIONS ''' for *-xyz*,
+     *--nz*, *--stdin*, 
+
+     See the section ``section 9.8, `REMOVING AN INSTALLED PACKAGE -
+     VIRTUAL OPTIONS ''' for *--purge*, *--remove*, *-r*. 
+
+     See the section ``section 9.11, `DATABASE LOCATIONS ''' for options
+     *--dbpath* and *--root*. 
+
+
+11.5. EXAMPLES 
+---------------
+
+     *swim -gn hamradio --search "radio network/i" --dbpath /test --arch
+     alpha* 
+
+     will search the alpha architecture not-installed system databases in
+     the /test directory for all package information from the hamradio
+     group using the case insensitive pattern ``radio network''. 
+
+     *swim --powersearch dpkg -xn* 
+
+     will search the not-installed system databases for all package
+     information and all files using the case sensitive pattern dpkg, after
+     which apt-get will run a simulation of what would happen if it got and
+     installed these packages. 
+
+
+-------------------------------------------------------------------------------
+
+
+12. RAMDISK 
+------------
+
+          usage: swim --ramdiskon
+                 swim --ramdiskoff
+          
+          options: [-n] [--searchfile] [--arch <architecture>]
+                   [--dists <distribution>] [--dbpath] [--root]
+          
+                   no options for --ramdiskoff
+
+
+
+12.1. OVERVIEW 
+---------------
+
+     A ramdisk can be mounted below the default path or the specified path
+     for the databases in the dramdisk directory. The ramdisk is used to
+     speed up powersearchs and/or file/dir listings for packages from the
+     not-installed system. Also, this is useful if a computer system is
+     heavily loaded with other processes using the memory, and the ramdisk
+     tends to persist even after being unmounted. Modern kernels usually
+     are built with support for ramdisks. If these options do not work the
+     kernel will need to be compiled to support ramdisks by answering yes
+     to RAM disk support. Perhaps the best *README* showing how to
+     configure and compile a kernel comes with the *kernel sources* in the
+     main directory. 
+
+     *--ramdiskon* allows a ramdisk to be created and mounted. If called
+     with *-n* (not-installed databases) *ncontents-arch-dists.deb.gz* will
+     automatically be written to the mounted ramdisk. This provides faster
+     file/dir listing capabilities when using *-l*, *--df*, or *-d* when
+     querying the not-installed system. Faster powersearch capabilities are
+     available through the option *--searchfile*. If the search databases
+     are not already compressed, they will now be compressed, this usually
+     only needs to be done once or until the databases are updated or
+     rebuilt again. The search databases will then be written to the
+     mounted ramdisk. An installed system only writes the search databases
+     to the mounted ramdisk, so always use --searchfile when specifying
+     installed system databases. 
+
+     *--ramdiskoff* is used to unmount the ramdisk. The not-installed
+     databases and the installed databases can not be simultaneously
+     provided by a mounted ramdisk, use *--ramdiskoff* first, then
+     *--ramdiskon* to install the other databases of choice. This also
+     pertains to different distributions and/or architectures. 
+
+     See the section ``section 9.2, `SPECIFYING THE DATABASES TO USE '''
+     for options *--arch*, *-dists*. 
+
+     See the section ``section 9.11, `DATABASE LOCATIONS ''' for options
+     *--dbpath* and *--root*. 
+
+
+-------------------------------------------------------------------------------
+
+
+13. FILES 
+----------
+
+     Configuration files: 
+
+           swimz.list
+           swimrc
+
+
+-------------------------------------------------------------------------------
+
+
+14. SEE ALSO 
+-------------
+
+     `swimrc(5),' apt-get(8), sources.list(5), `dpkg(8)' 
+
+
+-------------------------------------------------------------------------------
+
+
+15. BUGS
+--------
+
+     Send directly to mttrader@access.mountain.net. 
+
+
+-------------------------------------------------------------------------------
+
+
+     swim
+     Jonathan D. Rosenbaum<mttrader@access.mountain.net>       15 June 1999
+
