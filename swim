@@ -1728,13 +1728,17 @@ Usage: swim [--nopager -n]
        swim {--search ? (--research || --refinesearch) <pattern(s)>} 
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--download-only]>] [--stdin]
-                        [--purge] [--reinstall] [<\\d{1,}>]  
+                        [-xyz ? < [--download-only] [-r --remove] [--purge] 
+                        [--source <[-b] | [--diff-only] | [--tar-only]>] 
+                        [--reinstall] [--build-dep] >] [--stdin]
+                        [<\\d{1,}>]  
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--download-only]>] [--stdin]
-                        [--purge] [--reinstall] [<\\d{1,}>]  
+                        [-xyz ? < [--download-only] [-r --remove] [--purge] 
+                        [--source <[-b] | [--diff-only] | [--tar-only]>] 
+                        [--reinstall] [--build-dep] >] [--stdin]
+                        [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
@@ -1745,7 +1749,9 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--download-only]>] [--purge] [--reinstall] 
+                        [-xyz ? < [--download-only] [-r --remove] [--purge] 
+                        [--source <[-b] | [--diff-only] | [--tar-only]>] 
+                        [--reinstall] [--build-dep] >] 
                         [targets | -S ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
@@ -1789,7 +1795,7 @@ This may be freely redistributed under the terms of the GNU General Public Licen
 Usage: swim [--nopager -n]
        swim {--help} [--nopager -n]
        swim {--version}
-       swim {--history -h} [--arch <architecture>] [--dists <distribution>]
+       swim {--history -h} [--arch <architecture>] [--dists <distribution>] 
                         [-n] [--dbpath <dir>] [--root <dir>] 
        swim {--initdb} [--dbpath <dir>] [--root <dir>] [--lowmem]
                         [--split_data <lines>]
@@ -1800,13 +1806,17 @@ Usage: swim [--nopager -n]
        swim {--search ? (--research || --refinesearch) <pattern(s)>} 
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--download-only]>] [--stdin]
-                        [--purge] [--reinstall] [<\\d{1,}>] 
+                        [-xyz ? < [--download-only] [-r --remove] [--purge] 
+                        [--source <[-b] | [--diff-only] | [--tar-only]>] 
+                        [--reinstall] [--build-dep] >] [--stdin]
+                        [<\\d{1,}>]  
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [-xyrz --remove ? <[--download-only]>] [--stdin]
-                        [--purge] [--reinstall] [<\\d{1,}>]  
+                        [-xyz ? < [--download-only] [-r --remove] [--purge] 
+                        [--source <[-b] | [--diff-only] | [--tar-only]>] 
+                        [--reinstall] [--build-dep] >] [--stdin]
+                        [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
@@ -1817,8 +1827,10 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--download-only]>] [--purge] [--reinstall] 
-                        [targets | -S  ? <\\d{1,}>]
+                        [-xyz ? < [--download-only] [-r --remove] [--purge] 
+                        [--source <[-b] | [--diff-only] | [--tar-only]>] 
+                        [--reinstall] [--build-dep] >] 
+                        [targets | -S ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
        swim {--apt} [-xyz] [--upgrade] [--dist_upgrade]  
@@ -1921,7 +1933,7 @@ usage:
         -x                 - simulate apt-get installation
         -y                 - answer yes to all apt-get prompts
         -z                 - get and install package using apt-get
-        --download-only               - only download package when using apt-get
+        --download-only    - only download package when using apt-get
         --purge            - remove the installed package, and the
                              package's configuration files
         --remove
@@ -1959,7 +1971,7 @@ usage:
         -x                     - simulate apt-get installation
         -y                     - answer yes to all apt-get prompts
         -z                     - get and install package using apt-get
-        --download-only                   - only download package when using apt-get
+        --download-only        - only download package when using apt-get
         --ftp                  - download package 
         --source               - download source package
         --source_only          - only download source package
