@@ -370,7 +370,6 @@ sub command {
 	} 
 
 
-
 	# Check whether a different filesystem is being used with --root
 	my($arch, $dist) = which_archdist(\%commands);
 	if ($commands{"root"} && 
@@ -393,10 +392,12 @@ sub command {
 			  $commands{"rebuildndb"} || 
 			  $commands{"p"} ||
 			  $commands{"ndb"})) {
-			$root = "$main::home$parent$base/packages.deb";
+			#$root = "$main::home$parent$base/packages.deb";
+			$root = "$parent$base/packages.deb";
 		    }
 		    else {
-			$root = "$main::home$parent$base/npackages$arch$dist.deb";
+			#$root = "$main::home$parent$base/npackages$arch$dist.deb";
+			$root = "$parent$base/npackages$arch$dist.deb";
 		    }
 		    if (!-e $root && !-f $root) { 
 			print "failed to open $root\n\n";
@@ -435,6 +436,7 @@ sub command {
 		    exit;
 		}
 	    }
+	    $main::home = "/";
 	}   
 	# check whether a different database location is being used with --dbpath.
 	elsif ($commands{"dbpath"} && 
@@ -457,10 +459,12 @@ sub command {
 			  $commands{"rebuildndb"} ||
 			  $commands{"p"} || 
 			  $commands{"ndb"})) {
-			$dbpath = "$main::home$library/packages.deb";
+			#$dbpath = "$main::home$library/packages.deb";
+			$dbpath = "$library/packages.deb";
 		    }
 		    else {
-			$dbpath =  "$main::home$library/npackages$arch$dist.deb";
+			#$dbpath =  "$main::home$library/npackages$arch$dist.deb";
+			$dbpath =  "$library/npackages$arch$dist.deb";
 		    }
 		    if (!-e $dbpath && !-f $dbpath) {
 			print "failed to open $dbpath\n\n";
@@ -504,6 +508,7 @@ sub command {
 		    }
 		} 
 	    }
+	    $main::home = "/";
 	}
 	# check whether a different database location is being used with
 	# --dbpath 
@@ -531,10 +536,12 @@ sub command {
 			  $commands{"rebuildndb"} || 
 			  $commands{"p"} ||
 			  $commands{"ndb"})) {
-			$dbpath = "$main::home$parent$library/packages.deb";
+			#$dbpath = "$main::home$parent$library/packages.deb";
+			$dbpath = "$parent$library/packages.deb";
 		    }
 		    else {
-			$dbpath = "$main::home$parent$library/npackages$arch$dist.deb";
+			#$dbpath = "$main::home$parent$library/npackages$arch$dist.deb";
+			$dbpath = "$parent$library/npackages$arch$dist.deb";
 		    }
 		    if (!-e $dbpath && !-f $dbpath) {
 			print "failed to open $dbpath\n\n";
@@ -588,6 +595,7 @@ sub command {
 		    exit;
 		} 
 	    }
+	    $main::home = "/";
 	}
 	# final monster ... but, really only as a trap. 
 	elsif ($commands{"root"}) {
