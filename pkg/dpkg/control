@@ -24,7 +24,3 @@ Description: Debian System Wide Information Manager
  management rather than through huge databases.  The virtual filesystem will 
  still be managed by a database, and Contents.gz listings will also be 
  reinstated.
- .	
- The latest and greatest dswim can be retrieved from here: 
- .	
- deb http://prdownloads.sourceforge.net/avd ./
