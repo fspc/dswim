@@ -69,7 +69,7 @@ sub safex {
 	     if (($argument =~ m,/, && ($commands->{"y"} || 
 					$commands->{"z"} ||
 					$commands->{"ftp"} || 
-					$commands->{"no-download"})) || 
+					$commands->{"download-only"})) || 
 		 defined $aptor_group ||
 		 $commands->{"ftp"} || 
 		 $commands->{"purge"} || 
@@ -93,7 +93,7 @@ sub safex {
 	 if ($commands->{"y"} || 
 	     $commands->{"z"} || 
 	     $commands->{"ftp"} ||
-	     $commands->{"no-download"} || 
+	     $commands->{"download-only"} || 
 	     $commands->{"purge"} || 
 	     $commands->{"remove"} ||
 	     $commands->{"r"}  || 
@@ -221,7 +221,7 @@ sub xyz {
   if (($commands->{"y"} || 
        $commands->{"z"} || 
        $commands->{"x"} ||
-       $commands->{"no-download"}) && 
+       $commands->{"download-only"}) && 
  
       ($commands->{"ftp"})) {
 
@@ -229,7 +229,7 @@ sub xyz {
     print "x" if $commands->{"x"};
     print "y" if $commands->{"y"};
     print "z" if $commands->{"z"};
-    print " --no-download" if $commands->{"no-download"};
+    print " --download-only" if $commands->{"download-only"};
     print " cannot be used with ";
     #print "--purge " if defined $commands->{"purge"};
     print "--ftp " if defined $commands->{"ftp"};
@@ -251,7 +251,7 @@ sub xyz {
     print " cannot be used without --ftp\n";
     exit;
   }  
-  if (($commands->{"y"} || $commands->{"z"} || $commands->{"no-download"}) &&
+  if (($commands->{"y"} || $commands->{"z"} || $commands->{"download-only"}) &&
        !$commands->{"x"}) {
     print "swim: requires -x option\n";
     exit;
@@ -294,7 +294,7 @@ sub xyz {
 	
 	) && 
        
-       !($commands->{"z"} || $commands->{"no-download"}) ) {
+       !($commands->{"z"} || $commands->{"download-only"}) ) {
 
       my $arg;
       my $count = 0;
@@ -353,7 +353,7 @@ sub xyz {
   # SAFETY MODE DOWNLOAD-ONLY #
   #############################
   # --download-only and simulate
-  elsif ($commands->{"no-download"} && !$commands->{"z"} ) {
+  elsif ($commands->{"download-only"} && !$commands->{"z"} ) {
 
       my $arg;
       my $count = 0;
@@ -455,7 +455,7 @@ sub xyz {
     if (!($commands->{"ftp"} || $commands->{"purge"} || 
 	  $commands->{"reinstall"})) {
      if (!$commands->{"y"}) {
-      if (!$commands->{"no-download"}) {
+      if (!$commands->{"download-only"}) {
        !($commands->{"r"} || $commands{"remove"}) ?
          system "$apt_get install $arg" :
          system "$apt_get remove $arg";
@@ -467,7 +467,7 @@ sub xyz {
       } 
      }
      else {
-      if (!$commands->{"no-download"}) {
+      if (!$commands->{"download-only"}) {
        !($commands->{"r"} || $commands{"remove"}) ?
          system "$apt_get install -y $arg" :
          system "$apt_get remove -y $arg";
