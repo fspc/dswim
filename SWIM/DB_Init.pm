@@ -1,5 +1,5 @@
 #    Package administration and research tool for Debian
-#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum
+#    Copyright (C) 1999-2001 Jonathan D. Rosenbaum
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ sub database {
 
   my ($commands) = @_;
   my %commands = %$commands;
-  print scalar(localtime), "\n";
+  print STDERR scalar(localtime), "\n";
 
   #my whatever that is
   my @dpackage; # passes name_version to md()
@@ -98,7 +98,7 @@ sub database {
       $the_status = "$parent$base/status";
   }
   else {
-      print "swim: crucial file(s)/directories are missing in $parent\n";
+      print STDERR "swim: crucial file(s)/directories are missing in $parent\n";
       exit;
   }
 
@@ -108,7 +108,7 @@ sub database {
       if ($commands->{"initdb"}) {  
         if (-e "$main::home$parent$library/packages.deb" &&
             -e "$main::home$parent$library/fileindex.deb") {            
-            print "swim:  use --rebuilddb\n";
+            print STDERR "swim:  use --rebuilddb\n";
             exit;
         }
         else {
@@ -155,7 +155,7 @@ sub database {
           if -e "$main::home$parent$library/dirindex.deb.gz";           
         }
         else {
-          print "swim:  use --initdb to create databases\n";
+          print STDERR "swim:  use --initdb to create databases\n";
           exit;
         }
       }  
@@ -164,7 +164,7 @@ sub database {
       if ($commands->{"initdb"}) {  
         if (-e "$main::home$parent$base/packages.deb" &&
             -e "$main::home$parent$base/fileindex.deb") {            
-            print "swim:  use --rebuilddb\n";
+            print STDERR "swim:  use --rebuilddb\n";
             exit;
         }
         else {
@@ -211,7 +211,7 @@ sub database {
           if -e "$main::home$parent$library/dirindex.deb.gz";           
         }
         else {
-          print "swim:  use --initdb to create databases\n";
+          print STDERR "swim:  use --initdb to create databases\n";
           exit;
         }
       }  
@@ -225,7 +225,7 @@ sub database {
 
   # Seems like both approaches are about the same speed.
   #use File::Copy; 
-  print "Making backups of *.list\n";
+  print STDERR "Making backups of *.list\n";
   if (!-d "$main::home$parent$base/info/backup") {
       system "mkdir $main::home$parent$base/info/backup";
   }
@@ -240,7 +240,7 @@ sub database {
   }
   closedir(COPY);
 
- print "Description Database is being made\n";
+ print STDERR "Description Database is being made\n";
 
     $| = 1; my $x = 0;
     open(PRETTY, ">$format_deb");
@@ -251,8 +251,8 @@ sub database {
           @package = split(/: /,$_);                                                  
           chomp	 $package[1];
           $x = 1 if $x == 6;
-          print "|\r" if $x == 1 || $x == 4; print "/\r" if $x == 2;
-          print "-\r" if $x == 3 || $x == 6; print "\\\r" if $x == 5;
+          print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
+          print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
           $x++;         
         } 
   # Some other pertinent fields
@@ -538,7 +538,7 @@ sub database {
   # database().
 
   # Put the groups into the groupindex.deb database.
-  print "Group Database is being made\n";
+  print STDERR "Group Database is being made\n";
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
@@ -555,7 +555,7 @@ sub database {
   undef %group;
 
   # Create the important status database.
-  print "Status Database is being made\n";
+  print STDERR "Status Database is being made\n";
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
@@ -633,7 +633,7 @@ sub md {
           system $fastswim, "--transfer", $argument2, $tmp;
          }
          else {
-          print "Gathering the file(s)/dir(s)\n";
+          print STDERR "Gathering the file(s)/dir(s)\n";
           system $imswim, $argument2, $tmp;
           system $slowswim, $tmp, $sort;
          }

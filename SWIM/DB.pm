@@ -1,5 +1,5 @@
 #    Package administration and research tool for Debian
-#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum
+#    Copyright (C) 1999-2001 Jonathan D. Rosenbaum
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -220,7 +220,7 @@ sub db {
 
     # Going to be adding some stuff to nsearchindex.deb and ndirindex.deb
     # so better remove any compressed versions if they exist
-    if (defined @GONE || defined @NEW) {
+    if (@GONE || @NEW) {
      if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
@@ -487,7 +487,7 @@ sub db {
             ###########
             # SECTION #
             ###########
-            if (defined $section) {
+            if ($section) {
               chomp $section;
             }
             else {
@@ -516,7 +516,7 @@ sub db {
              ############
              # PRIORITY #
              ############
-             if (defined $priority) {       
+             if ($priority) {       
               $priory = substr($priority,10);
              }
              else {
@@ -548,7 +548,7 @@ sub db {
             ######################
             # SECTION & PRIORITY #
             ######################
-            if (defined $section) {
+            if ($section) {
               $col1 = $section;
             }
             else {
@@ -593,7 +593,7 @@ sub db {
             #my $cool = $installed_size . $maintainer;
             #print PRETTY $cool;
             $col1 = $installed_size;
-            if (defined $source) {
+            if ($source) {
               $col2 = $source;
             }
             else {
