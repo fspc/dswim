@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# This is for development - modify for your own $HOME.
+
+ln -sf /home/mttrader/avd/avd/swim/bin/fastswim /usr/lib/SWIM/fastswim
+ln -sf /home/mttrader/avd/avd/swim/bin/imswim /usr/lib/SWIM/imswim
+ln -sf /home/mttrader/avd/avd/swim/bin/slowswim /usr/lib/SWIM/slowswim
+ln -sf /home/mttrader/avd/avd/swim/bin/longswim /usr/lib/SWIM/longswim
