@@ -81,7 +81,7 @@ sub findexer {
           $argument = $_;
             if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} ) {
              scripts(\%commands);
           }
           menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -103,7 +103,7 @@ sub findexer {
              $argument = $_;           
              if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"}  || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -125,7 +125,7 @@ sub findexer {
              $argument = $_;                     
              if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"}  || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -160,7 +160,7 @@ sub findexer {
              $argument = $_;                                     
              if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);                                                     
              }                                                                  
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -179,7 +179,7 @@ sub findexer {
              $argument = $_;           
              if ($commands->{"scripts"} || $commands->{"preinst"} ||
                  $commands->{"postinst"} || $commands->{"prerm"} ||
-                 $commands->{"postrm"}) {
+                 $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -200,7 +200,7 @@ sub findexer {
             $argument = $_;                     
             if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                 scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -266,7 +266,7 @@ sub qindexer {
 
    if ($commands->{"scripts"} || $commands->{"preinst"} ||
        $commands->{"postinst"} || $commands->{"prerm"} ||
-       $commands->{"postrm"}) {
+       $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
       scripts(\%commands);
    }
    menu(\%commands) if $commands->{"menu"} || $commands->{"m"};

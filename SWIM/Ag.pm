@@ -40,7 +40,7 @@ sub description {
 
   if ($commands->{"scripts"} || $commands->{"preinst"} ||
       $commands->{"postinst"} || $commands->{"prerm"} ||
-      $commands->{"postrm"}) {
+      $commands->{"postrm"} || $commands{"config"} || $commands{"templates"}) {
        scripts(\%commands);
   }
   menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -127,7 +127,7 @@ sub q_description {
 
   if ($commands->{"scripts"} || $commands->{"preinst"} ||
       $commands->{"postinst"} || $commands->{"prerm"} ||
-      $commands->{"postrm"}) {
+      $commands->{"postrm"} || $commands{"config"} || $commands{"templates"}) {
       scripts(\%commands);
   }
   menu(\%commands) if $commands->{"menu"} || $commands->{"m"};

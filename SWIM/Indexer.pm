@@ -38,27 +38,32 @@ sub T_indexer {
    my ($alot,$commands) = @_;
    my %commands = %$commands;
 
-           foreach (@$alot) {
-             $argument = $_;
-             if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
-                 scripts(\%commands);
-             }
-             menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
-             copyright(\%commands) if $commands->{"copyright"};
-             changelog(\%commands) if $commands->{"changelog"};
-             # looks o.k.
-             print "$argument\n";
-             character(\%commands);
-             shlibs(\%commands) if $commands->{"shlibs"};
-             if ($commands->{"d"} && !$commands->{"c"}) {
-              require SWIM::File;
-              SWIM::File->import(qw(file));
-              file(\%commands);
-             }
-             print "\n";
-           }
+   foreach (@$alot) {
+       $argument = $_;
+       if ($commands->{"scripts"} || 
+	   $commands->{"preinst"} ||
+	   $commands->{"postinst"} || 
+	   $commands->{"config"} || 
+	   $commands->{"prerm"} ||
+	   $commands->{"postrm"} || 
+	   $commands->{"config"} || 
+	   $commands->{"templates"}) {
+	   scripts(\%commands);
+       }
+       menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
+       copyright(\%commands) if $commands->{"copyright"};
+       changelog(\%commands) if $commands->{"changelog"};
+       # looks o.k.
+       print "$argument\n";
+       character(\%commands);
+       shlibs(\%commands) if $commands->{"shlibs"};
+       if ($commands->{"d"} && !$commands->{"c"}) {
+	   require SWIM::File;
+	 SWIM::File->import(qw(file));
+	   file(\%commands);
+       }
+       print "\n";
+   }
 } # end sub T_indexer
 
 
@@ -72,7 +77,7 @@ sub which_character_indexer {
              $argument = $_;
              if ($commands->{"scripts"} || $commands->{"preinst"} ||
                  $commands->{"postinst"} || $commands->{"prerm"} ||
-                 $commands->{"postrm"}) {
+                 $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -107,7 +112,7 @@ sub noT_indexer {
             $argument = $_;                     
              if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -136,7 +141,7 @@ sub nonoT_indexer {
               $argument = $_;  
              if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
              }
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -171,7 +176,7 @@ sub c_indexer {
               # covers first argument, but not the rest.
               if ($commands->{"scripts"} || $commands->{"preinst"} ||
                 $commands->{"postinst"} || $commands->{"prerm"} ||
-                $commands->{"postrm"}) {
+                $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
               }
               menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -194,7 +199,7 @@ sub c_indexer {
                  $argument = $_;           
                  if ($commands->{"scripts"} || $commands->{"preinst"} ||
                      $commands->{"postinst"} || $commands->{"prerm"} ||
-                     $commands->{"postrm"}) {
+                     $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                     scripts(\%commands);
                  }
                  menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -219,7 +224,7 @@ sub c_indexer {
              # no Ts.
              else {
                 if ($commands->{"scripts"} || $commands->{"preinst"} ||
-                    $commands->{"postinst"} || $commands->{"prerm"} ||
+                    $commands->{"postinst"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"prerm"} ||
                     $commands->{"postrm"}) {
                     scripts(\%commands);
                 }
@@ -255,7 +260,7 @@ sub c_indexer {
                 $argument = $_;           
               if ($commands->{"scripts"} || $commands->{"preinst"} ||
                   $commands->{"postinst"} || $commands->{"prerm"} ||
-                  $commands->{"postrm"}) {
+                  $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}) {
                  scripts(\%commands);
               }
               menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -273,7 +278,7 @@ sub c_indexer {
                  $argument = $_;           
                  if ($commands->{"scripts"} || $commands->{"preinst"} ||
                      $commands->{"postinst"} || $commands->{"prerm"} ||
-                     $commands->{"postrm"}) {
+                     $commands->{"postrm" || $commands->{"config"} || $commands->{"templates"}}) {
                     scripts(\%commands);
                  }
                  menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
@@ -294,7 +299,7 @@ sub c_indexer {
               else {
                  if ($commands->{"scripts"} || $commands->{"preinst"} ||
                     $commands->{"postinst"} || $commands->{"prerm"} ||
-                    $commands->{"postrm"}) {
+                    $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} ) {
                      scripts(\%commands);
                  }
                  menu(\%commands) if $commands->{"menu"} || $commands->{"m"};

@@ -39,7 +39,7 @@ sub singular {
       !($commands->{"i"} || $commands->{"l"} ||
       $commands->{"df"} || $commands->{"d"} || $commands->{"c"} ||
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} ||
+      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||
@@ -53,7 +53,7 @@ sub singular {
       $commands {"c"} && !($commands->{"i"} || 
       $commands->{"df"} || $commands->{"d"} || $commands->{"l"} ||
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} &&
+      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} &&
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||
@@ -67,7 +67,7 @@ sub singular {
       $commands {"c"} && $commands->{"d"} &&
       !($commands->{"i"} || $commands->{"df"} || $commands->{"l"} || 
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} ||
+      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||
@@ -81,7 +81,7 @@ sub singular {
       $commands {"c"} && ($commands->{"d"} ||
       $commands->{"l"}) && !($commands->{"i"} || $commands->{"df"} || 
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} ||
+      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||

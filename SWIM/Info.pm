@@ -40,7 +40,7 @@ sub scripts {
   my %commands = %$commands;
 
   my ($file, $preinst, $postinst, $prerm,
-      $postrm, $orig_argument);
+      $postrm, $config, $templates, $orig_argument);
       
 
   if ($commands->{"n"}) {
@@ -64,7 +64,7 @@ sub scripts {
    # here we will print out whatever we find including the file name.
    if ($commands->{"scripts"} && !($commands->{"preinst"} ||
        $commands->{"postinst"} || $commands->{"prerm"} ||
-       $commands->{"postrm"})) {
+       $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"})) {
      if (defined "$parent$base/info/$argument.preinst") {     
          $preinst = "$parent$base/info/$argument.preinst";
      }
@@ -76,6 +76,12 @@ sub scripts {
      }
      if (defined "$parent$base/info/$argument.postrm") {     
         $postrm = "$parent$base/info/$argument.postrm";
+     }
+     if (defined "$parent$base/info/$argument.config") {     
+        $config = "$parent$base/info/$argument.config";
+     }
+     if (defined "$parent$base/info/$argument.templates") {     
+        $templates = "$parent$base/info/$argument.templates";
      }
      
      if (-e $preinst) {
@@ -106,6 +112,21 @@ sub scripts {
         print $_;             
        }      
      } 
+     if (-e $config) {
+       open (LIST,"$config");
+       print "#####$argument.config#####\n\n";
+       while (<LIST>) {                                           
+        print $_;             
+       }      
+     } 
+     if (-e $templates) {
+       open (LIST,"$templates");
+       print "#####$argument.templates#####\n\n";
+       while (<LIST>) {                                           
+        print $_;             
+       }      
+     } 
+
    } # if scripts
 
 
@@ -192,6 +213,48 @@ sub scripts {
       }
       else {
        open (LIST,"$postrm");
+       while (<LIST>) {                                           
+        print $_;             
+       }      
+      }
+     } 
+   }
+
+   if ($commands->{"config"}) {
+     if (defined "$parent$base/info/$argument.config") {     
+        $config = "$parent$base/info/$argument.config";
+     }
+     if (-e $config) {
+      if ($commands->{"a"} || $commands->{"t"}) { 
+       print "#####$argument.config#####\n\n";
+       open (LIST,"$config");
+       while (<LIST>) {                                           
+        print $_;             
+       }      
+      }
+      else {
+       open (LIST,"$config");
+       while (<LIST>) {                                           
+        print $_;             
+       }      
+      }
+     } 
+   }
+
+   if ($commands->{"templates"}) {
+     if (defined "$parent$base/info/$argument.templates") {     
+        $templates = "$parent$base/info/$argument.templates";
+     }
+     if (-e $templates) {
+      if ($commands->{"a"} || $commands->{"t"}) { 
+       print "#####$argument.templates#####\n\n";
+       open (LIST,"$templates");
+       while (<LIST>) {                                           
+        print $_;             
+       }      
+      }
+      else {
+       open (LIST,"$templates");
        while (<LIST>) {                                           
         print $_;             
        }      

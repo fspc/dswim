@@ -567,7 +567,7 @@ sub printme {
   if ($commands->{"p"} && !($commands->{"i"} || $commands->{"l"} ||
       $commands->{"df"} || $commands->{"d"} || $commands->{"c"} ||
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} ||
+      $commands->{"prerm"} || $commands->{"postrm"}  || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||
@@ -603,7 +603,7 @@ sub printme {
          $commands{"c"})
       && !($commands->{"i"} || $commands->{"df"} ||
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} ||
+      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}  || $commands->{"T"} ||
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||
@@ -643,7 +643,7 @@ that there was a reason for doing it this way.
   elsif ($commands->{"p"} && $commands {"c"} && !($commands->{"i"} || 
       $commands->{"df"} || $commands->{"d"} || $commands->{"l"} ||
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} &&
+      $commands->{"prerm"} || $commands->{"postrm"}  || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} &&
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||
@@ -678,7 +678,7 @@ that there was a reason for doing it this way.
   elsif ($commands->{"p"} && $commands {"c"} && $commands->{"d"} &&
       !($commands->{"i"} || $commands->{"df"} || $commands->{"l"} || 
       $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"T"} ||
+      $commands->{"prerm"} || $commands->{"postrm"}  || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
       $commands->{"pre_depends"} || $commands->{"depends"} || 
       $commands->{"recommends"} || $commands->{"suggests"} ||
       $commands->{"provides"} || $commands->{"replaces"} ||
@@ -991,7 +991,7 @@ sub scripto {
    # Give a title.
    if ($commands->{"scripts"} && !($commands->{"preinst"} ||
        $commands->{"postinst"} || $commands->{"prerem"} ||
-       $commands->{"postrm"})) {
+       $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"})) {
 
         if (defined $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument preinst >/dev/null 2>&1";
@@ -1067,6 +1067,45 @@ sub scripto {
            undef $real;
          }
         }
+
+        if (defined $dpkg_deb) {
+         $real = system "$dpkg_deb -I $argument config >/dev/null 2>&1";      
+         if ($real == 0) {
+           print "#####$1.config#####\n";
+           $real = system "$dpkg_deb -I $argument config";            
+           undef $real;
+         }
+        }
+        elsif (defined $ar) {
+         $real = system "$ar -p $argument control.tar.gz |\
+                         $tar tOz config >/dev/null 2>&1"; 
+         if ($real == 0) {
+           print "#####$1.config#####\n";
+           $real = system "$ar -p $argument control.tar.gz |\
+                           $tar xOz config";
+           undef $real;
+         }
+        }
+
+        if (defined $dpkg_deb) {
+         $real = system "$dpkg_deb -I $argument templates >/dev/null 2>&1";      
+         if ($real == 0) {
+           print "#####$1.templates#####\n";
+           $real = system "$dpkg_deb -I $argument templates";            
+           undef $real;
+         }
+        }
+        elsif (defined $ar) {
+         $real = system "$ar -p $argument control.tar.gz |\
+                         $tar tOz templates >/dev/null 2>&1"; 
+         if ($real == 0) {
+           print "#####$1.templates#####\n";
+           $real = system "$ar -p $argument control.tar.gz |\
+                           $tar xOz templates";
+           undef $real;
+         }
+        }
+
    } 
 
    # no titles here
@@ -1141,6 +1180,44 @@ sub scripto {
          if ($real == 0) {
            $real = system "$ar -p $argument control.tar.gz |\
                            $tar xOz postrm";
+           undef $real;
+         }
+        }
+   }
+
+   if ($commands->{"config"}) {
+        if (defined $dpkg_deb) {
+         $real = system "$dpkg_deb -I $argument config >/dev/null 2>&1";   
+         if ($real == 0) {
+           $real = system "$dpkg_deb -I $argument config";            
+           undef $real;
+         }
+        }
+        elsif (defined $ar) {
+         $real = system "$ar -p $argument control.tar.gz |\
+                         $tar tOz config >/dev/null 2>&1"; 
+         if ($real == 0) {
+           $real = system "$ar -p $argument control.tar.gz |\
+                           $tar xOz config";
+           undef $real;
+         }
+        }
+   }
+
+   if ($commands->{"templates"}) {
+        if (defined $dpkg_deb) {
+         $real = system "$dpkg_deb -I $argument templates >/dev/null 2>&1";   
+         if ($real == 0) {
+           $real = system "$dpkg_deb -I $argument templates";            
+           undef $real;
+         }
+        }
+        elsif (defined $ar) {
+         $real = system "$ar -p $argument control.tar.gz |\
+                         $tar tOz templates >/dev/null 2>&1"; 
+         if ($real == 0) {
+           $real = system "$ar -p $argument control.tar.gz |\
+                           $tar xOz templates";
            undef $real;
          }
         }
