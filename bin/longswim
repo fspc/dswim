@@ -5,7 +5,7 @@ use DB_File;
 
 ############################################################################
 #
-#    Package administration and research tool for Debian                       
+#    Debian System Wide Information Manager                       
 #
 #    Copyright (C) 1999-2001 Jonathan D. Rosenbaum 
 #
