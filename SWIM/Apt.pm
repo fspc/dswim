@@ -533,14 +533,14 @@ sub ftp {
               # to a non-standard dist.
               my $localfile = "$default_directory/partial/$the_site" . "_" .
               "$distb" . "_dists_" . "$dist" . "_" . "Contents-$arch.gz";
-              my $main::home = "$default_directory/$the_site" . "_" . "$distb" .
+              my $home = "$default_directory/$the_site" . "_" . "$distb" .
               "_dists_" . "$dist" . "_" . "Contents-$arch.gz";
-              if (-e "$main::home") {
+              if (-e "$home") {
                 my $size =
                 $ftp->size("$distbase/dists/$dist/Contents-$arch.gz");
                 my $rmtime =
                 $ftp->mdtm("$distbase/dists/$dist/Contents-$arch.gz");
-                my ($lmtime) = (stat($main::home))[9];
+                my ($lmtime) = (stat($home))[9];
                 my $file_exist = $ftp->code();
                 print "swim: $distg[0]/Contents-$arch.gz does not exist on the server\n" 
                 if $file_exist == 550  && $distbase !~ /non-US/ && 
@@ -553,13 +553,13 @@ sub ftp {
                   if ($lsize == $size && $complete == 226) {
                     print "swim: successful retrieval of $dist/Contents-$arch.gz\n"; 
                     $cc++ if $commands->{"onec"};
-                    rename("$localfile","$main::home")
-                    or system "$mv", "$localfile", "$main::home"; 
+                    rename("$localfile","$home")
+                    or system "$mv", "$localfile", "$home"; 
                   }
                   else {
                     print "swim: unsuccessful retrieval of $dist/Contents-$arch.gz\n"; 
                   }
-                  utime(time,$rmtime,$main::home); 
+                  utime(time,$rmtime,$home); 
                 }
                 elsif ($lmtime == $rmtime) {
                   $cc++ if $commands->{"onec"};
@@ -582,14 +582,14 @@ sub ftp {
                  if ($lsize == $size && $complete == 226) {
                    print "swim: successful retrieval of $dist/Contents-$arch.gz\n"; 
                    $cc++ if $commands->{"onec"};
-                   rename("$localfile","$main::home")
-                   or system "$mv", "$localfile", "$main::home"; 
+                   rename("$localfile","$home")
+                   or system "$mv", "$localfile", "$home"; 
                  }
                  else {
                    print "swim: unsuccessful retrieval of $dist/Contents-$arch.gz\n"; 
                  }
-                 if (-e $main::home) {
-                  utime(time,$rmtime,$main::home); 
+                 if (-e $home) {
+                  utime(time,$rmtime,$home); 
                  }  
                 }
               }
@@ -599,14 +599,14 @@ sub ftp {
               make_dir($place);
               my $localfile = "$default_directory/partial/$the_site" . "_" .
               "$distb" . "_dists_" . "$dist" . "_" . "Contents-$arch.gz";
-              my $main::home = "$place/$the_site" . "_" . "$distb" .
+              my $home = "$place/$the_site" . "_" . "$distb" .
               "_dists_" . "$dist" . "_" . "Contents-$arch.gz";
-              if (-e "$main::home") {
+              if (-e "$home") {
                 my $size =
                 $ftp->size("$distbase/dists/$dist/Contents-$arch.gz");
                 my $rmtime =
                 $ftp->mdtm("$distbase/dists/$dist/Contents-$arch.gz");
-                my ($lmtime) = (stat($main::home))[9];
+                my ($lmtime) = (stat($home))[9];
                 my $file_exist = $ftp->code();
                 print "swim: $distg[0]/Contents-$arch.gz does not exist on the server\n" 
                 if $file_exist == 550  && $distbase !~ /non-US/ &&        
@@ -619,13 +619,13 @@ sub ftp {
                   if ($lsize == $size && $complete == 226) {
                     print "swim: successful retrieval of $dist/Contents-$arch.gz\n"; 
                     $cc++ if $commands->{"onec"};
-                    rename("$localfile","$main::home")
-                    or system "$mv", "$localfile", "$main::home"; 
+                    rename("$localfile","$home")
+                    or system "$mv", "$localfile", "$home"; 
                   }
                   else {
                     print "swim: unsuccessful retrieval of $dist/Contents-$arch.gz\n"; 
                   }
-                  utime(time,$rmtime,$main::home); 
+                  utime(time,$rmtime,$home); 
                 }
                 else {
                   $cc++ if $commands->{"onec"};
@@ -648,14 +648,14 @@ sub ftp {
                  if ($lsize == $size && $complete == 226) {
                    print "swim: successful retrieval of $dist/Contents-$arch.gz\n"; 
                    $cc++ if $commands->{"onec"};
-                   rename("$localfile","$main::home")
-                   or system "$mv", "$localfile", "$main::home"; 
+                   rename("$localfile","$home")
+                   or system "$mv", "$localfile", "$home"; 
                  }
                  else {
                    print "swim: unsuccessful retrieval of $dist/Contents-$arch.gz\n"; 
                  }
-                 if (-e $main::home) {
-                   utime(time,$rmtime,$main::home); 
+                 if (-e $home) {
+                   utime(time,$rmtime,$home); 
                  }
                 }
               }
@@ -672,14 +672,14 @@ sub ftp {
                !defined $commands->{"Release_only"}) {  
               my $localfile = "$default_directory/partial/$the_site" . "_" .
               "$distb" . "_dists_" . "$dist" . "_" . "Contents-$arch.gz";
-              my $main::home = "$default_directory/$the_site" . "_" . "$distb" .
+              my $home = "$default_directory/$the_site" . "_" . "$distb" .
               "_dists_" . "$dist" . "_" . "Contents-$arch.gz";
-              if (-e "$main::home") {
+              if (-e "$home") {
                 my $size =
                 $ftp->size("$distbase/dists/$dist/Contents-$arch.gz");
                 my $rmtime =
                 $ftp->mdtm("$distbase/dists/$dist/Contents-$arch.gz");
-                my ($lmtime) = (stat($main::home))[9];
+                my ($lmtime) = (stat($home))[9];
                 my $file_exist = $ftp->code();
                 print "swim: $dist/Contents-$arch.gz does not exist on the server\n" 
                 if $file_exist == 550 && $distbase !~ /non-US/ &&        
@@ -692,13 +692,13 @@ sub ftp {
                   if ($lsize == $size && $complete == 226) {
                     print "swim: successful retrieval of $dist/Contents-$arch.gz\n"; 
                     $cc++ if $commands->{"onec"};
-                    rename("$localfile","$main::home")
-                    or system "$mv", "$localfile", "$main::home"; 
+                    rename("$localfile","$home")
+                    or system "$mv", "$localfile", "$home"; 
                   }
                   else {
                     print "swim: unsuccessful retrieval of $dist/Contents-$arch.gz\n"; 
                   }
-                  utime(time,$rmtime,$main::home); 
+                  utime(time,$rmtime,$home); 
                 }
                 else {
                   $cc++ if $commands->{"onec"};
@@ -721,14 +721,14 @@ sub ftp {
                  if ($lsize == $size && $complete == 226) {
                    print "swim: successful retrieval of $dist/Contents-$arch.gz\n"; 
                    $cc++ if $commands->{"onec"};
-                   rename("$localfile","$main::home")
-                   or system "$mv", "$localfile", "$main::home"; 
+                   rename("$localfile","$home")
+                   or system "$mv", "$localfile", "$home"; 
                  }
                  else {
                    print "swim: unsuccessful retrieval of $dist/Contents-$arch.gz\n"; 
                  }
-                 if (-e $main::home) {
-                   utime(time,$rmtime,$main::home); 
+                 if (-e $home) {
+                   utime(time,$rmtime,$home); 
                  } 
                 }
               }
@@ -743,18 +743,18 @@ sub ftp {
            ##############
            if (defined $commands->{"Packages"}) {  
             if ($commands->{"Packages"} eq "DF") {
-              my ($main::home,$localfile,$release_home,$release_localfile);
+              my ($home,$localfile,$release_home,$release_localfile);
               my $nue = (split(m,/,,$dist))[0];
               $section ne "single" && $distb !~ /non-US|experimental/
-               ? ($main::home = 
+               ? ($home = 
                   "$default_directory/$the_site" . "_" . "$distb" . "_dists_" .
                   "$dist" . "_" . "$section" . "_" . "binary-$arch" . 
                   "_" . "Packages.gz")
                : $nue eq "project"
-                 ? ($main::home = 
+                 ? ($home = 
                     "$default_directory/$the_site" . "_" . "$distb" .
                      "_" . "Packages.gz")
-                 : ($main::home = 
+                 : ($home = 
                     "$default_directory/$the_site" .  "_" . "$distb" . "_"  
                     . "$nue" . "_" . "binary-$arch" . "_" . "Packages.gz");
               $section ne "single" && $distb !~ /non-US|experimental/
@@ -769,10 +769,10 @@ sub ftp {
                  : ($localfile = 
                     "$default_directory/partial/$the_site" .  "_" . "$distb" . "_"  
                     . "$nue" . "_" . "binary-$arch" . "_" . "Packages.gz");
-                ($release_home = $main::home) =~ s,Packages.gz,Release,;
+                ($release_home = $home) =~ s,Packages.gz,Release,;
                 ($release_localfile = $localfile) =~ s,Packages.gz,Release,;
-              if (-e "$main::home") {
-                my ($lmtime) = (stat($main::home))[9];
+              if (-e "$home") {
+                my ($lmtime) = (stat($home))[9];
                 my $remotefile;
                 $section ne "single"
                   ? ($remotefile = 
@@ -788,9 +788,9 @@ sub ftp {
                   get($ftp,$remotefile,$localfile);
                   my $lsize = (stat($localfile))[7];
                   my $complete = $ftp->code();          
-                  two26($complete,$size,$lsize,$main::home,$localfile,
+                  two26($complete,$size,$lsize,$home,$localfile,
                         $section,$arch,$dist,$distb); 
-                  utime(time,$rmtime,$main::home); 
+                  utime(time,$rmtime,$home); 
                 }
               }
               else {
@@ -808,10 +808,10 @@ sub ftp {
                 get($ftp,$remotefile,$localfile); 
                 my $complete = $ftp->code();          
                 my $lsize = (stat($localfile))[7];
-                two26($complete,$size,$lsize,$main::home,$localfile,
+                two26($complete,$size,$lsize,$home,$localfile,
                       $section,$arch,$dist,$distb); 
-                if (-e $main::home) {
-                  utime(time,$rmtime,$main::home); 
+                if (-e $home) {
+                  utime(time,$rmtime,$home); 
                 } 
               }
               ###########
@@ -857,18 +857,18 @@ sub ftp {
             elsif ($commands->{"Packages"} ne "DF") {
               my $place = $commands->{"Packages"};
               make_dir($place);
-              my($main::home,$localfile,$release_home,$release_localfile);
+              my($home,$localfile,$release_home,$release_localfile);
               my $nue = (split(m,/,,$dist))[0];
               $section ne "single" && $distb !~ /non-US|experimental/
-               ? ($main::home = 
+               ? ($home = 
                   "$place/$the_site" . "_" . "$distb" . "_dists_" .
                   "$dist" . "_" . "$section" . "_" . "binary-$arch" . 
                   "_" . "Packages.gz")
                : $nue eq "project"
-                 ? ($main::home = 
+                 ? ($home = 
                     "$place/$the_site" . "_" . "$distb" .
                      "_" . "Packages.gz")
-                 : ($main::home = 
+                 : ($home = 
                     "$place/$the_site" .  "_" . "$distb" . "_"  
                     . "$nue" . "_" . "binary-$arch" . "_" . "Packages.gz");
               $section ne "single" && $distb !~ /non-US|experimental/
@@ -883,10 +883,10 @@ sub ftp {
                  : ($localfile = 
                     "$default_directory/partial/$the_site" .  "_" . "$distb" . "_"  
                     . "$nue" . "_" . "binary-$arch" . "_" . "Packages.gz");
-                ($release_home = $main::home) =~ s,Packages.gz,Release,;
+                ($release_home = $home) =~ s,Packages.gz,Release,;
                 ($release_localfile = $localfile) =~ s,Packages.gz,Release,;
-              if (-e "$main::home") {
-                my ($lmtime) = (stat($main::home))[9];
+              if (-e "$home") {
+                my ($lmtime) = (stat($home))[9];
                 my $remotefile;
                 $section ne "single"
                   ? ($remotefile = 
@@ -902,9 +902,9 @@ sub ftp {
                   get($ftp,$remotefile,$localfile);
                   my $lsize = (stat($localfile))[7];
                   my $complete = $ftp->code();          
-                  two26($complete,$size,$lsize,$main::home,$localfile,
+                  two26($complete,$size,$lsize,$home,$localfile,
                         $section,$arch,$dist,$distb);
-                  utime(time,$rmtime,$main::home); 
+                  utime(time,$rmtime,$home); 
                 }
               }
               else {
@@ -922,10 +922,10 @@ sub ftp {
                 get($ftp,$remotefile,$localfile);
                 my $complete = $ftp->code();          
                 my $lsize = (stat($localfile))[7];
-                two26($complete,$size,$lsize,$main::home,$localfile,
+                two26($complete,$size,$lsize,$home,$localfile,
                       $section,$arch,$dist,$distb);
-                if (-e $main::home) {
-                  utime(time,$rmtime,$main::home); 
+                if (-e $home) {
+                  utime(time,$rmtime,$home); 
                 }
               }
               ###########
@@ -975,18 +975,18 @@ sub ftp {
            ################################
            if ((!defined $commands->{"Contents"} && 
                !defined $commands->{"Packages"}) || defined $Go_on) {  
-              my ($main::home,$localfile,$release_home,$release_localfile);
+              my ($home,$localfile,$release_home,$release_localfile);
               my $nue = (split(m,/,,$dist))[0];
               $section ne "single" && $distb !~ /non-US|experimental/
-               ? ($main::home = 
+               ? ($home = 
                   "$default_directory/$the_site" . "_" . "$distb" . "_dists_" .
                   "$dist" . "_" . "$section" . "_" . "binary-$arch" . 
                   "_" . "Packages.gz")
                : $nue eq "project"
-                 ? ($main::home = 
+                 ? ($home = 
                     "$default_directory/$the_site" . "_" . "$distb" .
                      "_" . "Packages.gz")
-                 : ($main::home = 
+                 : ($home = 
                     "$default_directory/$the_site" .  "_" . "$distb" . "_"  
                     . "$nue" . "_" . "binary-$arch" . "_" . "Packages.gz");
               $section ne "single" && $distb !~ /non-US|experimental/
@@ -1001,11 +1001,11 @@ sub ftp {
                  : ($localfile = 
                     "$default_directory/partial/$the_site" .  "_" . "$distb" . "_"  
                     . "$nue" . "_" . "binary-$arch" . "_" . "Packages.gz");
-                ($release_home = $main::home) =~ s,Packages.gz,Release,;
+                ($release_home = $home) =~ s,Packages.gz,Release,;
                 ($release_localfile = $localfile) =~ s,Packages.gz,Release,;
-              if (-e "$main::home" && !$commands->{"Release_only"} &&
+              if (-e "$home" && !$commands->{"Release_only"} &&
                   !defined $Go_on) {
-                my ($lmtime) = (stat($main::home))[9];
+                my ($lmtime) = (stat($home))[9];
                 my $remotefile;
                 $section ne "single"
                   ? ($remotefile = 
@@ -1021,12 +1021,12 @@ sub ftp {
                   get($ftp,$remotefile,$localfile);
                   my $lsize = (stat($localfile))[7];
                   my $complete = $ftp->code();          
-                  two26($complete,$size,$lsize,$main::home,$localfile,
+                  two26($complete,$size,$lsize,$home,$localfile,
                         $section,$arch,$dist,$distb);
-                  utime(time,$rmtime,$main::home); 
+                  utime(time,$rmtime,$home); 
                 }
               }
-              elsif (!-e "$main::home" && !$commands->{"Release_only"} &&
+              elsif (!-e "$home" && !$commands->{"Release_only"} &&
                      !defined $Go_on ) {
                 my $remotefile;
                 $section ne "single"
@@ -1042,10 +1042,10 @@ sub ftp {
                 get($ftp,$remotefile,$localfile);
                 my $complete = $ftp->code();          
                 my $lsize = (stat($localfile))[7];
-                two26($complete,$size,$lsize,$main::home,$localfile,
+                two26($complete,$size,$lsize,$home,$localfile,
                       $section,$arch,$dist,$distb); 
-                if (-e $main::home) {
-                  utime(time,$rmtime,$main::home); 
+                if (-e $home) {
+                  utime(time,$rmtime,$home); 
                 }
               }
               ###########
@@ -1154,7 +1154,7 @@ sub download {
 # Packages printout for ftp 226 success and the correct size
 sub two26 {
 
-    my ($complete,$size,$lsize,$main::home,$localfile,$section,$arch,$dist,$distb)
+    my ($complete,$size,$lsize,$home,$localfile,$section,$arch,$dist,$distb)
         = @_;
 
    if ($complete == 226 && $size == $lsize) {
@@ -1165,8 +1165,8 @@ sub two26 {
     if $section eq "single" && $distb !~ /non-US/;  
     print "swim: successful retrieval of $distp[0]/non-US/$distp[1]/Packages.gz\n" 
     if $distb =~ /non-US/ && $section !~ "non-US";
-    rename("$localfile","$main::home")
-    or system "$mv", "$localfile", "$main::home"; 
+    rename("$localfile","$home")
+    or system "$mv", "$localfile", "$home"; 
    }
    else {
     my @distp = split(m,/,,$dist);
@@ -1184,12 +1184,12 @@ sub two26 {
 # check download of Release file
 sub two26_r {
 
-     my ($complete,$size,$lsize,$main::home,$localfile,$section,$arch,$dist) = @_;
+     my ($complete,$size,$lsize,$home,$localfile,$section,$arch,$dist) = @_;
 
    if ($complete == 226 && $size == $lsize) {
     #print "swim: successful retrieval of $dist/$section/binary-$arch/Packages.gz\n"; 
-    rename("$localfile","$main::home")
-    or system "$mv", "$localfile", "$main::home";   
+    rename("$localfile","$home")
+    or system "$mv", "$localfile", "$home";   
    }
    else {
     print "swim: unsuccessful retrieval of $dist/$section/binary-$arch/Packages.gz\n"; 
