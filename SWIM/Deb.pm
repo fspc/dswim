@@ -26,6 +26,7 @@ use SWIM::DB_Library qw(:Deb);
 use SWIM::Compare;
 use vars qw(@ISA @EXPORT);
 use Exporter;
+no warnings;
 @ISA = qw(Exporter);
 @EXPORT = qw(deb_package md5sumo);
 
@@ -37,7 +38,7 @@ $| = 1;
 # query Debian packages using dpkg-deb and dpkg, or ar for non dpkg
 # installations.  
 sub deb_package {
-
+ 
   my ($commands) = @_; my %commands = %$commands;
 
   # this routine will read in single or more packages at the command line
@@ -57,8 +58,9 @@ sub deb_package {
           ###############
           # SITUATION 0 #
           ###############
-          if (m,\.\./|^\.\.$,) {
-           if ($_ !~ m,/[\w-+]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+	  if (m,\.\./|^\.\.$,) {
+	   #if ($_ !~ m,/[\w-+]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+	   if ($_ !~ m,/(\w-+)+/[\.\$\^\+\?\*\[\]\w-]*$,) {
              my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
              my @pwd =  split(m,/,,$pwd);
              s,\.\./,,g;
@@ -75,10 +77,10 @@ sub deb_package {
              # we will first check to see if $argument really is a Debian
              # package
              my $real;
-             if (defined $dpkg_deb) {
+             if ($dpkg_deb) {
               $real = system("$dpkg_deb -f $argument Package 2&>/dev/null"); 
              }
-             elsif (defined $ar) {
+             elsif ($ar) {
               $real = system "$ar -p $argument debian-binary 2&>/dev/null";
              }
              # construct the fields to the standard of swim
@@ -91,11 +93,11 @@ sub deb_package {
               if ($commands->{"i"}) {         
                 shbang(\%commands);
                 package_processor(\%commands);
-                if (defined $dpkg_deb) {
+                if ($dpkg_deb) {
                  print "Description: ";
                  system "$dpkg_deb -f $argument Description";
                 }
-                elsif (defined $ar) {
+                elsif ($ar) {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
@@ -112,14 +114,14 @@ sub deb_package {
               deps(\%commands);
               # nothing fancy here, no md5sums, no indenting.
               if ($commands->{"c"}) {
-               if (defined $dpkg_deb) {
+               if ($dpkg_deb) {
               $real = system "$dpkg_deb -I $argument conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
                   system "$dpkg_deb --info $argument conffiles";
                   undef $real;
                 }
                }             
-               elsif (defined $ar) {
+               elsif ( $ar) {
               $real = system "$ar -p $argument control.tar.gz |\ 
                               $tar tOz conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
@@ -164,10 +166,10 @@ sub deb_package {
              # we will first check to see if $argument really is a Debian
              # package
              my $real;
-             if (defined $dpkg_deb) {
+             if ( $dpkg_deb) {
               $real = system("$dpkg_deb -f $argument Package 2&>/dev/null"); 
              }
-             elsif (defined $ar) {
+             elsif ( $ar) {
               $real = system "$ar -p $argument debian-binary 2&>/dev/null";
              }
              # construct the fields to the standard of swim
@@ -180,11 +182,11 @@ sub deb_package {
               if ($commands->{"i"}) {         
                 shbang(\%commands);
                 package_processor(\%commands);
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Description: ";
                  system "$dpkg_deb -f $argument Description";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
@@ -201,14 +203,14 @@ sub deb_package {
               deps(\%commands);
               # nothing fancy here, no md5sums, no indenting.
               if ($commands->{"c"}) {
-               if (defined $dpkg_deb) {
+               if ( $dpkg_deb) {
               $real = system "$dpkg_deb -I $argument conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
                   system "$dpkg_deb --info $argument conffiles";
                   undef $real;
                 }
                }             
-               elsif (defined $ar) {
+               elsif ( $ar) {
               $real = system "$ar -p $argument control.tar.gz |\ 
                               $tar tOz conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
@@ -243,10 +245,10 @@ sub deb_package {
              # we will first check to see if $argument really is a Debian
              # package 
              my $real;
-             if (defined $dpkg_deb) {
+             if ( $dpkg_deb) {
               $real = system("$dpkg_deb -f $argument Package 2&>/dev/null"); 
              }
-             elsif (defined $ar) {
+             elsif ( $ar) {
               $real = system "$ar -p $argument debian-binary 2&>/dev/null";
              }
              # construct the fields to the standard of swim
@@ -259,11 +261,11 @@ sub deb_package {
               if ($commands->{"i"}) {         
                 shbang(\%commands);
                 package_processor(\%commands);
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Description: ";
                  system "$dpkg_deb -f $argument Description";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
@@ -280,14 +282,14 @@ sub deb_package {
               deps(\%commands);
               # nothing fancy here, no md5sums, no indenting.
               if ($commands->{"c"}) {
-               if (defined $dpkg_deb) {
+               if ( $dpkg_deb) {
               $real = system "$dpkg_deb -I $argument conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
                   system "$dpkg_deb --info $argument conffiles";
                   undef $real;
                 }
                }             
-               elsif (defined $ar) {
+               elsif ( $ar) {
               $real = system "$ar -p $argument control.tar.gz |\ 
                               $tar tOz conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
@@ -326,10 +328,10 @@ sub deb_package {
              # we will first check to see if $argument really is a Debian
              # package 
              my $real;
-             if (defined $dpkg_deb) {
+             if ( $dpkg_deb) {
               $real = system("$dpkg_deb -f $argument Package 2&>/dev/null"); 
              }
-             elsif (defined $ar) {
+             elsif ( $ar) {
               $real = system "$ar -p $argument debian-binary 2&>/dev/null";
              }
              # construct the fields to the standard of swim
@@ -342,11 +344,11 @@ sub deb_package {
               if ($commands->{"i"}) {         
                 shbang(\%commands);
                 package_processor(\%commands);
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Description: ";
                  system "$dpkg_deb -f $argument Description";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
@@ -363,14 +365,14 @@ sub deb_package {
               deps(\%commands);
               # nothing fancy here, no md5sums, no indenting.
               if ($commands->{"c"}) {
-               if (defined $dpkg_deb) {
+               if ( $dpkg_deb) {
               $real = system "$dpkg_deb -I $argument conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
                   system "$dpkg_deb --info $argument conffiles";
                   undef $real;
                 }
                }             
-               elsif (defined $ar) {
+               elsif ( $ar) {
               $real = system "$ar -p $argument control.tar.gz |\ 
                               $tar tOz conffiles >/dev/null 2>&1";      
                 if ($real == 0) {
@@ -424,16 +426,16 @@ sub extract {
 
 
    # extract files into the current directory
-   if (defined $same) { 
+   if ( $same) { 
     # this is one of these instances where not being precise is o.k.
     print "swim: specify PWD before ! :*}\n" if $same ne "PWD";
     print "swim: PWD is used for extracting files into the current directory\n"
     if $file =~ m,.*/$,; exit if $file  =~ m,.*/$,; 
     chdir($tmp);
-    if (defined $dpkg_deb) {
+    if ( $dpkg_deb) {
      system "$dpkg_deb --fsys-tarfile $argument | $tar x $file 2> fields.deb";
     }
-    elsif (defined $ar) {
+    elsif ( $ar) {
      system "$ar -p $argument data.tar.gz | $tar xz $file 2> fields.deb";   
     }
 
@@ -446,7 +448,7 @@ sub extract {
     rename("$tmp/$file","$pwd/$1") 
     or system "$mv","$tmp/$file", "$pwd/$1";
     my @ddirs = split(m,/,,$file);
-    if (defined @ddirs) {
+    if ( @ddirs) {
       chdir("$tmp/$ddirs[0]");
       system "rm -rf *";
       chdir($tmp);
@@ -462,10 +464,10 @@ sub extract {
     elsif ($file ne "ALL") {
 
     chdir($pwd);
-    if (defined $dpkg_deb) {
+    if ( $dpkg_deb) {
      system "$dpkg_deb --fsys-tarfile $argument | $tar x $file 2> $tmp/fields.deb";
     }
-    elsif (defined $ar) {
+    elsif ( $ar) {
      system "$ar -p $argument data.tar.gz | $tar xz $file 2> $tmp/fields.deb";   
     }
 
@@ -483,10 +485,10 @@ sub extract {
    else   {
 
       chdir($pwd);
-    if (defined $dpkg_deb) {
+    if ( $dpkg_deb) {
      system "$dpkg_deb --fsys-tarfile $argument | $tar x  2> $tmp/fields.deb";
     }
-    elsif (defined $ar) {
+    elsif ( $ar) {
      system "$ar -p $argument data.tar.gz | $tar xz  2> $tmp/fields.deb";
     }
     $argument =~ m,.*/(.*)$,;
@@ -520,7 +522,7 @@ sub md5sumo {
      $one = $underlines[0] . "_" . $underlines[1];
    }
    my $md = $one . "MD";
-   if (defined $db{"$md"}) {
+   if ( defined $db{"$md"}) {
     # revision: situation 
     if ($db{"$md"} =~ /REVISION/) {
        $md = (split(/\s/,$db{$md}))[0];
@@ -574,10 +576,10 @@ sub printme {
       $commands->{"conflicts"} || $commands->{"requires"} ||
       $commands->{"changelog"} || $commands->{"m"} || $commands->{"menu"} ||
       $commands->{"copyright"})) {
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
       }
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Package: > $tmp/temp.deb";
        system "perl -pi -e \"s/Package: //\" $tmp/temp.deb";
@@ -588,10 +590,10 @@ sub printme {
        print;
       }
       print "_";
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb", "-f", "$argument", "Version";   
       } 
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Version: > $tmp/temp.deb";
        system "perl -pi -e \"s/Version: //\" $tmp/temp.deb";       
@@ -610,10 +612,10 @@ sub printme {
       $commands->{"conflicts"} || $commands->{"requires"} ||
       $commands->{"changelog"} || $commands->{"m"} || $commands->{"menu"} ||
       $commands->{"copyright"})) {
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
       }
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Package: > $tmp/temp.deb";
        system "perl -pi -e \"s/Package: //\" $tmp/temp.deb";
@@ -624,10 +626,10 @@ sub printme {
        print;
       }
       print "_";
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb", "-f", "$argument", "Version";   
       } 
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Version: > $tmp/temp.deb";
        system "perl -pi -e \"s/Version: //\" $tmp/temp.deb";       
@@ -650,10 +652,10 @@ that there was a reason for doing it this way.
       $commands->{"conflicts"} || $commands->{"requires"} ||
       $commands->{"changelog"}  || $commands->{"m"} || $commands->{"menu"} ||
       $commands->{"copyright"})) {
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
       }
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Package: > $tmp/temp.deb";
        system "perl -pi -e \"s/Package: //\" $tmp/temp.deb";
@@ -665,10 +667,10 @@ that there was a reason for doing it this way.
        print;
       }
       print "_";
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb", "-f", "$argument", "Version";   
       } 
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Version: > $tmp/temp.deb";
        system "perl -pi -e \"s/Version: //\" $tmp/temp.deb";       
@@ -685,10 +687,10 @@ that there was a reason for doing it this way.
       $commands->{"conflicts"} || $commands->{"requires"} ||
       $commands->{"changelog"}  || $commands->{"m"} || $commands->{"menu"} ||
       $commands->{"copyright"})) {
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
       }
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Package: > $tmp/temp.deb";
        system "perl -pi -e \"s/Package: //\" $tmp/temp.deb";
@@ -700,10 +702,10 @@ that there was a reason for doing it this way.
        print;
       }
       print "_";
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb", "-f", "$argument", "Version";   
       } 
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Version: > $tmp/temp.deb";
        system "perl -pi -e \"s/Version: //\" $tmp/temp.deb";       
@@ -720,10 +722,10 @@ that there was a reason for doing it this way.
       $commands->{"conflicts"} || $commands->{"requires"} ||
       $commands->{"changelog"}  || $commands->{"m"} || $commands->{"menu"} ||
       $commands->{"copyright"})) {
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
       }
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Package: > $tmp/temp.deb";
        system "perl -pi -e \"s/Package: //\" $tmp/temp.deb";
@@ -735,10 +737,10 @@ that there was a reason for doing it this way.
        print;
       }
       print "_";
-      if (defined $dpkg_deb) {
+      if ( $dpkg_deb) {
        system "$dpkg_deb", "-f", "$argument", "Version";   
       }
-      elsif (defined $ar) {
+      elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
                $grep Version: > $tmp/temp.deb";
        system "perl -pi -e \"s/Version: //\" $tmp/temp.deb";       
@@ -759,7 +761,7 @@ sub copyrighto {
 
  if ($commands->{"copyright"}) {
    # find everything with change
-   if (defined $dpkg_deb) {
+   if ( $dpkg_deb) {
     system "$dpkg_deb --fsys-tarfile $argument | $tar t |\ 
             $grep -E \"usr/doc\|usr/share/doc\" |\ 
             $grep -Ei \"copy|license\" > $tmp/fields.deb";
@@ -771,7 +773,7 @@ sub copyrighto {
             $grep -E \"usr/doc\|usr/share/doc\" |\ 
             $grep -Ei \"copy|license\" > $tmp/linkto.deb";
    }
-   elsif (defined $ar) {
+   elsif ( $ar) {
     system "$ar -p $argument data.tar.gz | $tar tz |\ 
             $grep -E \"usr/doc\|usr/share/doc\" |\ 
             $grep -Ei \"copy|license\" > $tmp/fields.deb";
@@ -791,7 +793,7 @@ sub copyrighto {
        $whattodo = "yes";
       }
      }
-   if (defined $whattodo) { 
+   if ( $whattodo) { 
     open(FIELDS, ">$tmp/fields.deb");
     foreach (@links) {
       print FIELDS;
@@ -812,12 +814,12 @@ sub copyrighto {
           my $change = $1;
          if ($_ =~ m,\.gz$,) {
            print "#####$change for $name#####\n\n";
-           if (defined $dpkg_deb) {
+           if ( $dpkg_deb) {
             system "$dpkg_deb --fsys-tarfile $argument |\ 
                     $tar xO $_ | gzip -d";
             print "\n";
            }
-           elsif (defined $ar) {
+           elsif ( $ar) {
             system "$ar -p $argument data.tar.gz |\ 
                     $tar xOz $_ | gzip -d";
             print "\n";
@@ -825,11 +827,11 @@ sub copyrighto {
          }
          elsif ($_ !~ m,html$|htm$|ps$|dvi$|sgml$|gs$,) {
            print "#####$change for $name#####\n\n";
-           if (defined $dpkg_deb) {
+           if ( $dpkg_deb) {
             system "$dpkg_deb --fsys-tarfile $argument | $tar xO $_";
             print "\n";
            }
-           elsif (defined $ar) {
+           elsif ( $ar) {
             system "$ar -p $argument data.tar.gz | $tar xOz $_";
             print "\n";
            }
@@ -851,12 +853,12 @@ sub changelogo {
 
  if ($commands->{"changelog"}) {
    # find everything with change
-   if (defined $dpkg_deb) {
+   if ( $dpkg_deb) {
     system "$dpkg_deb --fsys-tarfile $argument | $tar t |\ 
             $grep -E \"usr/doc\|usr/share/doc\" |\
             $grep -i change > $tmp/fields.deb";
    }
-   elsif (defined $ar) {
+   elsif ( $ar) {
     system "$ar -p $argument data.tar.gz | $tar tz |\ 
             $grep -E \"usr/doc\|usr/share/doc\" |\
             $grep -i change > $tmp/fields.deb";
@@ -865,11 +867,11 @@ sub changelogo {
    # Maybe just do this once, faster.
    # occasionally a changelog is linked to another file..so that file has
    # to be used instead, this routine checks for this situation.
-   if (defined $dpkg_deb) {
+   if ( $dpkg_deb) {
     system "$dpkg_deb --fsys-tarfile $argument | $tar tv | $grep usr/doc |\ 
             $grep -i change > $tmp/linkto.deb";
    }
-   elsif (defined $ar) {
+   elsif ( $ar) {
     system "$ar -p $argument data.tar.gz | $tar tvz | $grep usr/doc |\ 
             $grep -i change > $tmp/linkto.deb";
    }  
@@ -884,7 +886,7 @@ sub changelogo {
        $whattodo = "yes";
       }
      }
-   if (defined $whattodo) { 
+   if ( $whattodo) { 
     open(FIELDS, ">$tmp/fields.deb");
     foreach (@links) {
       print FIELDS;
@@ -905,12 +907,12 @@ sub changelogo {
           my $change = $1;
          if ($_ =~ m,\.gz$,) {
            print "#####$change for $name#####\n\n";
-           if (defined $dpkg_deb) {
+           if ( $dpkg_deb) {
             system "$dpkg_deb --fsys-tarfile $argument | $tar xO $_ |\
                     gzip -d";
             print "\n";
            }
-           elsif (defined $ar) {
+           elsif ( $ar) {
             system "$ar -p $argument data.tar.gz | $tar xOz $_ |\
                     gzip -d";
             print "\n";
@@ -918,11 +920,11 @@ sub changelogo {
          }
          elsif ($_ !~ m,html$|htm$|ps$|dvi$|sgml$|gs$,) {
            print "#####$change for $name#####\n\n";
-           if (defined $dpkg_deb) {
+           if ( $dpkg_deb) {
             system "$dpkg_deb --fsys-tarfile $argument | $tar xO $_";
             print "\n";
            }
-           elsif (defined $ar) {
+           elsif ( $ar) {
             system "$ar -p $argument data.tar.gz | $tar xOz $_";
             print "\n";
            }
@@ -940,7 +942,7 @@ sub menuo {
 
  if ($commands->{"menu"} || $commands->{"m"}) {
    # find everything with change
-  if (defined $dpkg_deb) {
+  if ( $dpkg_deb) {
    system "$dpkg_deb --fsys-tarfile $argument | $tar t |\
    $grep -E usr/lib/menu/[0-9A-Za-z\+\.-] > $tmp/fields.deb";
 
@@ -950,7 +952,8 @@ sub menuo {
      my $name = $2;
     while (<MENU>) {
       #print "$_\n";
-      if (m,^usr\/lib\/menu\/(.*[\w-\+\.]$),) {
+      #if (m,^usr\/lib\/menu\/(.*[\w-\+\.]$),) {
+      if (m,^usr\/lib\/menu\/(.*(\w-\+\.)$),) {
        print "#####menu for $name($1)#####\n";
        system "$dpkg_deb --fsys-tarfile $argument | $tar xO $_";
        print "\n";
@@ -958,7 +961,7 @@ sub menuo {
     }
     close(MENU);
   }
-  elsif (defined $ar) {
+  elsif ( $ar) {
    system "$ar -p $argument data.tar.gz |\ 
            $tar tOz usr/lib/menu/[0-9A-Za-z\+\.-]* 2> $tmp/fields.deb";
 
@@ -967,8 +970,8 @@ sub menuo {
     open(MENU,"$tmp/fields.deb");
      my $name = $2;
     while (<MENU>) {
-      #print "$_\n";
-      if (m,^usr\/lib\/menu\/(.*[\w-\+\.]$),) {
+      #if (m,^usr\/lib\/menu\/(.*[\w-\+\.]$),) {
+      if (m,^usr\/lib\/menu\/(.*(\w-\+\.)$),) {
        print "#####menu for $name($1)#####\n";
        system "$ar -p $argument data.tar.gz | $tar xOz $_";
        print "\n";
@@ -993,7 +996,7 @@ sub scripto {
        $commands->{"postinst"} || $commands->{"prerem"} ||
        $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"})) {
 
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument preinst >/dev/null 2>&1";
          if ($real == 0) {
            print "#####$1.preinst#####\n";
@@ -1001,7 +1004,7 @@ sub scripto {
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz preinst >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1012,7 +1015,7 @@ sub scripto {
          }
         }
 
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument postinst >/dev/null 2>&1";
          if ($real == 0) {
            print "#####$1.postinst#####\n";
@@ -1020,7 +1023,7 @@ sub scripto {
            undef $real;
          }
         }
-        elsif (defined $ar) {         
+        elsif ( $ar) {         
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz postinst >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1031,7 +1034,7 @@ sub scripto {
          }
         }
 
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument prerm >/dev/null 2>&1";      
          if ($real == 0) {
            print "#####$1.prerm#####\n";
@@ -1039,7 +1042,7 @@ sub scripto {
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz prerm >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1050,7 +1053,7 @@ sub scripto {
          }
         }
 
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument postrm >/dev/null 2>&1";   
          if ($real == 0) {
            print "#####$1.postrm#####\n";
@@ -1058,7 +1061,7 @@ sub scripto {
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz postrm >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1068,7 +1071,7 @@ sub scripto {
          }
         }
 
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument config >/dev/null 2>&1";      
          if ($real == 0) {
            print "#####$1.config#####\n";
@@ -1076,7 +1079,7 @@ sub scripto {
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz config >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1087,7 +1090,7 @@ sub scripto {
          }
         }
 
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument templates >/dev/null 2>&1";      
          if ($real == 0) {
            print "#####$1.templates#####\n";
@@ -1095,7 +1098,7 @@ sub scripto {
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz templates >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1110,14 +1113,14 @@ sub scripto {
 
    # no titles here
    if ($commands->{"preinst"}) {
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument preinst >/dev/null 2>&1";
          if ($real == 0) {
            $real = system "$dpkg_deb -I $argument preinst";
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz preinst >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1129,14 +1132,14 @@ sub scripto {
    }
 
    if ($commands->{"postinst"}) {
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument postinst >/dev/null 2>&1";
          if ($real == 0) {
            system "$dpkg_deb -I $argument postinst";
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz postinst >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1148,14 +1151,14 @@ sub scripto {
    }
 
    if ($commands->{"prerm"}) {
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument prerm >/dev/null 2>&1";      
          if ($real == 0) {
            $real = system "$dpkg_deb -I $argument prerm";            
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz prerm >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1167,14 +1170,14 @@ sub scripto {
    }
 
    if ($commands->{"postrm"}) {
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument postrm >/dev/null 2>&1";   
          if ($real == 0) {
            $real = system "$dpkg_deb -I $argument postrm";            
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz postrm >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1186,14 +1189,14 @@ sub scripto {
    }
 
    if ($commands->{"config"}) {
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument config >/dev/null 2>&1";   
          if ($real == 0) {
            $real = system "$dpkg_deb -I $argument config";            
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz config >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1205,14 +1208,14 @@ sub scripto {
    }
 
    if ($commands->{"templates"}) {
-        if (defined $dpkg_deb) {
+        if ( $dpkg_deb) {
          $real = system "$dpkg_deb -I $argument templates >/dev/null 2>&1";   
          if ($real == 0) {
            $real = system "$dpkg_deb -I $argument templates";            
            undef $real;
          }
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
          $real = system "$ar -p $argument control.tar.gz |\
                          $tar tOz templates >/dev/null 2>&1"; 
          if ($real == 0) {
@@ -1233,7 +1236,7 @@ sub shlibso {
   my ($commands) = @_; my %commands = %$commands;
 
    if ($commands->{"shlibs"}) {
-      if (defined $dpkg_deb) { 
+      if ( $dpkg_deb) { 
         my $real = system "$dpkg_deb -I $argument shlibs >/dev/null 2>&1";   
         if ($real == 0) {
           print "Shlibs:\n";
@@ -1241,7 +1244,7 @@ sub shlibso {
           print "\n";
         }
       }
-      elsif (defined $ar) {
+      elsif ( $ar) {
         my $real = system "$ar -p $argument control.tar.gz |\ 
                    $tar tOz shlibs >/dev/null 2>&1";   
         if ($real == 0) {
@@ -1268,20 +1271,20 @@ sub listing {
      # These next to print out the verbose ls -la listing when -v is used
      if (($commands->{"l"} && $commands->{"v"}) && !$commands->{"d"}) {
         if ($commands->{"df"}) {
-         if (defined $dpkg_deb) { 
+         if ( $dpkg_deb) { 
           system "$dpkg_deb --contents $argument";
          }
-         elsif (defined $ar) {
+         elsif ( $ar) {
           system "$ar -p $argument data.tar.gz |\ 
                          $tar tOzv 2> $tmp/fields.deb; \
                          $cat $tmp/fields.deb";
          } 
         }
         elsif (!$commands->{"df"}) {
-         if (defined $dpkg_deb) { 
+         if ( $dpkg_deb) { 
           system "$dpkg_deb --contents $argument > $tmp/fields.deb";
          }
-         elsif (defined $ar) {
+         elsif ( $ar) {
           system "$ar -p $argument data.tar.gz |\
                    $tar tOzv 2> $tmp/fields.deb";
          }
@@ -1295,10 +1298,10 @@ sub listing {
      } 
      if (($commands->{"l"} && $commands->{"v"} && $commands->{"d"}) ||
           $commands->{"d"} && $commands->{"v"}) {
-         if (defined $dpkg_deb) {
+         if ( $dpkg_deb) {
           system "$dpkg_deb --contents $argument > $tmp/fields.deb";
          }
-         elsif (defined $ar) {
+         elsif ( $ar) {
           system "$ar -p $argument data.tar.gz |\
                    $tar tOzv 2> $tmp/fields.deb";
          }
@@ -1313,23 +1316,23 @@ sub listing {
      # These next two print out a short listing
      if (($commands->{"l"} && !$commands->{"v"}) && !$commands->{"d"}) {
         if ($commands->{"df"}) {
-         if (defined $dpkg_deb) {
+         if ( $dpkg_deb) {
           system "$dpkg_deb --fsys-tarfile $argument | $tar t";
          }
-         elsif (defined $ar) {
+         elsif ( $ar) {
           system "$ar -p $argument data.tar.gz |\ 
                   $tar tOz 2> $tmp/fields.deb; \
                   $cat $tmp/fields.deb";
          }
         }
         elsif (!$commands->{"df"}) {
-         if (defined $dpkg_deb) {
+         if ( $dpkg_deb) {
           system "$dpkg_deb --fsys-tarfile $argument |\ 
                   $tar t > $tmp/fields.deb";
           system "$dpkg_deb --fsys-tarfile $argument |\ 
                   $tar tv > $tmp/temp.deb";
          }
-         elsif (defined $ar) {
+         elsif ( $ar) {
           system "$ar -p $argument data.tar.gz |\ 
                   $tar tOz 2> $tmp/fields.deb";
           system "$ar -p $argument data.tar.gz |\ 
@@ -1350,13 +1353,13 @@ sub listing {
      } 
      if (($commands->{"l"} && !$commands->{"v"} && $commands->{"d"}) ||
           $commands->{"d"} && !$commands->{"v"}) {
-         if (defined $dpkg_deb) { 
+         if ( $dpkg_deb) { 
           system "$dpkg_deb --fsys-tarfile $argument |\ 
                   $tar t > $tmp/fields.deb";
           system "$dpkg_deb --fsys-tarfile $argument |\ 
                   $tar tv > $tmp/temp.deb";
          }
-         elsif (defined $ar) {
+         elsif ( $ar) {
           system "$ar -p $argument data.tar.gz |\ 
                   $tar tOz 2> $tmp/fields.deb";
           system "$ar -p $argument data.tar.gz |\ 
@@ -1394,15 +1397,15 @@ sub deps {
 
            if (!$commands->{"T"}) {
               if ($commands->{"pre_depends"}) {
-                if (!defined $title{$1}) {
+                if (! defined $title{$1}) {
                   print "$1\n";
                 }
                 $title{$1}++; 
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Pre-Depends: ";
                  system "$dpkg_deb -f $argument Pre-Depends";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz |\ 
                          $tar xOz control | $grep \"Pre-Depends: \w*\"";
                 }
@@ -1413,11 +1416,11 @@ sub deps {
                   print "$1\n";
                 }
                 $title{$1}++; 
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Depends: ";
                  system "$dpkg_deb -f $argument Depends";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz |\ 
                          $tar xOz control | $grep \"Depends: \w*\"";
                 }
@@ -1428,11 +1431,11 @@ sub deps {
                   print "$1\n";
                 }
                 $title{$1}++; 
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Recommends: ";
                  system "$dpkg_deb -f $argument Recommends";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz |\ 
                          $tar xOz control | $grep \"Recommends: \w*\"";
                 }
@@ -1443,11 +1446,11 @@ sub deps {
                   print "$1\n";
                 }
                 $title{$1}++; 
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Suggests: ";
                  system "$dpkg_deb -f $argument Suggests";
                 } 
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz |\ 
                          $tar xOz control | $grep \"Suggests: \w*\"";
                 }
@@ -1458,11 +1461,11 @@ sub deps {
                   print "$1\n";
                 }
                 $title{$1}++; 
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Provides: ";
                  system "$dpkg_deb -f $argument Provides";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz |\ 
                          $tar xOz control | $grep \"Provides: \w*\"";
                 }
@@ -1473,11 +1476,11 @@ sub deps {
                   print "$1\n";
                 }
                 $title{$1}++; 
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Replaces: ";
                  system "$dpkg_deb -f $argument Replaces";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz |\ 
                          $tar xOz control | $grep \"Replaces: \w*\"";
                 }
@@ -1488,11 +1491,11 @@ sub deps {
                   print "$1\n";
                 }
                 $title{$1}++; 
-                if (defined $dpkg_deb) {
+                if ( $dpkg_deb) {
                  print "Conflicts: ";
                  system "$dpkg_deb -f $argument Conflicts";
                 }
-                elsif (defined $ar) {
+                elsif ( $ar) {
                  system "$ar -p $argument control.tar.gz |\ 
                          $tar xOz control | $grep \"Conflicts: \w*\"";
                 }
@@ -1500,7 +1503,7 @@ sub deps {
               }
            }
            elsif ($commands->{"T"}) {
-        if (defined $dpkg_deb) { 
+        if ( $dpkg_deb) { 
           system "$dpkg_deb -f $argument Pre-Depends 2&> $tmp/fields.deb";
           system "$dpkg_deb -f $argument Depends  2&> $tmp/temp.deb; \ 
                   $cat $tmp/temp.deb >> $tmp/fields.deb;";            
@@ -1515,7 +1518,7 @@ sub deps {
           system "$dpkg_deb -f $argument Conflicts 2&> $tmp/temp.deb; \
                   $cat $tmp/temp.deb >> $tmp/fields.deb;";            
         }
-        elsif (defined $ar) {
+        elsif ( $ar) {
           system "$ar -p $argument control.tar.gz | $tar xOz control |\
                   $grep \"Pre-Depends: \w*\" > $tmp/fields.deb";
           system "$ar -p $argument control.tar.gz | $tar xOz control |\
@@ -1558,7 +1561,7 @@ sub deps {
 sub shbang {
 
          # just one call needed here
-         if (defined $dpkg_deb) {
+         if ( $dpkg_deb) {
           system "$dpkg_deb -f $argument Package 2&> $tmp/fields.deb";
           system "$dpkg_deb -f $argument Essential 2&> $tmp/temp.deb; \   
                   $cat $tmp/temp.deb >> $tmp/fields.deb;";            
@@ -1575,7 +1578,7 @@ sub shbang {
           system "$dpkg_deb -f $argument Version 2&> $tmp/temp.deb; \
                   $cat $tmp/temp.deb >> $tmp/fields.deb";            
          }
-         elsif (defined $ar) {
+         elsif ( $ar) {
           system "$ar -p $argument control.tar.gz | $tar xOz control |\
                   $grep \"Package: \w*\" > $tmp/fields.deb";
           system "$ar -p $argument control.tar.gz | $tar xOz control |\
@@ -1651,7 +1654,7 @@ sub package_processor {
             my ($same, $different);
             my ($vname, $gname, $priorname, $statusname);
             chomp $version;
-            if (defined $section) {
+            if ( $section) {
               chomp $section;
             }
             $col1 = "Package: $package[1]";
@@ -1666,7 +1669,7 @@ sub package_processor {
             # if statusindex is around we will check here, and in
             # nstatus* if the version is different, or the information
             # is unavailable. 
-            if (defined $pname) { 
+            if ( $pname) { 
             if (defined $sb{$pname}) {
               ($vname,$gname,$priorname,$statusname) = 
               split(/\s/,"$sb{$pname}",4);
@@ -1711,11 +1714,11 @@ sub package_processor {
             }
             write STDOUT;
             # We will try to fill things in for Section: and Priority:
-            if (defined $section) {  
+            if ( $section) {  
              $col1 = $section;
             }
             else {
-              if (defined $same) {
+              if ( $same) {
                 if ($gname eq "unavailable") {
                    nsb(\%commands);
                    if (defined $nsb{$pname}) {
@@ -1728,7 +1731,7 @@ sub package_processor {
                    $col1 = "Section: $gname";
                 }
               }
-              elsif (defined $different) {
+              elsif ( $different) {
                # look first in available, and next in a specified Packages
                # file, we will also compare this to the existing Section, 
                # because this is known to change.
@@ -1745,7 +1748,7 @@ sub package_processor {
               else {
               # This may be in available or Packages
                 nsb(\%commands);
-              if (defined $pname) {
+              if ( $pname) {
               if (defined $nsb{$pname}) {
                 my ($nvname,$ngname,$npriorname) =
                 split(/\s/,"$nsb{$pname}",3);
@@ -1757,11 +1760,11 @@ sub package_processor {
               }
              }
             } 
-            if (defined $priority) {  
+            if ( $priority) {  
               $col2 = $priority;             
             }
             else {
-              if (defined $same ) {
+              if ( $same ) {
                 if ($gname eq "unavailable") {
                    nsb(\%commands);
                    if (defined $nsb{$pname}) {
@@ -1774,7 +1777,7 @@ sub package_processor {
                     $col2 = "Priority: $priorname\n";
                 }
               }
-              elsif (defined $different) {
+              elsif ( $different) {
                # look first in available, and next in a specified Packages
                # file
                 nsb(\%commands);
@@ -1790,7 +1793,7 @@ sub package_processor {
               else {
                # This is not in available or Packages
                nsb(\%commands);
-               if (defined $pname) {
+               if ( $pname) {
                if (defined $nsb{$pname}) {
                  my ($nvname,$ngname,$npriorname) =
                  split(/\s/,"$nsb{$pname}",3);
@@ -1806,7 +1809,7 @@ sub package_processor {
             write STDOUT;
             #my $cool = $installed_size . $maintainer;
             $col1 = $installed_size;
-            if (defined $source) {
+            if ( $source) {
               $col2 = $source;
             }
             else {
@@ -1824,6 +1827,5 @@ sub package_processor {
 } # end sub package_processor
 
 
-
-
 1;
+

@@ -784,29 +784,44 @@ sub command {
         initndb(\%commands);
     }    
 
+
     # Automatic rebuilding - assuming the first time
-    if (!-f "$main::home$parent$library/status") {
-	system "cp -fa $parent$library/status $main::home$parent$library";
+    # Could test the db, too.
+
+    my $dpkg_status = "$parent$library/status";
+    my $my_status = "$main::home$parent$library/status";
+   if (!-f $my_status) {
+       $commands{"check"} = 1;
+       require SWIM::DB;
+     SWIM::DB->import(qw(db));
+       db(\%commands);	    
+       require SWIM::DB_Init;
+       
+       $commands{"rebuilddb"} = 1;
+     SWIM::DB_Init->import(qw(database));
+       database(\%commands);	    
+
+	system "cp -fa $dpkg_status $my_status";
     }
     else {
 	if ( $no_rebuilddb == 0 ) {
-	    my $diff = `diff $parent$library/status $main::home$parent$library/status`;
-	    if ( $diff ) {
-		$commands{"check"} = 1;
-		require SWIM::DB;
-	      SWIM::DB->import(qw(db));
-		db(\%commands);	    
-		require SWIM::DB_Init;
+	    if ( (stat($dpkg_status))[9] != (stat($my_status))[9] ) {
+		my $diff = `diff $dpkg_status $my_status`;
+		if ( $diff ) {
+		    $commands{"check"} = 1;
+		    require SWIM::DB;
+		  SWIM::DB->import(qw(db));
+		    db(\%commands);	    
+		    require SWIM::DB_Init;
 
-		$commands{"rebuilddb"} = 1;
-	      SWIM::DB_Init->import(qw(database));
-		database(\%commands);	    
-
-		system "cp -fa $parent$library/status $main::home$parent$library";
-	    }
-
+		    $commands{"rebuilddb"} = 1;
+		  SWIM::DB_Init->import(qw(database));
+		    database(\%commands);	    
+		    
+		    system "cp -fa $dpkg_status $my_status";
+		}
+	    }    
 	}
-
     }
 
 
@@ -1699,15 +1714,13 @@ Usage: swim [--nopager -n]
        swim {--search ? (--research || --refinesearch) <pattern(s)>} 
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [--ftp ? --source | --source_only ? <[--diff]>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
-                        [--df2apt] [--purge] [<\\d{1,}>]  
+                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [--purge] [<\\d{1,}>]  
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [--ftp ? --source | --source_only ? <[--diff]>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
-                        [--df2apt] [--purge] [<\\d{1,}>]  
+                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [--purge] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
@@ -1718,8 +1731,8 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df] 
-                        [--df2apt] [targets | -S ? <\\d{1,}>]
+                        [-xyrz --remove ? <[--nz]>] [--purge] 
+                        [targets | -S ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
        swim {--apt} [-xyz] [--upgrade] [--dist_upgrade]  
@@ -1773,15 +1786,13 @@ Usage: swim [--nopager -n]
        swim {--search ? (--research || --refinesearch) <pattern(s)>} 
                         [-g] [-n] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [--ftp ? --source | --source_only ? <[--diff]>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
-                        [--df2apt] [--purge] [<\\d{1,}>] 
+                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [--purge] [<\\d{1,}>] 
        swim {--powersearch --ps ? (--research || --refinesearch) <pattern(s)>}
                         [-n] [--dir] [--dbpath <dir>] [--root <dir>] [--no]
                         [--arch <architecture>] [--dists <distribution>] 
-                        [--ftp ? --source | --source_only <[--diff]>] 
-                        [-xyrz --remove ? <[--nz]>] [--stdin] [--apt2df]
-                        [--df2apt] [--purge] [<\\d{1,}>]  
+                        [-xyrz --remove ? <[--nz]>] [--stdin]
+                        [--purge] [<\\d{1,}>]  
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
@@ -1792,8 +1803,8 @@ Usage: swim [--nopager -n]
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
                         [--stdin] [--extract <ALL|archive|PWD!archive>]
-                        [-xyrz --remove ? <[--nz]>] [--purge] [--apt2df] 
-                        [--df2apt] [targets | -S  ? <\\d{1,}>]
+                        [-xyrz --remove ? <[--nz]>] [--purge] 
+                        [targets | -S  ? <\\d{1,}>]
        swim {--audit --status -C}
        swim {--apt} [--update] [--clean] [--autoclean] [--check] 
        swim {--apt} [-xyz] [--upgrade] [--dist_upgrade]  
@@ -1902,8 +1913,6 @@ usage:
         --remove
         -r                 - remove the installed package, but not the
                              package's configuration files  
-        --apt2df           - not implemented
-        --df2apt           - not implemented
       Editing Option
         --stdin            - allows readline editing capabilities when
                              used with virtual options 
@@ -1944,8 +1953,6 @@ usage:
         --remove
         -r                     - remove the installed package, but not the
                                  package's configuration files  
-        --apt2df               - not implemented
-        --df2apt               - not implemented
       Editing Option
         --stdin                - allows readline editing capabilities when
                                  used with virtual options 
@@ -2023,7 +2030,6 @@ sub pager {
   close PAGER;                                                                  
 } # end sub pager
 
-
 # Pulled this from *_pkg from the gbootroot project.
 sub home_builder {
 
@@ -2045,8 +2051,6 @@ sub home_builder {
     }
 
 } # end home_builder
-
-
 
 =pod
 # Will be returned someday when apt cache control is added.

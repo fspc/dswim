@@ -13,11 +13,11 @@ install:
 	cp -f swimrc /etc/swim
 
 remove:
-	rm /usr/lib/perl5/SWIM/*
-	rmdir /usr/lib/perl5/SWIM
+	rm /usr/share/perl5/SWIM/*
+	rmdir /usr/share/perl5/SWIM
 	rm /usr/bin/swim
-	rm /usr/lib/SWIM/*
-	rmdir /usr/lib/SWIM
+	rm /usr/lib/SWIM/*swim
+	rm -rf /usr/lib/SWIM
 
 
 
