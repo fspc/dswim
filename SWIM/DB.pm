@@ -71,6 +71,7 @@ sub db {
   my (@GONE, @CHANGED, @NEW);
   my @before;
   my %compare;
+  my %purge_count;
 
   # The mys for NEW
   my $count = 0;
@@ -103,7 +104,7 @@ sub db {
         if (/^Package:/i) {             
           @package = split(/: /,$_);                                   
           chomp $package[1];
-        } 
+         } 
         elsif (/^Status:/) {
             chomp;
             $status = substr($_,8);
@@ -112,10 +113,21 @@ sub db {
 		##########
 		# PURGED #
 		##########
+		# actually this works correctly if the db was pre-made
+		# because $rootsky was being appende, so the same thing will
+		# be done for --db now :)
 		if (defined $db{$package[1]}) {
 		    #print "$db{$package[1]}\n";
-		    $db{$package[1]} =~ m,(^.*)_.*$,;
-		    push(@GONE,$1);
+		    #$db{$package[1]} =~ m,(^.*)_.*$,;
+		    #$purge_count{$1}++;
+		    # print "HI $1 $purge_count{$1}\n";
+		    #my $it = grep(/$1/,@GONE);
+		    #print "HELLO  $it\n";
+		    #if ($purge_count{$1} == 1 ) {
+			#if ( !grep(/$1/,@GONE) ) {
+			 #   push(@GONE,$1);
+			#}
+		    #}
 		}	          
 	    }
 	}
@@ -213,7 +225,7 @@ sub db {
       return 1;
     }
       print STDERR "\n       TOTAL\n       -----\n";
-      print STDERR "NEW $new\n"; print "GONE $gon\n";
+       print STDERR "NEW $new\n"; print "GONE $gon\n";
       print STDERR "CHANGED $ch\n"; print "CHANGED STATUS $cr\n";
 
 
@@ -422,9 +434,11 @@ sub db {
    my %exacts;
    my $goon;
    print STDERR "\n" if $#NEW != -1; $x = 1;
-   foreach (@NEW) {
-     $exacts{$_} = "yes";
+  foreach (@NEW) {
+       $exacts{$_} = "yes";
    } 
+
+
      # first let's find the fields to put into packages.deb
      # We'll have to go through the status file again, something we
      # wouldn't have had to do with swim -i.  As it turns out, a good
@@ -809,9 +823,9 @@ sub db {
      print STDERR "\n" if $#NEW != -1; $x = 1;
 
   foreach $package_name (@NEW) {
-      open(FILENAME,"$main::home$parent$base/info/$package_name.list");
+      open(FILENAME,"$parent$base/info/$package_name.list");
       open(CP,">$main::home$parent$base/info/backup/$package_name.list.bk");
-      if ( -e "$main::home$parent$base/info/$package_name.list" ) {
+      if ( -e "$parent$base/info/$package_name.list" ) {
 	  while (<FILENAME>) {
 	      print CP $_;  
 	  }
@@ -826,50 +840,55 @@ sub db {
       while (<LIST>) {
 	  chomp;
 
-       # Better add the new stuff to the flat files first
-       if (!defined $ib{$_}) {
-         if (($commands->{"dbpath"} && $commands->{"root"}) ||
-             ($commands->{"dbpath"} && !$commands->{"root"}) ||
-             (!$commands->{"dbpath"} && !$commands->{"root"})) {
-               open(SEARCHINDEX,">>$main::home$parent$library/searchindex.deb");
-         }
-         elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-               open(SEARCHINDEX,">>$main::home$parent$base/searchindex.deb");
-         }
-         if (!-d) {
-            print SEARCHINDEX "$_\n";
-         }
-         if (($commands->{"dbpath"} && $commands->{"root"}) ||
-             ($commands->{"dbpath"} && !$commands->{"root"}) ||
-             (!$commands->{"dbpath"} && !$commands->{"root"})) {
-               open(DIRINDEX,">>$main::home$parent$library/dirindex.deb");
-         }
-         elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-               open(DIRINDEX,">>$main::home$parent$base/dirindex.deb");
-         }
-         if (-d) {
-           print DIRINDEX "$_\n";  
-         }
-       } # !defined
+	  # Better add the new stuff to the flat files first
+	  if (!defined $ib{$_}) {
+	      if (($commands->{"dbpath"} && $commands->{"root"}) ||
+		  ($commands->{"dbpath"} && !$commands->{"root"}) ||
+		  (!$commands->{"dbpath"} && !$commands->{"root"})) {
+		  open(SEARCHINDEX,">>$main::home$parent$library/searchindex.deb");
+	      }
+	      elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
+		  open(SEARCHINDEX,">>$main::home$parent$base/searchindex.deb");
+	      }
+	      if (!-d) {
+		  print SEARCHINDEX "$_\n";
+	      }
+	      if (($commands->{"dbpath"} && $commands->{"root"}) ||
+		  ($commands->{"dbpath"} && !$commands->{"root"}) ||
+		  (!$commands->{"dbpath"} && !$commands->{"root"})) {
+		  open(DIRINDEX,">>$main::home$parent$library/dirindex.deb");
+	      }
+	      elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
+		  open(DIRINDEX,">>$main::home$parent$base/dirindex.deb");
+	      }
+	      if (-d) {
+		  print DIRINDEX "$_\n";  
+	      }
+	  } # !defined
+	  
+	  # If the directory already exists we can just append 
+	  # to the end of the value
+	  if (defined $ib{$_}) {
+	      dbi(\%commands);
+	      my $cvalue = $ib{$_} . " $db{$package_name}";
+	      # put overwrites by default!
+	      $zing->put($_,$cvalue);   
+	  } # if defined        
+	  else {
+	      dbi(\%commands);
+	      print "$_ $db{$package_name}\n";
+	      $zing->put($_,$db{$package_name});    
+	  }
 
-       # If the directory already exists we can just append 
-       # to the end of the value
-       if (defined $ib{$_}) {
-           dbi(\%commands);
-           my $cvalue = $ib{$_} . " $db{$package_name}";
-           # put overwrites by default!
-           $zing->put($_,$cvalue);   
-       } # if defined        
-       else {
-           dbi(\%commands);
-           $zing->put($_,$db{$package_name});    
-       }
-     untie %db;
-     untie $zing;
-     }
-    close(LIST);  
-    close(SEARCHINDEX);
-    close(DIRINDEX);
+      untie %db;
+      untie $zing;
+
+      } # end while
+
+      
+      close(LIST);  
+      close(SEARCHINDEX);
+      close(DIRINDEX);
 
      my $zit; my ($nit,$yit) = (split(/\s/,$sb{$package_name}))[0,3];
      if ($yit eq "deinstall:ok:config-files" ||
