@@ -14,12 +14,15 @@ $apt = "yes";
 # Databases will automatically by rebuilt if any differences are found
 # in the status.  Although --db could be used to update the changes
 # for each particular packages, newer versions of libdb2 have introduced
-# bugs;  --rebuilddb is know to be 100% stable.  On some systems
+# bugs;  --rebuilddb is known to be 100% stable.  On some systems
 # which are slow, or have massive installations this feature may be
 # annoying.  If you decide to turn it off, remember to --rebuilddb your
 # databases from time to time, or run it as a cron job.  Programs like
 # make-debian-x11 will then be guaranteed to have correct information about 
-# your system.
+# your system.  Note: When $no_rebuilddb is set to 0, $tmp is automatically 
+# checked to make sure that it is executable/writable for your effective 
+# uid/gid when the status changes, if not set to 0 you may need to check this
+# yourself.
 
 $no_rebuilddb = 0;
 
