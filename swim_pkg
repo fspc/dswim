@@ -42,6 +42,8 @@ use File::Find;
 # User defined variables for directories and package
 # Makefile.pkg in $gbootroot_cvs in used as the packages Makefile.
 
+# Edit Changes with your changes.
+
 my $user_home = "/home/mttrader";
 my $prog = "dswim";
 my $prog_real_name = "swim";
