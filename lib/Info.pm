@@ -244,7 +244,7 @@ sub menu {
       open(FINDMENU,"$filelist");
        while (<FINDMENU>) {
          chomp;
-         if (m,^\/usr\/lib\/menu\/(.*[\w-\+\.]),) {
+         if (m,^\/usr\/lib\/menu\/(.*(\w-\+\.)),) {
           if (!-d) { 
            print "#####menu for $orig_argument($1)#####\n";
            open(MENU,"$_");
