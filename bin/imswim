@@ -48,58 +48,60 @@ line.
 
 =cut
 
-   if ($#ARGV == -1) {                                                          
-     print STDERR "swim: imswim requires arguments, see program for instructions\n";                                                                      
-         exit;                                                                  
+    if ($#ARGV == -1) {                                                          
+	print STDERR "swim: imswim requires arguments, see program for instructions\n";                                                                      
+	exit;                                                                  
    }                                                                           
-   else {
-     $| = 1; my $x = 1;
-     open(FILEDIR, ">$ARGV[1]/filedir.deb") 
-     or warn "could not create filedir.deb\n";
-     open(TRANSFER, "$ARGV[1]/transfer.deb") or warn "needs transfer.deb"; 
-      while (<TRANSFER>) {
-       chomp;
-       my @the = split(/_/, $_);
-       open (LIST, "$ARGV[0]/$the[0].list") 
-       or warn "could not file *list";
+else {
+    $| = 1; my $x = 1;
+    open(FILEDIR, ">$ARGV[1]/filedir.deb") 
+	or warn "could not create filedir.deb\n";
+    open(TRANSFER, "$ARGV[1]/transfer.deb") or warn "needs transfer.deb"; 
+    while (<TRANSFER>) {
+	chomp;
+	my @the = split(/_/, $_);
+	if (-e "$ARGV[0]/$the[0].list") { 
+	open (LIST, "$ARGV[0]/$the[0].list") 
+	    or warn "could not file *list";
         chomp;
         # better check if /. is missing in any of the *list
         my $count = 0;                                                          
         my @count = <LIST>;  
         close(LIST);                                                            
         foreach (@count) {                                                      
-          $x = 1 if $x == 6;
-          print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
-          print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
-          $x++;
-          chomp $_;                                                             
-          # does /. exist?  it should be first.                                 
-          if ($count == 0) {                                                    
-            if ($_ !~ m,\/\.,) {                                                
-             my $shifter = $_;                                                  
-             my @redolist = @count;                                             
-             push(@count,$shifter);                                             
-             # humm let's rebuild the offending backup list, this               
-             # is important for --db.                                           
-             unshift(@redolist,"/.");                                           
-             open(REDOLIST, ">$ARGV[2]/$ARGV[0]/backup/$the[0].list.bk.bk")        
-             or warn "needed to edit $the[0].list because it lacked /.,              
+	    $x = 1 if $x == 6;
+	    print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
+	    print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
+	    $x++;
+	    chomp $_;                                                             
+	    # does /. exist?  it should be first.                                 
+	    if ($count == 0) {                                                    
+		if ($_ !~ m,\/\.,) {                                                
+		    my $shifter = $_;                                                  
+		    my @redolist = @count;                                             
+		    push(@count,$shifter);                                             
+		    # humm let's rebuild the offending backup list, this               
+		    # is important for --db.                                           
+		    unshift(@redolist,"/.");                                           
+		    open(REDOLIST, ">$ARGV[2]/$ARGV[0]/backup/$the[0].list.bk.bk")        
+			or warn "needed to edit $the[0].list because it lacked /.,              
                       but could not open up a backup file\n";                   
-               my $rd;                                                          
-               foreach $rd (@redolist) {                                        
-                 chomp $rd;                                                     
-                 print REDOLIST "$rd\n";                                        
-               }                                                                
-             close(REDOLIST);                                                   
-             rename("$ARGV[2]/$ARGV[0]/backup/$the[0].list.bk.bk",
-                    "$ARGV[2]/$ARGV[0]/backup/$the[0].list.bk");    
-             $_ =  "/.";                                                        
-            }                                                                   
-          }                                                                     
-         $count = 1;      
-         print FILEDIR "$_ -> $the[0]_$the[1]\n";
-        } # foreach @count
-      } # while TRANSFER
-     close(TRANSFER);
-     close(FILEDIR); 
-  } # else
+		    my $rd;                                                          
+		    foreach $rd (@redolist) {                                        
+			chomp $rd;                                                     
+			print REDOLIST "$rd\n";                                        
+		    }                                                                
+		    close(REDOLIST);                                                   
+		    rename("$ARGV[2]/$ARGV[0]/backup/$the[0].list.bk.bk",
+			   "$ARGV[2]/$ARGV[0]/backup/$the[0].list.bk");    
+		    $_ =  "/.";                                                        
+		}                                                                   
+	    }                                                                     
+	    $count = 1;      
+	    print FILEDIR "$_ -> $the[0]_$the[1]\n";
+	} # if *list exists
+    } # foreach @count
+    } # while TRANSFER
+    close(TRANSFER);
+    close(FILEDIR); 
+} # else
