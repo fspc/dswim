@@ -1,0 +1,206 @@
+<html>
+<head><title>Quickstart</title></head>
+<body  text="#000000" bgcolor="#FFFFFF" link="#0000EF" vlink="#51188E"
+alink="#FF0000">
+
+<br><br><br>
+
+<h1 align=center>QUICKSTART</h1>
+
+<br><br>
+
+<h5>READ THE <A HREF="REQUIREMENTS.html">REQUIREMENTS</A></h5>
+
+Now you can skip the next three steps if you have an installed Debian
+distribution and you are in a hurry for a demonstration, but you will miss
+out on swim's more awesome capabilities. With that said..... 
+
+<p>
+<b>FIRST GET SWIMRC PREPARED</b>
+
+<p> Edit the swimrc configution file, you should read <A
+HREF="swimrc.html/index.html">swimrc(5)</A>, but I'll ask you some
+question right now.  You can find swimrc in /etc/swim, and swimrc can be
+placed in your home directory in the subdirectory .swim. Entries in the
+home directory swimrc override ones in /etc/swim. 
+
+<p>
+Are you using an installed Debian system?  If so, you almost definitely
+have dpkg installed.  So uncomment this line in /etc/swim/swimrc by
+removing the pound sign. 
+
+<p>
+<code>$package_tool = "/usr/bin/dpkg";</code>
+
+<p>otherwise
+
+<p>
+<code>$package_tool = "/usr/bin/ar";</code>
+
+<p>
+Do you have the apt package installed?  Configure this, or -xyz will not
+work.
+
+<p>
+<code>$apt = "yes";</code>
+
+<p>
+Now you need to decide what architecture you would like to be swim's
+default value when you download, build, and query the not-installed
+databases.
+
+<p>
+What flavor, do you want alpha, arm, hurd-i386, i386, m68k, powerpc,
+or sparc? (more coming :*)  I decided on .....
+
+<p>
+<code>$architecture = "i386";</code>
+
+<p>
+What kind of distribution do you want to be your default? stable,
+unstable, frozen, or experimental (rare)  I like the ever changing ...
+
+<p>
+<code>$distribution = "unstable";</code>
+
+<p>
+Decide which sections you want?  You can have this
+
+<p>
+<code>@user_defined_section = qw(main contrib non-free);</code>
+
+<p>
+or this.
+
+<p>
+<code>@user_defined_section = qw(main);</code>
+
+<p>
+or .....
+   
+<p>
+<b>SECOND GET SWIMZ.LIST PREPARED</b>
+
+<p> Now grab a copy of the <A
+HREF="http://www.debian.org/misc/README.mirrors">README.mirrors</A> from
+http://www.debian.org/misc/README.mirrors", 
+you will need this to set-up the configuration file /etc/swim/swimz.list. 
+
+<p> If your using apt make sure to read <A
+HREF="swim.html/index.html">swim(8)</A> to get the nitty gritty on how you
+can synchronize swim along with apt :*} using <A
+HREF="swim.html/ch-important.html#s5.6">swimz.list</A>. 
+
+<p>
+Humm, you found a site which has the distribution you want, and you know
+which section you want, and you are happy knowing about packages which can
+install on the architecture you computer happens to have.
+
+<p>
+So what site is that?
+
+<p>
+<code>deb ftp://ftp.swimz.org</code>
+
+<p>
+What was the directory you happened to notice in the README.mirrors page?  
+
+<p>
+<code>deb ftp://ftp.swimz.org/pub/debian</code>
+
+<p>
+What distribution did you want?  Note: You won't want to use the Release
+code name for the distribution, see
+<A HREF="swim.html/ch-important.html#s5.6">swimz.list</A>.
+
+<p>
+<code>deb ftp://ftp.swimz.org/pub/debian unstable</code>
+
+<p>
+What sections did you want?
+
+<p>
+<code>deb ftp://ftp.swimz.org/pub/debian unstable main contrib
+non-free</code>
+
+<p>
+Now put this line in the swimz.list, exactly like written, and ofcourse
+use the values you want. 
+
+<p>
+<b>THIRD GET THE DEBIAN DATABASE WITH FTP</b>
+
+<p>
+Just issue this command.
+
+<p>
+<kbd>swim --ftp --Contents DF --Packages DF</kbd>
+
+<p>
+and wait a little bit.
+
+<p>
+<b>FOURTH BUILD THE DATABASES</b>
+
+<p>
+This is for a computer system with a Debian distribution installed.
+
+<p>
+<kbd>swim --initdb</kbd>
+
+<p>
+This next part applies to people who followed all the steps to get here,
+and also read the important requirements at the top.  This makes the
+not-installed databases.  Go take a walk, or a swim :*}
+
+<p>
+<kbd>swim --initndb --Contents DF DF</kbd>
+
+<p>
+When either of these commands are complete they will say "<samp>over and
+out</samp>".
+
+<p>
+<b>NOW WHAT?</b>
+
+<p> Now the real fun begins.  If you happen to have some experience with
+rpm you already know some of the options which swim uses, but be prepared
+for surpises.  <A HREF="swim.html/index.html">swim(8)</A> goes into more detail, the
+<A HREF="http://www.rpm.org/maximum-rpm.ps.gz">"<cite>Maximum
+RPM</cite>"</A> book by Edward C. Bailey which is freely available may
+provide help for swim's <kbd>--query</kbd> option, but you will find that
+swim greatly diverges from rpm. 
+
+<p> Try something like this, and do not use the <kbd>-n</kbd> unless you
+made the not-installed databases, on the other hand, <em>REMEMBER</em> to
+use <kbd>-n</kbd> if you do not have an installed Debian system.... 
+
+<p>
+<kbd>swim -n --search swim</kbd>
+
+<p>
+now do this..
+
+<p>
+<kbd>swim -qnSi</kbd> or <kbd>swim -hn</kbd>
+
+<p>
+go to the directory /usr/bin and do
+
+<p>
+<kbd>swim -qnf</kbd> <b>.</b>
+
+<p>
+you probably will have to do
+
+<p>
+<kbd>swim -qnft</kbd> <b>.</b>
+
+<p>
+<b>...the fun is just beginning...</b>
+
+<p>
+<em>Where are you swimming to today?</em>
+
+</body>                                                                         
+</html>  
