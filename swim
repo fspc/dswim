@@ -129,6 +129,7 @@ my($result) =
 		"remove", "r",    # remove all, but conf.
 		"purge",          # remove it all
 		"reinstall",      # reinstall
+		"build-dep",      # build dep packages for building a package
 		"apt",            # apt-get
 		"update",         # using sources.list
 		"clean",          # remove archives or apt2ftp
