@@ -40,7 +40,7 @@ multi-dimensional is the way to go.
 
 sub process_md {
 
-     print "File Database is being made\n";
+     print STDERR "File Database is being made\n";
 
      my ($commands) = @_;
      my %commands = %$commands;
@@ -86,7 +86,7 @@ sub process_md {
      @ppackage = <$tmp/DEBIAN*>;
      # It's unlikely this file will ever get too massive.
      push(@ppackage, "$tmp/long.debian");
-     print "  Create the database\n";
+     print STDERR "  Create the database\n";
      foreach $thingy (@ppackage) {  
       open(PARTS, "$thingy"); 
          while (<PARTS>) {
@@ -100,8 +100,8 @@ sub process_md {
              push(@mi,$md[0]);
              push(@mi,$md[1]);
         } # while        
-       print "    $thingy\n";
-       print "    wait a few seconds\n";
+       print STDERR "    $thingy\n";
+       print STDERR "    wait a few seconds\n";
        my $zing;
        if (($commands->{"dbpath"} && $commands->{"root"}) ||
          ($commands->{"dbpath"} && !$commands->{"root"}) ||
@@ -155,7 +155,7 @@ sub process_md {
      # creates the hash database reference for -db or -i.
      my $searchindex =  $not . "searchindex";
      open(FLATFILE, ">$place/$searchindex$arch$dist.deb");
-     print "Create the powersearch flat database\n";
+     print STDERR "Create the powersearch flat database\n";
      foreach $thingy (@ppackage) {  
       if ($thingy ne "$tmp/long.debian") {
        open(PARTS, "$thingy");         
@@ -167,8 +167,8 @@ sub process_md {
               push(@mi,$md[0]);
          } # while        
        }
-       print "    $thingy\n";
-       print "    wait a few seconds\n";
+       print STDERR "    $thingy\n";
+       print STDERR "    wait a few seconds\n";
        while ($count <= $#mi) {
           print FLATFILE "$mi[$count]\n";
           $count++;
@@ -188,7 +188,7 @@ sub process_md {
      # package without directories or files, but this is Debian.
      my $dirindex =  $not . "dirindex";
      open(FLATFILE, ">$place/$dirindex$arch$dist.deb");
-     print "Create the powersearch flat directory database\n";
+     print STDERR "Create the powersearch flat directory database\n";
        open(PARTS, "$ppackage[$#ppackage]");         
           while (<PARTS>) {
               @md = split(/ -> /,$_); 
@@ -197,7 +197,7 @@ sub process_md {
               }
               push(@mi,$md[0]);
          } # while        
-       print "    $ppackage[$#ppackage]\n";
+       print STDERR "    $ppackage[$#ppackage]\n";
        while ($count <= $#mi) {
           print FLATFILE "$mi[$count]\n";
           $count++;
@@ -261,8 +261,8 @@ sub process_md {
 
 
   #!!!
-   print "    over and out\n";
-   print scalar(localtime), "\n";
+   print STDERR "    over and out\n";
+   print STDERR scalar(localtime), "\n";
 
 } # end sub process_md
 

@@ -153,8 +153,8 @@ my %version;
       open(LONG, ">$ARGV[2]/long.debian") or die;
       foreach $thingy (sort keys %HL ) {
           $x = 1 if $x == 6;
-          print STDERR "|\r" if $x == 1 || $x == 4; print "/\r" if $x == 2;
-          print STDERR "-\r" if $x == 3 || $x == 6; print "\\\r" if $x == 5;
+          print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
+          print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
           $x++;
            # Humm, will split or grep be faster?
             #my $tingy  = "@{ $HL{$thingy} }" . " " .  @{ $HL{$thingy} };
