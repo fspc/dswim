@@ -83,6 +83,14 @@ sub ramdisk {
          $size = (stat("$where/$not$contentsindex$arch$dist.deb.gz"))[7];
           push(@files,"$where/$not$contentsindex$arch$dist.deb.gz");
   }
+   elsif ( $commands->{"n"} ) {
+       print STDERR "swim: not-installed search databases do not exist\n";
+       return "not-installed search non-existent";
+   }
+   elsif ( !$commands->{"searchfile"} ) {
+       print STDERR "swim: use --seaarchfile for installed system\n";
+       return "searchfile installed";
+   }
   
   if ($commands->{"searchfile"}) {
     # stat caused some weirdisms based on the boolean logic
@@ -117,7 +125,7 @@ sub ramdisk {
  # it will be assumed that ext2 is used, and hopefully there isn't a mount
  # of the exact same name..hence dramdisk should be unusual
   my $number;
-  if (defined @storage) {
+  if ( @storage) {
     @storage = sort {$a cmp $b} @storage;
     $storage[$#storage] =~ s/\D//g;
     $number = $storage[$#storage] + 1;
@@ -158,7 +166,8 @@ sub ramdisk {
         my($device,$mount) = split(/\s/,$_,2);
           if ($mount =~ /dramdisk/) {
           system "$umount", "$device";
-          exit;
+	  print STDERR "swim: ramdisk is off\n";
+          return "ramdiskoff";
           }
         $storage[$count] = $device;
         $count++;
