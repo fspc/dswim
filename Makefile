@@ -1,5 +1,5 @@
 
-all: install
+all: 
 
 install:	
 	install -d /var/lib/dpkg
