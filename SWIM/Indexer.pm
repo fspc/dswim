@@ -113,7 +113,7 @@ sub noT_indexer {
              menu(\%commands) if $commands->{"menu"} || $commands->{"m"};
              copyright(\%commands) if $commands->{"copyright"}; 
              changelog(\%commands) if $commands->{"changelog"}; 
-             if (defined $argument) {
+             if ($argument) {
               # should be o.k., almost everything has documentation
               print "$argument\n";
              }
@@ -240,9 +240,9 @@ sub c_indexer {
            # everything.  watch this..these are packages which don't have
            # conf files 
            if ($commands->{"d"} || $commands->{"l"}) {
-            if (defined $arg_save) {
+            if ($arg_save) {
             if ($argument ne $arg_save) { 
-            #if (!defined $arg_save) {
+            #if (!$arg_save) {
             if (conf(\%commands) ne 0) {
                shlibs(\%commands) if $commands->{"shlibs"};
                file(\%commands);
@@ -339,14 +339,14 @@ sub indexer {
    }
   }
 
-  if (defined $argument) {
+  if ($argument) {
    dir(\%commands);
    fir(\%commands);
     if ($ib{"$argument"}){
        my $package = $ib{"$argument"};
        $package =~ s/\s/\n/g;
         @alot = split(/\s/, $package);
-        if (defined @alot) {
+        if (@alot) {
          @PACKAGES = @alot;
         }
         if ($commands->{"z"} || $commands->{"ftp"}||
@@ -465,7 +465,7 @@ sub indexer {
     }
       else { 
         $argument =~ m,.*\/(.*$),;
-         if (defined $1) {
+         if ($1) {
           my $file = $1; 
           if (!$commands->{"n"} && -e "/usr/sbin/update-alternatives") {
            my $it = "update-alternatives --display $1|";
@@ -488,7 +488,7 @@ sub indexer {
   }
   untie %ib;
 
-  if (defined @alot) {
+  if (@alot) {
    @PACKAGES = @alot;
   }
   if (!($commands->{"z"} || $commands->{"ftp"} ||

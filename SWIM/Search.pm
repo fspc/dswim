@@ -87,7 +87,7 @@ sub search {
   #####
   else {
     my $return = nib(\%commands);
-     if (!defined $return) {
+     if (!$return) {
         untie %ib;
         nsb(\%commands);
        $ib{"/."} = $nsb{"/."};
@@ -147,7 +147,7 @@ sub search {
 
   # not yet for -g
   if ($commands->{"search"} && !$commands->{"g"}) {
-   if (defined $argument) {
+   if ($argument) {
     if ($ib{"$argument"}){
           foreach (split(/\s/, $ib{"$argument"})) {
            if ($keyword =~ /\/i$/) {
@@ -156,7 +156,7 @@ sub search {
              if ($db{$_} =~ /$1/i) {
                print "$db{$_}\n" if !$commands->{"no"};
                push(@PACKAGES,$_);
-               if (!defined $line) {
+               if (!$line) {
                 $line =  (split(/_/,$_))[0];
                }
                else {
@@ -172,7 +172,7 @@ sub search {
              if ($db{$_} =~ /$1/m ) {
               print "$db{$_}\n" if !$commands->{"no"};
               push(@PACKAGES,$_);
-              if (!defined $line) {
+              if (!$line) {
                $line =  (split(/_/,$_))[0];
               }
               else {
@@ -188,7 +188,7 @@ sub search {
              if ($db{$_} =~ /$1/im ) {
               print "$db{$_}\n" if !$commands->{"no"};
               push(@PACKAGES,$_);
-              if (!defined $line) {
+              if (!$line) {
                $line =  (split(/_/,$_))[0];
               }
               else {
@@ -203,7 +203,7 @@ sub search {
              if ($db{$_} =~ /$keyword/) {
                print "$db{$_}\n" if !$commands->{"no"};
                push(@PACKAGES,$_);
-               if (!defined $line) {
+               if (!$line) {
                 $line =  (split(/_/,$_))[0];
                }
                else {
@@ -215,9 +215,9 @@ sub search {
            }
           }
     print "swim: found $count package(s)\n"; 
-    #exit;
+
     }
-    if (!defined $line) {
+    if (!$line) {
       $line = "";
     }
     else {
@@ -229,7 +229,7 @@ sub search {
 
   # ok -g
   elsif ($commands->{"search"} && $commands->{"g"}) {
-   if (defined @stuff) {
+   if (@stuff) {
     #unlink("$search_mem");
     foreach (@stuff) {
        $argument = $_;
@@ -258,7 +258,7 @@ sub search {
              if ($db{$argument} =~ /$1/m ) {
               print "$db{$argument}\n" if !$commands->{"no"};
               push(@PACKAGES,$argument);
-               if (!defined $line) {
+               if (!$line) {
                 $line =  (split(/_/,$_))[0];
                }
                else {
@@ -274,7 +274,7 @@ sub search {
              if ($db{$argument} =~ /$1/im ) {
               print "$db{$argument}\n" if !$commands->{"no"};
               push(@PACKAGES,$argument);
-              if (!defined $line) {
+              if (!$line) {
                $line =  (split(/_/,$_))[0];
               }
               else {
@@ -289,7 +289,7 @@ sub search {
              if ($db{$argument} =~ /$keyword/) {
                print "$db{$argument}\n" if !$commands->{"no"};
                push(@PACKAGES,$argument);
-               if (!defined $line) {
+               if (!$line) {
                 $line =  (split(/_/,$_))[0];
                }
                else {
@@ -301,7 +301,7 @@ sub search {
            }
     }
     print "swim: found $count package(s)\n"; 
-    if (!defined $line) {
+    if (!$line) {
       $line = "";
     }
     else {
@@ -332,7 +332,7 @@ sub search {
              if ($db{$db{$_}} =~ /$1/i) {
                print "$db{$db{$_}}\n" if !$commands->{"no"};
                push(@PACKAGES,$_);
-               if (!defined $line) {
+               if (!$line) {
                 $line =  (split(/_/,$_))[0];
                }
                else {
@@ -348,7 +348,7 @@ sub search {
              if ($db{$db{$_}} =~ /$1/m ) {
               print "$db{$db{$_}}\n" if !$commands->{"no"};
               push(@PACKAGES,$_);
-              if (!defined $line) {
+              if (!$line) {
                $line =  (split(/_/,$_))[0];
               }
               else {
@@ -364,7 +364,7 @@ sub search {
              if ($db{$db{$_}} =~ /$1/im ) {
               print "$db{$db{$_}}\n" if !$commands->{"no"};
               push(@PACKAGES,$_);
-              if (!defined $line) {
+              if (!$line) {
                $line =  (split(/_/,$_))[0];
               }
               else {
@@ -379,7 +379,7 @@ sub search {
              if ($db{$db{$_}} =~ /$keyword/) {
                print "$db{$db{$_}}\n" if !$commands->{"no"};
                push(@PACKAGES,$_);
-              if (!defined $line) {
+              if (!$line) {
                $line =  (split(/_/,$_))[0];
               }
               else {
@@ -391,7 +391,7 @@ sub search {
            }
           }
     print "swim: found $count package(s)\n"; 
-    if (!defined $line) {
+    if (!$line) {
       $line = "";
     }
     else {
@@ -430,7 +430,7 @@ sub search {
                if ($morethanone{$ib{$_}} == 1) { 
                   print  "$db{$ib{$_}}\n" if !$commands->{"no"};
                   push(@PACKAGES,$ib{$_});
-                  if (!defined $line) {
+                  if (!$line) {
                    $line =  (split(/_/,$ib{$_}))[0];
                   }
                   else {
@@ -449,7 +449,7 @@ sub search {
                if ($morethanone{$ib{$_}} == 1) { 
                   print  "$db{$ib{$_}}\n" if !$commands->{"no"};
                   push(@PACKAGES,$ib{$_});
-                  if (!defined $line) {
+                  if (!$line) {
                    $line =  (split(/_/,$ib{$_}))[0];
                   }
                   else {
@@ -468,7 +468,7 @@ sub search {
                if ($morethanone{$ib{$_}} == 1) { 
                   print  "$db{$ib{$_}}\n" if !$commands->{"no"};
                   push(@PACKAGES,$ib{$_});
-                  if (!defined $line) {
+                  if (!$line) {
                    $line =  (split(/_/,$ib{$_}))[0];
                   }
                   else {
@@ -489,7 +489,7 @@ sub search {
                   #print "HUMM  DIR $_ ", $ib{$_}, "\n"; 
                   print  "$db{$ib{$_}}\n" if !$commands->{"no"};
                   push(@PACKAGES,$ib{$_});
-                  if (!defined $line) {
+                  if (!$line) {
                    $line =  (split(/_/,$ib{$_}))[0];
                   }
                   else {
@@ -526,7 +526,7 @@ sub search {
                     if ($morethanone{$_} == 1) {
                        print "$db{$_}\n" if !$commands->{"no"};
                        push(@PACKAGES,$_);
-                       if (!defined $line) {
+                       if (!$line) {
                         $line =  (split(/_/,$_))[0];
                        }
                        else {
@@ -553,7 +553,7 @@ sub search {
                     if ($morethanone{$_} == 1) {
                        print "$db{$_}\n" if !$commands->{"no"};
                        push(@PACKAGES,$_);
-                       if (!defined $line) {
+                       if (!$line) {
                         $line =  (split(/_/,$_))[0];
                        }
                        else {
@@ -580,7 +580,7 @@ sub search {
                     if ($morethanone{$_} == 1) {
                        print "$db{$_}\n" if !$commands->{"no"};
                        push(@PACKAGES,$_);
-                       if (!defined $line) {
+                       if (!$line) {
                         $line =  (split(/_/,$_))[0];
                        }
                        else {
@@ -608,7 +608,7 @@ sub search {
                     if ($morethanone{$_} == 1) {
                        print "$db{$_}\n" if !$commands->{"no"};
                        push(@PACKAGES,$_);
-                       if (!defined $line) {
+                       if (!$line) {
                         $line =  (split(/_/,$_))[0];
                        }
                        else {
@@ -630,7 +630,7 @@ sub search {
    # NORMAL SEARCH #
    #################
    # now we can do a normal search for the powersearch
-   if (defined $argument) {
+   if ($argument) {
     if ($ib{"$argument"}){
           foreach (split(/\s/, $ib{$argument})) {
            if ($keyword =~ /\/i$/) {
@@ -641,7 +641,7 @@ sub search {
               if ($db{$_} =~ /$1/i) {
                 print "$db{$_}\n" if !$commands->{"no"};
                 push(@PACKAGES,$_);
-                if (!defined $line) {
+                if (!$line) {
                  $line =  (split(/_/,$_))[0];
                 }
                 else {
@@ -660,7 +660,7 @@ sub search {
               if ($db{$_} =~ /$1/m ) {
                print "$db{$_}\n" if !$commands->{"no"};
                push(@PACKAGES,$_);
-               if (!defined $line) {
+               if (!$line) {
                 $line =  (split(/_/,$_))[0];
                }
                else {
@@ -679,7 +679,7 @@ sub search {
               if ($db{$_} =~ /$1/im ) {
                print "$db{$_}\n" if !$commands->{"no"};
                push(@PACKAGES,$_);
-               if (!defined $line) {
+               if (!$line) {
                 $line =  (split(/_/,$_))[0];
                }
                else {
@@ -697,7 +697,7 @@ sub search {
                if ($db{$_} =~ /$keyword/) {
                  print "$db{$_}\n" if !$commands->{"no"};
                  push(@PACKAGES,$_);
-                 if (!defined $line) {
+                 if (!$line) {
                   $line =  (split(/_/,$_))[0];
                  }
                  else {
@@ -710,7 +710,7 @@ sub search {
            }
           }
     print "swim: found $count package(s)\n"; 
-    if (!defined $line) {
+    if (!$line) {
       $line = "";
     }
     else {
