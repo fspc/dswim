@@ -43,16 +43,16 @@ use File::Find;
 # Makefile.pkg in $gbootroot_cvs in used as the packages Makefile.
 
 my $user_home = "/home/mttrader";
-my $prog = "gbootroot";
-my $prog_real_name = "gbootroot";
+my $prog = "swim";
+my $prog_real_name = "swim";
 my $revision = 1;
 my $dist = "unstable";
 my $urgency = "low";
 #my $arch = "all";
-#my $group = "utils";
+#my $group = "admin";
 #my $priority = "optional";
-my $gbootroot_cvs =  "$user_home/gbootroot/gbootroot";
-my $packaging_place = "$user_home/gbootroot/PACKAGING";
+my $gbootroot_cvs =  "$user_home/avd/avd/swim";
+my $packaging_place = "$user_home/avd/PACKAGING-swim";
 my $packaging_defaults = "$gbootroot_cvs/pkg/dpkg";
 my $email = "freesource\@users.sourceforge.net";
 my $name = "Jonathan Rosenbaum";
