@@ -180,7 +180,7 @@ sub db {
       }      
      }
      else {
-       print "swim: missing important database\n"; exit;
+       print "swim: missing important database\n"; return "missing";
      }
     
      foreach (@GONE) {
@@ -199,10 +199,13 @@ sub db {
 
       my $new=$#NEW + 1; my $cr=$#changed_packages + 1;
       my $ch=($#CHANGED + 1) - $cr; my $gon= $#GONE + 1;
+
+
     if ($commands->{"check"}) {
       print "\n       TOTAL\n       -----\n";
       print "NEW $new\n"; print "GONE $gon\n";
-      print "CHANGED $ch\n"; print "CHANGED STATUS $cr\n"; exit;
+      print "CHANGED $ch\n"; print "CHANGED STATUS $cr\n"; 
+      return 1;
     }
       print "\n       TOTAL\n       -----\n";
       print "NEW $new\n"; print "GONE $gon\n";

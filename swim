@@ -796,10 +796,17 @@ sub command {
      SWIM::DB->import(qw(db));
        db(\%commands);	    
        require SWIM::DB_Init;
-       
-       $commands{"rebuilddb"} = 1;
+
+       $commands{"initdb"} = 1;
      SWIM::DB_Init->import(qw(database));
-       database(\%commands);	    
+       my $success_check = database(\%commands);
+
+       if ($success_check eq "rebuilddb") {
+	   undef $commands{"initdb"};
+	   $commands{"rebuilddb"} = 1;
+	 SWIM::DB_Init->import(qw(database));
+	   my $success_check = database(\%commands);
+       }
 
 	system "cp -fa $dpkg_status $my_status";
     }
