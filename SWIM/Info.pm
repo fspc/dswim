@@ -47,79 +47,83 @@ sub scripts {
     print "swim: no scripts for not-installed, consider --diff\n"; exit;
   }
 
+  # no sense going on if $argument doesn't have a value, at this point
+  # scripts has already  been called once. --freesource
+  return if !$argument;
+
   dbi(\%commands);
 
-    if ($argument =~ /_/) {
-       $orig_argument = $argument;
-       my $check = $db{"$argument"};
-       $argument =~ m,(^.*)_(.*$),;
-        if (defined $check) {
-         $argument = $1;
-         }
-        else {};
-    }
-  untie %db;
+  if ($argument =~ /_/) {
+      $orig_argument = $argument;
+      my $check = $db{"$argument"};
+      $argument =~ m,(^.*)_(.*$),;
+			    if (defined $check) {
+				$argument = $1;
+			    }
+			    else {};
+			}
+      untie %db;
       
 
    # here we will print out whatever we find including the file name.
    if ($commands->{"scripts"} && !($commands->{"preinst"} ||
        $commands->{"postinst"} || $commands->{"prerm"} ||
        $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"})) {
-     if (defined "$parent$base/info/$argument.preinst") {     
+     if (-e "$parent$base/info/$argument.preinst") {     
          $preinst = "$parent$base/info/$argument.preinst";
      }
-     if (defined "$parent$base/info/$argument.postinst") {     
+     if (-e "$parent$base/info/$argument.postinst") {     
         $postinst = "$parent$base/info/$argument.postinst";
      }
-     if (defined "$parent$base/info/$argument.prerm") {     
+     if (-e "$parent$base/info/$argument.prerm") {     
         $prerm = "$parent$base/info/$argument.prerm";
      }
-     if (defined "$parent$base/info/$argument.postrm") {     
+     if (-e "$parent$base/info/$argument.postrm") {     
         $postrm = "$parent$base/info/$argument.postrm";
      }
-     if (defined "$parent$base/info/$argument.config") {     
+     if (-e "$parent$base/info/$argument.config") {     
         $config = "$parent$base/info/$argument.config";
      }
-     if (defined "$parent$base/info/$argument.templates") {     
+     if (-e "$parent$base/info/$argument.templates") {     
         $templates = "$parent$base/info/$argument.templates";
      }
      
-     if (-e $preinst) {
+     if ($preinst and -e $preinst) {
        print "#####$argument.preinst#####\n\n";
        open (LIST,"$preinst");
        while (<LIST>) {                                           
         print $_;             
        }      
      } 
-     if (-e $postinst) {
+     if ($postinst and -e $postinst) {
        print "#####$argument.postinst#####\n\n";
        open (LIST,"$postinst");
        while (<LIST>) {                                           
         print $_;             
        }      
      } 
-     if (-e $prerm) {
+     if ($prerm and -e $prerm) {
        open (LIST,"$prerm");
        print "#####$argument.prerm#####\n\n";
        while (<LIST>) {                                           
         print $_;             
        }      
      } 
-     if (-e $postrm) {
+     if ($postrm and -e $postrm) {
        open (LIST,"$postrm");
        print "#####$argument.postrm#####\n\n";
        while (<LIST>) {                                           
         print $_;             
        }      
      } 
-     if (-e $config) {
+     if ($config and -e $config) {
        open (LIST,"$config");
        print "#####$argument.config#####\n\n";
        while (<LIST>) {                                           
         print $_;             
        }      
      } 
-     if (-e $templates) {
+     if ($templates and -e $templates) {
        open (LIST,"$templates");
        print "#####$argument.templates#####\n\n";
        while (<LIST>) {                                           
