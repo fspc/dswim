@@ -65,11 +65,11 @@ sub finddb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-    $fileplace = "$parent$library";
+    $fileplace = "$main::home$parent$library";
     return $fileplace;
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    $fileplace = "$parent$base";
+    $fileplace = "$main::home$parent$base";
     return $fileplace;
   }
 
