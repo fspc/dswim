@@ -630,11 +630,11 @@ sub md {
          }							
          close(TRANSFER);
          if (!$commands->{"lowmem"}) {
-          system $fastswim, "--transfer", $argument2, $tmp;
+          system $fastswim, "--transfer", $argument2, $tmp, $main::home;
          }
          else {
           print STDERR "Gathering the file(s)/dir(s)\n";
-          system $imswim, $argument2, $tmp;
+          system $imswim, $argument2, $tmp, $main::home;
           system $slowswim, $tmp, $sort;
          }
      }
