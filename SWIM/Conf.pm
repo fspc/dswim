@@ -217,16 +217,16 @@ $pager = $ENV{PAGER};
 $pre="/usr";
 
 # This is the hash making program fastswim.
-$fastswim = "$pre/lib/SWIM/fastswim";
+$fastswim = "$pre/lib/dswim/fastswim";
 
 # imswim in an alternative to fastswim for --lowmem
-$imswim = "$pre/lib/SWIM/imswim";
+$imswim = "$pre/lib/dswim/imswim";
 
 #  This is the low memory program slowswim.
-$slowswim = "$pre/lib/SWIM/slowswim";
+$slowswim = "$pre/lib/dswim/slowswim";
 
 # This is the dir/file making program longswim.
-$longswim = "$pre/lib/SWIM/longswim";
+$longswim = "$pre/lib/dswim/longswim";
 
 ############
 # TEMP DIR #
