@@ -16,7 +16,7 @@ Description: Debian System Wide Information Manager
  Debian distribution(s) allowing querying of software packages with a
  variety of package information options, and powerful searches. Virtual
  options which include ftp, installation, and package removal capabilities
- can be seamlessly combined with querying or searches. swim can be used on
+ can be seamlessly combined with querying or searches. SWIM can be used on
  computer systems which either have, or do not have a Debian distribution
  installed.
  .
@@ -24,6 +24,7 @@ Description: Debian System Wide Information Manager
  hierarchy, so help information doesn't reflect them anymore.  In the near 
  future, all -n options will be handled directly through apt-cache 
  information and apt cache management rather than through huge databases.
+ The virtual filesystem will still be managed by a database, and 
  Contents.gz listings will also be reinstated.
  .	
  The latest and greatest swim can be retrieved from here: 
