@@ -793,7 +793,7 @@ sub command {
         initndb(\%commands);
     }
     elsif ($commands{"ndb"}) {
-        require SWIM::NDB_Init;   
+        require SWIM::NDB_Init; 
         SWIM::NDB_Init->import(qw(initndb));
         initndb(\%commands);
     }    
@@ -805,23 +805,28 @@ sub command {
     my $dpkg_status = "$parent$library/status";
     my $my_status = "$main::home$parent$library/status";
    if (!-f $my_status) {
+       # If /tmp is executable good, but -p will still fail.
        if ( 
 	    (!-x $tmp && !-w $tmp) ||
 	    
-	    !-x $tmp ||
+	    (-x $tmp && !-w $tmp) ||
 
-	    !-w $tmp
+	    (!-x && -w $tmp)
 
 	   ) {
 	   print STDERR "swim: $tmp is not ";
+	   print STDERR "readable" if !-r $tmp;
+	   print STDERR "/" if !-r $tmp && !-w $tmp;
 	   print STDERR "writable" if !-w $tmp;
-	   print STDERR "/" if !-w $tmp;
+	   print STDERR "/" if !-w $tmp || !-r $tmp;
 	   print STDERR "executable" if !-x $tmp;
 	   print STDERR " by your effective uid/gid\n";
 
 	   print STDERR "swim: set \$tmp to a directory ";
+	   print STDERR "readable" if !-r $tmp;
+	   print STDERR "/" if !-r $tmp && !-w $tmp;
 	   print STDERR "writable" if !-w $tmp;
-	   print STDERR "/" if !-w $tmp;
+	   print STDERR "/" if !-w $tmp || !-r $tmp;
 	   print STDERR "executable" if !-x $tmp;
 	   print STDERR " by your effective uid/gid " . 
 	       "in $ENV{HOME}/.swimrc\n";
@@ -853,21 +858,25 @@ sub command {
 		if ( $diff ) {
 		    if ( 
 			 (!-x $tmp && !-w $tmp) ||
-			 
-			 !-x $tmp ||
+	    
+			 (-x $tmp && !-w $tmp) ||
 
-			 !-w $tmp
+			 (!-x && -w $tmp)
 
 			 ) {
 			print STDERR "swim: $tmp is not ";
+			print STDERR "readable" if !-r $tmp;
+			print STDERR "/" if !-r $tmp && !-w $tmp;
 			print STDERR "writable" if !-w $tmp;
-			print STDERR "/" if !-w $tmp;
+			print STDERR "/" if !-w $tmp || !-r $tmp;
 			print STDERR "executable" if !-x $tmp;
 			print STDERR " by your effective uid/gid\n";
-			
+
 			print STDERR "swim: set \$tmp to a directory ";
+			print STDERR "readable" if !-r $tmp;
+			print STDERR "/" if !-r $tmp && !-w $tmp;
 			print STDERR "writable" if !-w $tmp;
-			print STDERR "/" if !-w $tmp;
+			print STDERR "/" if !-w $tmp || !-r $tmp;
 			print STDERR "executable" if !-x $tmp;
 			print STDERR " by your effective uid/gid " . 
 			    "in $ENV{HOME}/.swimrc\n";
