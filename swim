@@ -6,7 +6,7 @@ use Getopt::Long;
 use SWIM::Conf;
 use SWIM::Global;
 use SWIM::Library;
-
+my $version = "0.3.7";
 
 ############################################################################
 #
@@ -89,8 +89,6 @@ anyone, find the program to do the job easily.
 
 # The MAIN 
 # First let's determine what options are being used.
-    my $home = $ENV{'HOME'};
-
 
 Getopt::Long::config("bundling","no_auto_abbrev"); # will use pass_through
 
@@ -208,7 +206,6 @@ command();
 
 sub command {
 
-
     # test 
     if ($commands{"testmenu"}) {
 	menuindex();
@@ -272,7 +269,7 @@ sub command {
 
     # version of the program
     if ($commands{"version"}) {
-	print "SWIM version $swim_version\n";      
+	print "SWIM version $version\n";      
     }
 
 
@@ -329,7 +326,13 @@ sub command {
 	exit;
     }
 
+
+
     # this will handle options with arguments
+
+    $main::home = $ENV{'HOME'};
+    home_builder("$main::home$parent$base/info");    
+
     if ($Getopt::Long::error == 1 || $commands{"root"} || 
 	$commands{"dbpath"}) {
 	# If two options are used
@@ -341,8 +344,10 @@ sub command {
 		exit;
 	    } 
 	} 
-   
-    # Check whether a different filesystem is being used with --root
+
+
+
+	# Check whether a different filesystem is being used with --root
 	my($arch, $dist) = which_archdist(\%commands);
 	if ($commands{"root"} && 
 	    !$commands{"dbpath"}) {
@@ -364,10 +369,10 @@ sub command {
 			  $commands{"rebuildndb"} || 
 			  $commands{"p"} ||
 			  $commands{"ndb"})) {
-			$root = "$parent$base/packages.deb";
+			$root = "$main::home$parent$base/packages.deb";
 		    }
 		    else {
-			$root = "$parent$base/npackages$arch$dist.deb";
+			$root = "$main::home$parent$base/npackages$arch$dist.deb";
 		    }
 		    if (!-e $root && !-f $root) { 
 			print "failed to open $root\n\n";
@@ -428,10 +433,10 @@ sub command {
 			  $commands{"rebuildndb"} ||
 			  $commands{"p"} || 
 			  $commands{"ndb"})) {
-			$dbpath = "$library/packages.deb";
+			$dbpath = "$main::home$library/packages.deb";
 		    }
 		    else {
-			$dbpath =  "$library/npackages$arch$dist.deb";
+			$dbpath =  "$main::home$library/npackages$arch$dist.deb";
 		    }
 		    if (!-e $dbpath && !-f $dbpath) {
 			print "failed to open $dbpath\n\n";
@@ -502,10 +507,10 @@ sub command {
 			  $commands{"rebuildndb"} || 
 			  $commands{"p"} ||
 			  $commands{"ndb"})) {
-			$dbpath = "$parent$library/packages.deb";
+			$dbpath = "$main::home$parent$library/packages.deb";
 		    }
 		    else {
-			$dbpath = "$parent$library/npackages$arch$dist.deb";
+			$dbpath = "$main::home$parent$library/npackages$arch$dist.deb";
 		    }
 		    if (!-e $dbpath && !-f $dbpath) {
 			print "failed to open $dbpath\n\n";
@@ -1624,11 +1629,11 @@ sub usage {
 
 # Shameless publication of the ThE_* Project, and also shameless self
 # agrandizing....
-print "SWIM version $swim_version
+print "SWIM version $version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
 This may be freely redistributed under the terms of the GNU General Public License\n";
 
-$save = "SWIM version $swim_version
+$save = "SWIM version $version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
 This may be freely redistributed under the terms of the GNU General Public License
 
@@ -1723,7 +1728,7 @@ Quit?:press q here\n";
 # nusage
 sub nusage {
 
-$save = "SWIM version $swim_version
+$save = "SWIM version $version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
 This may be freely redistributed under the terms of the GNU General Public License
 
@@ -1816,7 +1821,7 @@ Hints: Searches -                        equiv.   negated [^...]
 # differnces between swim and rpm.
 sub help {
 
-$save = "SWIM version $swim_version
+$save = "SWIM version $version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
 This may be freely redistributed under the terms of the GNU General Public License
 
@@ -2053,3 +2058,31 @@ sub pager {
   print PAGER $text;                                                            
   close PAGER;                                                                  
 } # end sub pager
+
+
+# Pulled this from *_pkg from the gbootroot project.
+sub home_builder {
+
+    my ($home_builder) = @_; 
+
+    if (!-d $home_builder) {
+	if (-e $home_builder) {
+	    print "ERROR: A file exists where $home_builder should be.\n";
+	}	 
+	else {
+	    my @directory_parts = split(m,/,,$home_builder);
+	    my $placement = "/";
+	    for (1 .. $#directory_parts) {
+		$_ == 1 ? ($placement = "/$directory_parts[$_]")
+		    : ($placement = $placement . "/" . $directory_parts[$_]);
+		-d $placement or mkdir $placement;
+	    }
+	}
+    }
+
+} # end home_builder
+
+
+
+
+

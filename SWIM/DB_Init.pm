@@ -19,7 +19,7 @@
 package SWIM::DB_Init;
 use strict;
 use SWIM::Conf qw(:Path $fastswim $imswim $slowswim $sort);
-#use SWIM::Global;
+use SWIM::Global;
 use SWIM::Format;
 use SWIM::MD;
 use DB_File;
@@ -106,53 +106,53 @@ sub database {
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
       if ($commands->{"initdb"}) {  
-        if (-e "$parent$library/packages.deb" &&
-            -e "$parent$library/fileindex.deb") {            
+        if (-e "$main::home$parent$library/packages.deb" &&
+            -e "$main::home$parent$library/fileindex.deb") {            
             print "swim:  use --rebuilddb\n";
             exit;
         }
         else {
           # if a database happens to be missing 
-          if (-e "$parent$library/packages.deb") {
-             unlink("$parent$library/packages.deb");
+          if (-e "$main::home$parent$library/packages.deb") {
+             unlink("$main::home$parent$library/packages.deb");
           }
-          if (-e "$parent$library/fileindex.deb") {
-             unlink("$parent$library/fileindex.deb");
+          if (-e "$main::home$parent$library/fileindex.deb") {
+             unlink("$main::home$parent$library/fileindex.deb");
           }
-          if (-e "$parent$library/groupindex.deb") {
-             unlink("$parent$library/groupindex.deb");
+          if (-e "$main::home$parent$library/groupindex.deb") {
+             unlink("$main::home$parent$library/groupindex.deb");
           }
-          if (-e "$parent$library/statusindex.deb") {
-             unlink("$parent$library/statusindex.deb");
+          if (-e "$main::home$parent$library/statusindex.deb") {
+             unlink("$main::home$parent$library/statusindex.deb");
           }
-          if (-e "$parent$library/searchindex.deb") {
-             unlink("$parent$library/searchindex.deb");
+          if (-e "$main::home$parent$library/searchindex.deb") {
+             unlink("$main::home$parent$library/searchindex.deb");
           }
-          if (-e "$parent$library/searchindex.deb.gz") {
-             unlink("$parent$library/searchindex.deb.gz");
+          if (-e "$main::home$parent$library/searchindex.deb.gz") {
+             unlink("$main::home$parent$library/searchindex.deb.gz");
           }
-          if (-e "$parent$library/dirindex.deb") {
-             unlink("$parent$library/dirindex.deb");
+          if (-e "$main::home$parent$library/dirindex.deb") {
+             unlink("$main::home$parent$library/dirindex.deb");
           }
-          if (-e "$parent$library/dirindex.deb.gz") {
-             unlink("$parent$library/dirindex.deb.gz");
+          if (-e "$main::home$parent$library/dirindex.deb.gz") {
+             unlink("$main::home$parent$library/dirindex.deb.gz");
           }
         }
       }
       #  this only works if all databases exist.
       elsif ($commands->{"rebuilddb"}) {
-        if (-e "$parent$library/packages.deb" &&        
-            -e "$parent$library/fileindex.deb") {            
-          unlink("$parent$library/packages.deb");
-          unlink("$parent$library/fileindex.deb");
-          unlink("$parent$library/groupindex.deb");
-          unlink("$parent$library/statusindex.deb");
-          unlink("$parent$library/searchindex.deb");
-          unlink("$parent$library/searchindex.deb")
-          if -e "$parent$library/searchindex.deb";           
-          unlink("$parent$library/dirindex.deb");
-          unlink("$parent$library/dirindex.deb")
-          if -e "$parent$library/dirindex.deb.gz";           
+        if (-e "$main::home$parent$library/packages.deb" &&        
+            -e "$main::home$parent$library/fileindex.deb") {            
+          unlink("$main::home$parent$library/packages.deb");
+          unlink("$main::home$parent$library/fileindex.deb");
+          unlink("$main::home$parent$library/groupindex.deb");
+          unlink("$main::home$parent$library/statusindex.deb");
+          unlink("$main::home$parent$library/searchindex.deb");
+          unlink("$main::home$parent$library/searchindex.deb")
+          if -e "$main::home$parent$library/searchindex.deb";           
+          unlink("$main::home$parent$library/dirindex.deb");
+          unlink("$main::home$parent$library/dirindex.deb")
+          if -e "$main::home$parent$library/dirindex.deb.gz";           
         }
         else {
           print "swim:  use --initdb to create databases\n";
@@ -162,53 +162,53 @@ sub database {
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
       if ($commands->{"initdb"}) {  
-        if (-e "$parent$base/packages.deb" &&
-            -e "$parent$base/fileindex.deb") {            
+        if (-e "$main::home$parent$base/packages.deb" &&
+            -e "$main::home$parent$base/fileindex.deb") {            
             print "swim:  use --rebuilddb\n";
             exit;
         }
         else {
           # if a database happens to be missing 
-          if (-e "$parent$base/packages.deb") {
-             unlink("$parent$base/packages.deb");
+          if (-e "$main::home$parent$base/packages.deb") {
+             unlink("$main::home$parent$base/packages.deb");
           }
-          if (-e "$parent$base/fileindex.deb") {
-             unlink("$parent$base/fileindex.deb");
+          if (-e "$main::home$parent$base/fileindex.deb") {
+             unlink("$main::home$parent$base/fileindex.deb");
           }
-          if (-e "$parent$base/groupindex.deb") {
-             unlink("$parent$base/groupindex.deb");
+          if (-e "$main::home$parent$base/groupindex.deb") {
+             unlink("$main::home$parent$base/groupindex.deb");
           }
-          if (-e "$parent$library/statusindex.deb") {
-             unlink("$parent$library/statusindex.deb");
+          if (-e "$main::home$parent$library/statusindex.deb") {
+             unlink("$main::home$parent$library/statusindex.deb");
           }
-          if (-e "$parent$library/searchindex.deb") {
-             unlink("$parent$library/searchindex.deb");
+          if (-e "$main::home$parent$library/searchindex.deb") {
+             unlink("$main::home$parent$library/searchindex.deb");
           }
-          if (-e "$parent$library/searchindex.deb.gz") {
-             unlink("$parent$library/searchindex.deb.gz");
+          if (-e "$main::home$parent$library/searchindex.deb.gz") {
+             unlink("$main::home$parent$library/searchindex.deb.gz");
           }
-          if (-e "$parent$library/dirindex.deb") {
-             unlink("$parent$library/dirindex.deb");
+          if (-e "$main::home$parent$library/dirindex.deb") {
+             unlink("$main::home$parent$library/dirindex.deb");
           }
-          if (-e "$parent$library/dirindex.deb.gz") {
-             unlink("$parent$library/dirindex.deb.gz");
+          if (-e "$main::home$parent$library/dirindex.deb.gz") {
+             unlink("$main::home$parent$library/dirindex.deb.gz");
           }
         }
       }
       #  this only works if all databases exist.
       elsif ($commands->{"rebuilddb"}) {
-        if (-e "$parent$base/packages.deb" &&        
-            -e "$parent$base/fileindex.deb") {            
-          unlink("$parent$base/packages.deb");
-          unlink("$parent$base/fileindex.deb");
-          unlink("$parent$base/groupindex.deb");
-          unlink("$parent$base/statusindex.deb");
-          unlink("$parent$library/searchindex.deb");
-          unlink("$parent$library/searchindex.deb")
-          if -e "$parent$library/searchindex.deb";           
-          unlink("$parent$library/dirindex.deb");
-          unlink("$parent$library/dirindex.deb")
-          if -e "$parent$library/dirindex.deb.gz";           
+        if (-e "$main::home$parent$base/packages.deb" &&        
+            -e "$main::home$parent$base/fileindex.deb") {            
+          unlink("$main::home$parent$base/packages.deb");
+          unlink("$main::home$parent$base/fileindex.deb");
+          unlink("$main::home$parent$base/groupindex.deb");
+          unlink("$main::home$parent$base/statusindex.deb");
+          unlink("$main::home$parent$library/searchindex.deb");
+          unlink("$main::home$parent$library/searchindex.deb")
+          if -e "$main::home$parent$library/searchindex.deb";           
+          unlink("$main::home$parent$library/dirindex.deb");
+          unlink("$main::home$parent$library/dirindex.deb")
+          if -e "$main::home$parent$library/dirindex.deb.gz";           
         }
         else {
           print "swim:  use --initdb to create databases\n";
@@ -223,22 +223,22 @@ sub database {
      # this won't cause problems because everything is rebuilt, there may 
      # just be some lingering small files in backup.
 
-     # Seems like both approaches are about the same speed.
-     #use File::Copy; 
-     print "Making backups of *.list\n";
-     if (!-d "$parent$base/info/backup") {
-        mkdir("$parent$base/info/backup",0666);
-     }
-     opendir(COPY,"$parent$base/info");
-     foreach (sort grep(/\.list$/, readdir(COPY))) {
-       #copy ("$parent$base/info/$_","$parent$base/info/backup/$_.bk");
-       open(FILENAME,"$parent$base/info/$_");
-       open(CP,">$parent$base/info/backup/$_.bk");
-        while (<FILENAME>) {
-         print CP $_;
-        }
-     }
-     closedir(COPY);
+  # Seems like both approaches are about the same speed.
+  #use File::Copy; 
+  print "Making backups of *.list\n";
+  if (!-d "$main::home$parent$base/info/backup") {
+      system "mkdir $main::home$parent$base/info/backup";
+  }
+
+  opendir(COPY,"$parent$base/info") or die "Sorry Charlie: $!\n";
+  foreach (sort grep(/\.list$/, readdir(COPY))) {
+      open(FILENAME,"$parent$base/info/$_");
+      open(CP,">$main::home$parent$base/info/backup/$_.bk");
+      while (<FILENAME>) {
+	  print CP $_;
+      }
+  }
+  closedir(COPY);
 
  print "Description Database is being made\n";
 
@@ -542,10 +542,10 @@ sub database {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     tie %gb, 'DB_File', "$parent$library/groupindex.deb" or die "DB_File: $!";
+     tie %gb, 'DB_File', "$main::home$parent$library/groupindex.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    tie %gb, 'DB_File', "$parent$base/groupindex.deb" or die "DB_File: $!";
+    tie %gb, 'DB_File', "$main::home$parent$base/groupindex.deb" or die "DB_File: $!";
   }
   
   %gb = %group;
@@ -559,10 +559,10 @@ sub database {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-        tie %sb, 'DB_File', "$parent$library/statusindex.deb" or die "DB_File: $!";
+        tie %sb, 'DB_File', "$main::home$parent$library/statusindex.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-        tie %sb, 'DB_File', "$parent$base/statusindex.deb" or die "DB_File: $!";
+        tie %sb, 'DB_File', "$main::home$parent$base/statusindex.deb" or die "DB_File: $!";
   }
 
   %sb = @status;
@@ -575,10 +575,10 @@ sub database {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     tie %db, 'DB_File', "$parent$library/packages.deb" or die "DB_File: $!";
+     tie %db, 'DB_File', "$main::home$parent$library/packages.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    tie %db, 'DB_File', "$parent$base/packages.deb" or die "DB_File: $!";
+    tie %db, 'DB_File', "$main::home$parent$base/packages.deb" or die "DB_File: $!";
   }
 
   %db = (@name,@Tdescription,@conf,@REPLACE);
@@ -609,7 +609,7 @@ sub md {
 
 
      unless (-e "$parent$base/info") {    
-      die 'This program requires the /var/lib/dpkg/info directory set-up by dpkg';                                  
+      die 'This program requires the $parent$base/info directory set-up by dpkg';                                  
      }    
     
      # Put all file/dir(*.list)->package_name(s) into an massive array.

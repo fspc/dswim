@@ -28,7 +28,6 @@ use Exporter;
 @ISA = qw(Exporter);
 @EXPORT_OK = qw(db rebuildflatdb);
 
-
 # --db --rebuildflatdb  db() rebuildflatdb()
 
 # The goal here is to save some time by just updating the database rather
@@ -225,15 +224,15 @@ sub db {
      if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-         if (-e "$parent$library/searchindex.deb") {
-             unlink("$parent$library/searchindex.deb.gz");
-             unlink("$parent$library/dirindex.deb.gz");
+         if (-e "$main::home$parent$library/searchindex.deb") {
+             unlink("$main::home$parent$library/searchindex.deb.gz");
+             unlink("$main::home$parent$library/dirindex.deb.gz");
          } 
      }
      elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-         if (-e "$parent$base/searchindex.deb") {
-             unlink("$parent$base/searchindex.deb.gz");
-             unlink("$parent$base/dirindex.deb.gz");
+         if (-e "$main::home$parent$base/searchindex.deb") {
+             unlink("$main::home$parent$base/searchindex.deb.gz");
+             unlink("$main::home$parent$base/dirindex.deb.gz");
           }
      }
     }
@@ -815,10 +814,10 @@ sub db {
          if (($commands->{"dbpath"} && $commands->{"root"}) ||
              ($commands->{"dbpath"} && !$commands->{"root"}) ||
              (!$commands->{"dbpath"} && !$commands->{"root"})) {
-               open(SEARCHINDEX,">>$parent$library/searchindex.deb");
+               open(SEARCHINDEX,">>$main::home$parent$library/searchindex.deb");
          }
          elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-               open(SEARCHINDEX,">>$parent$base/searchindex.deb");
+               open(SEARCHINDEX,">>$main::home$parent$base/searchindex.deb");
          }
          if (!-d) {
             print SEARCHINDEX "$_\n";
@@ -826,10 +825,10 @@ sub db {
          if (($commands->{"dbpath"} && $commands->{"root"}) ||
              ($commands->{"dbpath"} && !$commands->{"root"}) ||
              (!$commands->{"dbpath"} && !$commands->{"root"})) {
-               open(DIRINDEX,">>$parent$library/dirindex.deb");
+               open(DIRINDEX,">>$main::home$parent$library/dirindex.deb");
          }
          elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-               open(DIRINDEX,">>$parent$base/dirindex.deb");
+               open(DIRINDEX,">>$main::home$parent$base/dirindex.deb");
          }
          if (-d) {
            print DIRINDEX "$_\n";  
@@ -890,9 +889,9 @@ sub rebuildflatdb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      !($commands->{"dbpath"} && $commands->{"root"})) {
-        if (-e "$parent$library/searchindex.deb") {
-            $dir = "$parent$library/dirindex.deb";
-            $file = "$parent$library/searchindex.deb";
+        if (-e "$main::home$parent$library/searchindex.deb") {
+            $dir = "$main::home$parent$library/dirindex.deb";
+            $file = "$main::home$parent$library/searchindex.deb";
             unlink($file);
             unlink("$file.gz") if -e "$file.gz";
             unlink($dir);
@@ -904,9 +903,9 @@ sub rebuildflatdb {
        	}
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-        if (-e "$parent$base/searchindex.deb") {
-            $file = "$parent$base/searchindex.deb";
-            $dir = "$parent$base/dirindex.deb";
+        if (-e "$main::home$parent$base/searchindex.deb") {
+            $file = "$main::home$parent$base/searchindex.deb";
+            $dir = "$main::home$parent$base/dirindex.deb";
             unlink($file);
             unlink("$file.gz") if -e "$file.gz";
             unlink($dir);

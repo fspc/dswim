@@ -1779,9 +1779,9 @@ sub rebuildflatndb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      !($commands->{"dbpath"} && $commands->{"root"})) {
-        if (-e "$parent$library/nsearchindex$arch$dist.deb") {
-            $dir = "$parent$library/ndirindex$arch$dist.deb";
-            $file = "$parent$library/nsearchindex$arch$dist.deb";
+        if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb") {
+            $dir = "$main::home$parent$library/ndirindex$arch$dist.deb";
+            $file = "$main::home$parent$library/nsearchindex$arch$dist.deb";
             unlink($file);
             unlink("$file.gz") if -e "$file.gz";
             unlink($dir);
@@ -1793,9 +1793,9 @@ sub rebuildflatndb {
        	}
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-        if (-e "$parent$base/nsearchindex$arch$dist.deb") {
-            $file = "$parent$base/nsearchindex$arch$dist.deb";
-            $dir = "$parent$base/ndirindex$arch$dist.deb";
+        if (-e "$main::home$parent$base/nsearchindex$arch$dist.deb") {
+            $file = "$main::home$parent$base/nsearchindex$arch$dist.deb";
+            $dir = "$main::home$parent$base/ndirindex$arch$dist.deb";
             unlink($file);
             unlink("$file.gz") if -e "$file.gz";
             unlink($dir);

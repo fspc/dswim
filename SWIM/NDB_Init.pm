@@ -24,7 +24,7 @@ use SWIM::Format;
 use SWIM::Conf qw(:Path $default_directory $apt_cache @user_defined_section
                   $distribution $pwd $sort $gzip $architecture $slowswim 
                   $longswim $apt_sources $alt);
-use SWIM::Global qw(%sb $argument);
+use SWIM::Global qw(%sb $argument $main::home);
 use SWIM::Dir;
 use SWIM::Compare;
 use SWIM::MD;
@@ -1097,68 +1097,68 @@ sub not_installed {
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
       if ($commands->{"initndb"}) {  
-        if (-e "$parent$library/npackages$arch$dist.deb") {            
+        if (-e "$main::home$parent$library/npackages$arch$dist.deb") {            
             print "swim:  use --rebuildndb\n";
             exit;
         }
         else {
           # if a database happens to be missing 
-          if (-e "$parent$library/npackages$arch$dist.deb") {
-             unlink("$parent$library/npackages$arch$dist.deb");
+          if (-e "$main::home$parent$library/npackages$arch$dist.deb") {
+             unlink("$main::home$parent$library/npackages$arch$dist.deb");
           }
-          if (-e "$parent$library/nfileindex$arch$dist.deb") {
-             unlink("$parent$library/nfileindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/nfileindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/nfileindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ngroupindex$arch$dist.deb") {
-             unlink("$parent$library/ngroupindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ngroupindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ngroupindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb.gz");
           }
           # might as well delete these to free some room
-          if (-e "$parent$library/nsearchindex$arch$dist.deb") {
-             unlink("$parent$library/nsearchindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/nsearchindex$arch$dist.deb");
           }
-          if (-e "$parent$library/nsearchindex$arch$dist.deb.gz") {
-             unlink("$parent$library/nsearchindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/nsearchindex$arch$dist.deb.gz");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb") {
-             unlink("$parent$library/ndirindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ndirindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb.gz");
           }
           
         }
       }
       #  this only works if all databases exist.
       elsif ($commands->{"rebuildndb"}) {
-        if (-e "$parent$library/npackages$arch$dist.deb") {            
-          unlink("$parent$library/npackages$arch$dist.deb");
-          unlink("$parent$library/nfileindex$arch$dist.deb");
-          unlink("$parent$library/ngroupindex$arch$dist.deb");
-          unlink("$parent$library/nstatusindex$arch$dist.deb");
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb");
+        if (-e "$main::home$parent$library/npackages$arch$dist.deb") {            
+          unlink("$main::home$parent$library/npackages$arch$dist.deb");
+          unlink("$main::home$parent$library/nfileindex$arch$dist.deb");
+          unlink("$main::home$parent$library/ngroupindex$arch$dist.deb");
+          unlink("$main::home$parent$library/nstatusindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb.gz");
           }
           # might as well delete these to free some room
-          if (-e "$parent$library/nsearchindex$arch$dist.deb") {
-             unlink("$parent$library/nsearchindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/nsearchindex$arch$dist.deb");
           }
-          if (-e "$parent$library/nsearchindex$arch$dist.deb.gz") {
-             unlink("$parent$library/nsearchindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/nsearchindex$arch$dist.deb.gz");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb") {
-             unlink("$parent$library/ndirindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ndirindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb.gz");
           }
         }
         else {
@@ -1169,67 +1169,67 @@ sub not_installed {
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
       if ($commands->{"initndb"}) {  
-        if (-e "$parent$base/npackages$arch$dist.deb") {            
+        if (-e "$main::home$parent$base/npackages$arch$dist.deb") {            
             print "swim:  use --rebuildndb\n";
             exit;
         }
         else {
           # if a database happens to be missing 
-          if (-e "$parent$base/npackages$arch$dist.deb") {
-             unlink("$parent$base/npackages$arch$dist.deb");
+          if (-e "$main::home$parent$base/npackages$arch$dist.deb") {
+             unlink("$main::home$parent$base/npackages$arch$dist.deb");
           }
-          if (-e "$parent$base/nfileindex$arch$dist.deb") {
-             unlink("$parent$base/nfileindex$arch$dist.deb");
+          if (-e "$main::home$parent$base/nfileindex$arch$dist.deb") {
+             unlink("$main::home$parent$base/nfileindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ngroupindex$arch$dist.deb") {
-             unlink("$parent$base/ngroupindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ngroupindex$arch$dist.deb") {
+             unlink("$main::home$parent$base/ngroupindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb.gz");
           }
           # might as well delete these to free some room
-          if (-e "$parent$library/nsearchindex$arch$dist.deb") {
-             unlink("$parent$base/nsearchindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb") {
+             unlink("$main::home$parent$base/nsearchindex$arch$dist.deb");
           }
-          if (-e "$parent$library/nsearchindex$arch$dist.deb.gz") {
-             unlink("$parent$base/nsearchindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$base/nsearchindex$arch$dist.deb.gz");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb") {
-             unlink("$parent$library/ndirindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ndirindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb.gz");
           }
         }
       }
       #  this only works if all databases exist.
       elsif ($commands->{"rebuildndb"}) {
-        if (-e "$parent$base/npackages$arch$dist.deb") {            
-          unlink("$parent$base/npackages$arch$dist.deb");
-          unlink("$parent$base/nfileindex$arch$dist.deb");
-          unlink("$parent$base/ngroupindex$arch$dist.deb");
-          unlink("$parent$base/nstatusindex$arch$dist.deb");
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb");
+        if (-e "$main::home$parent$base/npackages$arch$dist.deb") {            
+          unlink("$main::home$parent$base/npackages$arch$dist.deb");
+          unlink("$main::home$parent$base/nfileindex$arch$dist.deb");
+          unlink("$main::home$parent$base/ngroupindex$arch$dist.deb");
+          unlink("$main::home$parent$base/nstatusindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ncontentsindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ncontentsindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ncontentsindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ncontentsindex$arch$dist.deb.gz");
           }
           # might as well delete these to free some room
-          if (-e "$parent$library/nsearchindex$arch$dist.deb") {
-             unlink("$parent$library/nsearchindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/nsearchindex$arch$dist.deb");
           }
-          if (-e "$parent$library/nsearchindex$arch$dist.deb.gz") {
-             unlink("$parent$library/nsearchindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/nsearchindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/nsearchindex$arch$dist.deb.gz");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb") {
-             unlink("$parent$library/ndirindex$arch$dist.deb");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb");
           }
-          if (-e "$parent$library/ndirindex$arch$dist.deb.gz") {
-             unlink("$parent$library/ndirindex$arch$dist.deb.gz");
+          if (-e "$main::home$parent$library/ndirindex$arch$dist.deb.gz") {
+             unlink("$main::home$parent$library/ndirindex$arch$dist.deb.gz");
           }
         }
         else {
@@ -2168,10 +2168,10 @@ sub not_installed {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     tie %ngb, 'DB_File', "$parent$library/ngroupindex$arch$dist.deb" or die "DB_File: $!";
+     tie %ngb, 'DB_File', "$main::home$parent$library/ngroupindex$arch$dist.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    tie %ngb, 'DB_File', "$parent$base/ngroupindex$arch$dist.deb" or die "DB_File: $!";
+    tie %ngb, 'DB_File', "$main::home$parent$base/ngroupindex$arch$dist.deb" or die "DB_File: $!";
   }
 
   # assigning to HUMM solves a strange problem.  semi-panic: attempt to dup
@@ -2189,10 +2189,10 @@ sub not_installed {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-        tie %nsb, 'DB_File', "$parent$library/nstatusindex$arch$dist.deb" or die "DB_File: $!";
+        tie %nsb, 'DB_File', "$main::home$parent$library/nstatusindex$arch$dist.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-        tie %nsb, 'DB_File', "$parent$base/nstatusindex$arch$dist.deb" or die "DB_File: $!";
+        tie %nsb, 'DB_File', "$main::home$parent$base/nstatusindex$arch$dist.deb" or die "DB_File: $!";
   }
 
   push(@status,"/.");
@@ -2212,10 +2212,10 @@ sub not_installed {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     tie %ndb, 'DB_File', "$parent$library/npackages$arch$dist.deb" or die "DB_File: $!";
+     tie %ndb, 'DB_File', "$main::home$parent$library/npackages$arch$dist.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     tie %ndb, 'DB_File', "$parent$base/npackages$arch$dist.deb" or die "DB_File: $!";
+     tie %ndb, 'DB_File', "$main::home$parent$base/npackages$arch$dist.deb" or die "DB_File: $!";
   }
 
   %ndb = (@name,@Tdescription,@conf,@REPLACE,@FILENAME,@MD5SUM,@revision);
@@ -2246,19 +2246,19 @@ sub exist_sb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     if (-e "$parent$library/statusindex.deb") {
+     if (-e "$main::home$parent$library/statusindex.deb") {
          $yep = "yes";
      }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     if (-e "$parent$base/statusindex.deb") {
+     if (-e "$main::home$parent$base/statusindex.deb") {
          $yep = "yes";
      }
   }
 
   if (!defined $yep) {
-    if (-e "$parent$base/statusindex.deb") {
-     tie %sb, 'DB_File', "$parent$base/statusindex.deb" 
+    if (-e "$main::home$parent$base/statusindex.deb") {
+     tie %sb, 'DB_File', "$main::home$parent$base/statusindex.deb" 
       or die "DB_File: $!";
       return "yes";
     }
@@ -2281,8 +2281,8 @@ sub sb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     if (-e "$parent$library/statusindex.deb") {
-      tie %sb, 'DB_File', "$parent$library/statusindex.deb" 
+     if (-e "$main::home$parent$library/statusindex.deb") {
+      tie %sb, 'DB_File', "$main::home$parent$library/statusindex.deb" 
       or die "DB_File: $!";
      }
      else {
@@ -2290,8 +2290,8 @@ sub sb {
     }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    if (-e "$parent$base/statusindex.deb") {
-     tie %sb, 'DB_File', "$parent$base/statusindex.deb" 
+    if (-e "$main::home$parent$base/statusindex.deb") {
+     tie %sb, 'DB_File', "$main::home$parent$base/statusindex.deb" 
      or die "DB_File: $!";
     }
     else {

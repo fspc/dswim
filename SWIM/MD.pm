@@ -54,6 +54,7 @@ sub process_md {
      my $count1 = 1;
 
      my($place) = finddb(\%commands);
+     $place = "$main::home$place";
           
      # Let's determine what architecture and distribution this person is
      # interested in.
@@ -105,11 +106,11 @@ sub process_md {
        if (($commands->{"dbpath"} && $commands->{"root"}) ||
          ($commands->{"dbpath"} && !$commands->{"root"}) ||
          (!$commands->{"dbpath"} && !$commands->{"root"})) {
-        $zing = tie %md, 'DB_File',"$parent$library/$fileindex$arch$dist.deb" 
+        $zing = tie %md, 'DB_File',"$main::home$parent$library/$fileindex$arch$dist.deb" 
                 or die "DB_File: $!";
        }
        elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-         $zing = tie %md, 'DB_File',"$parent$base/$fileindex$arch$dist.deb" 
+         $zing = tie %md, 'DB_File',"$main::home$parent$base/$fileindex$arch$dist.deb" 
                  or die "DB_File: $!";
        }
        while ($count <= $#mi) {
@@ -220,6 +221,7 @@ sub process_md {
        my @statusindex = split(/\s/,$nsb{"/."});
        if ($#fileindex < $#statusindex) {
          my $place = finddb(\%commands);
+         $place = "$main::home$place";
          open(DIFF, ">$place/.packagesdiff$arch$dist.deb") 
              or warn "couldn't create diff file\n";
          my %uniques;

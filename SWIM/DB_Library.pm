@@ -50,13 +50,13 @@ sub ib {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-   if (-e "$parent$library/fileindex.deb") {
-     tie %ib, 'DB_File', "$parent$library/fileindex.deb" or die "DB_File: $!";
+   if (-e "$main::home$parent$library/fileindex.deb") {
+     tie %ib, 'DB_File', "$main::home$parent$library/fileindex.deb" or die "DB_File: $!";
    }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-   if (-e "$parent$base/fileindex.deb") {
-    tie %ib, 'DB_File', "$parent$base/fileindex.deb" or die "DB_File: $!";
+   if (-e "$main::home$parent$base/fileindex.deb") {
+    tie %ib, 'DB_File', "$main::home$parent$base/fileindex.deb" or die "DB_File: $!";
    }
   }
 } # end sub ib
@@ -68,15 +68,15 @@ sub dbi {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-   if (-e "$parent$library/packages.deb" ||
+   if (-e "$main::home$parent$library/packages.deb" ||
       ($commands->{"initndb"} || $commands->{"rebuildndb"})) {
-     tie %db, 'DB_File', "$parent$library/packages.deb" or die "DB_File: $!";
+     tie %db, 'DB_File', "$main::home$parent$library/packages.deb" or die "DB_File: $!";
    }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-   if (-e  "$parent$base/packages.deb" ||
+   if (-e  "$main::home$parent$base/packages.deb" ||
        ($commands->{"initndb"} || $commands->{"rebuildndb"})) {
-    tie %db, 'DB_File', "$parent$base/packages.deb" or die "DB_File: $!";
+    tie %db, 'DB_File', "$main::home$parent$base/packages.deb" or die "DB_File: $!";
    }
   }
 } # end sub dbi
@@ -92,16 +92,16 @@ sub nib {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     if (!-e "$parent$library/nfileindex$arch$dist.deb") {
+     if (!-e "$main::home$parent$library/nfileindex$arch$dist.deb") {
        return;
      }
-     tie %ib, 'DB_File', "$parent$library/nfileindex$arch$dist.deb" or die "DB_File: $!";
+     tie %ib, 'DB_File', "$main::home$parent$library/nfileindex$arch$dist.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     if (!-e "$parent$base/nfileindex$arch$dist.deb") {
+     if (!-e "$main::home$parent$base/nfileindex$arch$dist.deb") {
        return;
      }
-    tie %ib, 'DB_File', "$parent$base/nfileindex$arch$dist.deb" or die "DB_File: $!";
+    tie %ib, 'DB_File', "$main::home$parent$base/nfileindex$arch$dist.deb" or die "DB_File: $!";
   }
 } # end sub nib
 
@@ -115,18 +115,18 @@ sub ndb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-    if (-e "$parent$library/npackages$arch$dist.deb" ||
+    if (-e "$main::home$parent$library/npackages$arch$dist.deb" ||
         ($commands->{"initndb"} || $commands->{"rebuildndb"} ||
          $commands->{"ndb"})) {
-     tie %db, 'DB_File', "$parent$library/npackages$arch$dist.deb" 
+     tie %db, 'DB_File', "$main::home$parent$library/npackages$arch$dist.deb" 
      or die "swim: use pre-existing databases for this option";
     }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-   if (-e  "$parent$base/npackages$arch$dist.deb" ||
+   if (-e  "$main::home$parent$base/npackages$arch$dist.deb" ||
       ($commands->{"initndb"} || $commands->{"rebuildndb"} ||
        $commands->{"ndb"})) {
-     tie %db, 'DB_File', "$parent$base/npackages$arch$dist.deb" 
+     tie %db, 'DB_File', "$main::home$parent$base/npackages$arch$dist.deb" 
      or die "swim: use pre-existing databases for this option";
    }
   }
@@ -141,8 +141,8 @@ sub sb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     if (-e "$parent$library/statusindex.deb") {
-      tie %sb, 'DB_File', "$parent$library/statusindex.deb" 
+     if (-e "$main::home$parent$library/statusindex.deb") {
+      tie %sb, 'DB_File', "$main::home$parent$library/statusindex.deb" 
       or die "DB_File: $!";
      }
      else {
@@ -150,8 +150,8 @@ sub sb {
     }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    if (-e "$parent$base/statusindex.deb") {
-     tie %sb, 'DB_File', "$parent$base/statusindex.deb" 
+    if (-e "$main::home$parent$base/statusindex.deb") {
+     tie %sb, 'DB_File', "$main::home$parent$base/statusindex.deb" 
      or die "DB_File: $!";
     }
     else {
@@ -174,19 +174,19 @@ sub exist_sb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     if (-e "$parent$library/statusindex.deb") {
+     if (-e "$main::home$parent$library/statusindex.deb") {
          $yep = "yes";
      }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     if (-e "$parent$base/statusindex.deb") {
+     if (-e "$main::home$parent$base/statusindex.deb") {
          $yep = "yes";
      }
   }
 
   if (!defined $yep) {
-    if (-e "$parent$base/statusindex.deb") {
-     tie %sb, 'DB_File', "$parent$base/statusindex.deb" 
+    if (-e "$main::home$parent$base/statusindex.deb") {
+     tie %sb, 'DB_File', "$main::home$parent$base/statusindex.deb" 
       or die "DB_File: $!";
       return "yes";
     }
@@ -210,18 +210,18 @@ sub nsb {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-    if (-e "$parent$library/nstatusindex$arch$dist.deb" ||
+    if (-e "$main::home$parent$library/nstatusindex$arch$dist.deb" ||
         ($commands->{"initndb"} || $commands->{"rebuildndb"} ||
          $commands->{"ndb"})) {
-     tie %nsb, 'DB_File', "$parent$library/nstatusindex$arch$dist.deb"
+     tie %nsb, 'DB_File', "$main::home$parent$library/nstatusindex$arch$dist.deb"
      or die "swim: use pre-existing databases for this option";
     }
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-   if (-e "$parent$base/nstatusindex$arch$dist.deb" ||
+   if (-e "$main::home$parent$base/nstatusindex$arch$dist.deb" ||
         ($commands->{"initndb"} || $commands->{"rebuildndb"} ||
          $commands->{"ndb"})) {
-    tie %nsb, 'DB_File', "$parent$base/nstatusindex$arch$dist.deb" or die
+    tie %nsb, 'DB_File', "$main::home$parent$base/nstatusindex$arch$dist.deb" or die
      or die "swim: use pre-existing databases for this option";
    }
   }
@@ -234,10 +234,10 @@ sub ping {
       if (($commands->{"dbpath"} && $commands->{"root"}) ||
          ($commands->{"dbpath"} && !$commands->{"root"}) ||
          (!$commands->{"dbpath"} && !$commands->{"root"})) {
-         $ping = tie %db, 'DB_File', "$parent$library/packages.deb" or die "DB_File: $!";
+         $ping = tie %db, 'DB_File', "$main::home$parent$library/packages.deb" or die "DB_File: $!";
       }
       elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-         $ping = tie %db, 'DB_File', "$parent$base/packages.deb" or die "DB_File: $!";
+         $ping = tie %db, 'DB_File', "$main::home$parent$base/packages.deb" or die "DB_File: $!";
       }
 }
 
@@ -250,11 +250,11 @@ sub nping {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $ping = tie %db, 'DB_File', "$parent$library/npackages$arch$dist.deb"
+     $ping = tie %db, 'DB_File', "$main::home$parent$library/npackages$arch$dist.deb"
                or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    $ping = tie %db, 'DB_File', "$parent$base/npackages$arch$dist.deb" 
+    $ping = tie %db, 'DB_File', "$main::home$parent$base/npackages$arch$dist.deb" 
              or die "DB_File: $!";
   }
 } # end sub nping
@@ -267,11 +267,11 @@ sub zing {
       if (($commands->{"dbpath"} && $commands->{"root"}) ||
          ($commands->{"dbpath"} && !$commands->{"root"}) ||
          (!$commands->{"dbpath"} && !$commands->{"root"})) {
-         $zing = tie %ib, 'DB_File', "$parent$library/fileindex.deb" 
+         $zing = tie %ib, 'DB_File', "$main::home$parent$library/fileindex.deb" 
                  or die "DB_File: $!";
       }
       elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-         $zing = tie %ib, 'DB_File', "$parent$base/fileindex.deb" 
+         $zing = tie %ib, 'DB_File', "$main::home$parent$base/fileindex.deb" 
                  or die "DB_File: $!";
       }
 } # end sub zing
@@ -285,11 +285,11 @@ sub nzing {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $zing = tie %ib, 'DB_File', "$parent$library/nfileindex$arch$dist.deb"
+     $zing = tie %ib, 'DB_File', "$main::home$parent$library/nfileindex$arch$dist.deb"
                or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    $zing = tie %ib, 'DB_File', "$parent$base/nfileindex$arch$dist.deb" 
+    $zing = tie %ib, 'DB_File', "$main::home$parent$base/nfileindex$arch$dist.deb" 
              or die "DB_File: $!";
   }
 } # end sub nzing
@@ -302,10 +302,10 @@ sub ging {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $ging = tie %gb, 'DB_File', "$parent$library/groupindex.deb" or die "DB_File: $!";
+     $ging = tie %gb, 'DB_File', "$main::home$parent$library/groupindex.deb" or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    $ging = tie %gb, 'DB_File', "$parent$base/groupindex.deb" or die "DB_File: $!";
+    $ging = tie %gb, 'DB_File', "$main::home$parent$base/groupindex.deb" or die "DB_File: $!";
   }
 } #end sub ging
 
@@ -319,11 +319,11 @@ sub nging {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $ging = tie %gb, 'DB_File',"$parent$library/ngroupindex$arch$dist.deb"
+     $ging = tie %gb, 'DB_File',"$main::home$parent$library/ngroupindex$arch$dist.deb"
                or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    $ging = tie %gb, 'DB_File', "$parent$base/ngroupindex$arch$dist.deb" 
+    $ging = tie %gb, 'DB_File', "$main::home$parent$base/ngroupindex$arch$dist.deb" 
              or die "DB_File: $!";
   }
 } # end sub nging
@@ -336,15 +336,15 @@ sub gb {
       if (($commands->{"dbpath"} && $commands->{"root"}) ||
          ($commands->{"dbpath"} && !$commands->{"root"}) ||
          (!$commands->{"dbpath"} && !$commands->{"root"})) {
-         if (-e  "$parent$library/groupindex.deb" ||
+         if (-e  "$main::home$parent$library/groupindex.deb" ||
             ($commands->{"initndb"} || $commands->{"rebuildndb"})) {
-          tie %gb, 'DB_File', "$parent$library/groupindex.deb" or die "DB_File: $!";
+          tie %gb, 'DB_File', "$main::home$parent$library/groupindex.deb" or die "DB_File: $!";
          }
       }
       elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-         if (-e "$parent$base/groupindex.deb" ||
+         if (-e "$main::home$parent$base/groupindex.deb" ||
             ($commands->{"initndb"} || $commands->{"rebuildndb"})) {
-          tie %gb, 'DB_File', "$parent$base/groupindex.deb" or die "DB_File: $!";
+          tie %gb, 'DB_File', "$main::home$parent$base/groupindex.deb" or die "DB_File: $!";
          }
       }
 }
@@ -358,16 +358,16 @@ sub ngb {
       if (($commands->{"dbpath"} && $commands->{"root"}) ||
          ($commands->{"dbpath"} && !$commands->{"root"}) ||
          (!$commands->{"dbpath"} && !$commands->{"root"})) {
-        if (-e "$parent$library/ngroupindex$arch$dist.deb" ||
+        if (-e "$main::home$parent$library/ngroupindex$arch$dist.deb" ||
            ($commands->{"initndb"} || $commands->{"rebuildndb"})) {
-          tie %gb, 'DB_File', "$parent$library/ngroupindex$arch$dist.deb" 
+          tie %gb, 'DB_File', "$main::home$parent$library/ngroupindex$arch$dist.deb" 
           or die "DB_File: $!";
         }
       }
       elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-        if (-e "$parent$base/ngroupindex$arch$dist.deb" ||
+        if (-e "$main::home$parent$base/ngroupindex$arch$dist.deb" ||
            ($commands->{"initndb"} || $commands->{"rebuildndb"})) {
-          tie %gb, 'DB_File', "$parent$base/ngroupindex$arch$dist.deb" 
+          tie %gb, 'DB_File', "$main::home$parent$base/ngroupindex$arch$dist.deb" 
           or die "DB_File: $!";
         }
       }
@@ -380,11 +380,11 @@ sub sing {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-       $sing =  tie %sb, 'DB_File', "$parent$library/statusindex.deb" 
+       $sing =  tie %sb, 'DB_File', "$main::home$parent$library/statusindex.deb" 
        or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-       $sing = tie %sb, 'DB_File', "$parent$base/statusindex.deb" or die "DB_File: $!";
+       $sing = tie %sb, 'DB_File', "$main::home$parent$base/statusindex.deb" or die "DB_File: $!";
   }
 } # sub sing
 
@@ -397,11 +397,11 @@ sub nsing {
   if (($commands->{"dbpath"} && $commands->{"root"}) ||
      ($commands->{"dbpath"} && !$commands->{"root"}) ||
      (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $sing = tie %nsb, 'DB_File', "$parent$library/nstatusindex$arch$dist.deb"
+     $sing = tie %nsb, 'DB_File', "$main::home$parent$library/nstatusindex$arch$dist.deb"
                or die "DB_File: $!";
   }
   elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-    $sing = tie %nsb, 'DB_File', "$parent$base/nstatusindex$arch$dist.deb" 
+    $sing = tie %nsb, 'DB_File', "$main::home$parent$base/nstatusindex$arch$dist.deb" 
              or die "DB_File: $!";
   }
 } # end sub nsing

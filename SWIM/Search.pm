@@ -741,13 +741,13 @@ sub searchdf {
    if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $sfile = "$parent$library/searchindex.deb";
-     $sdir = "$parent$library/dirindex.deb";
+     $sfile = "$main::home$parent$library/searchindex.deb";
+     $sdir = "$main::home$parent$library/dirindex.deb";
      return ($sfile,$sdir);
    }
    elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     $sfile = "$parent$base/searchindex.deb";
-     $sdir = "$parent$base/dirindex.deb";
+     $sfile = "$main::home$parent$base/searchindex.deb";
+     $sdir = "$main::home$parent$base/dirindex.deb";
      return ($sfile,$sdir);
    }
   }
@@ -755,8 +755,8 @@ sub searchdf {
    if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $sfile = "$parent$library/dramdisk/searchindex.deb.gz";
-     $sdir = "$parent$library/dramdisk/dirindex.deb.gz";
+     $sfile = "$main::home$parent$library/dramdisk/searchindex.deb.gz";
+     $sdir = "$main::home$parent$library/dramdisk/dirindex.deb.gz";
      if (!-e $sdir && !-e $sfile) {
        print "swim: found wrong database(s), use --ramdiskoff\n";
        exit;
@@ -764,8 +764,8 @@ sub searchdf {
      return ($sfile,$sdir);
    }
    elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     $sfile = "$parent$base/dramdisk/searchindex.deb.gz";
-     $sdir = "$parent$base/dramdisk/dirindex.deb.gz";
+     $sfile = "$main::home$parent$base/dramdisk/searchindex.deb.gz";
+     $sdir = "$main::home$parent$base/dramdisk/dirindex.deb.gz";
      if (!-e $sdir && !-e $sfile) {
        print "swim: found wrong database(s), use --ramdiskoff\n";
        exit;
@@ -781,13 +781,13 @@ sub searchdf {
    if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $sfile = "$parent$library/nsearchindex$arch$dist.deb";
-     $sdir = "$parent$library/ndirindex$arch$dist.deb";
+     $sfile = "$main::home$parent$library/nsearchindex$arch$dist.deb";
+     $sdir = "$main::home$parent$library/ndirindex$arch$dist.deb";
      return ($sfile,$sdir);
    }
    elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     $sfile = "$parent$base/nsearchindex$arch$dist.deb";
-     $sdir = "$parent$base/ndirindex$arch$dist.deb";
+     $sfile = "$main::home$parent$base/nsearchindex$arch$dist.deb";
+     $sdir = "$main::home$parent$base/ndirindex$arch$dist.deb";
      return ($sfile,$sdir);
    }
   }
@@ -795,8 +795,8 @@ sub searchdf {
    if (($commands->{"dbpath"} && $commands->{"root"}) ||
       ($commands->{"dbpath"} && !$commands->{"root"}) ||
       (!$commands->{"dbpath"} && !$commands->{"root"})) {
-     $sfile = "$parent$library/dramdisk/nsearchindex$arch$dist.deb.gz";
-     $sdir = "$parent$library/dramdisk/ndirindex$arch$dist.deb.gz";
+     $sfile = "$main::home$parent$library/dramdisk/nsearchindex$arch$dist.deb.gz";
+     $sdir = "$main::home$parent$library/dramdisk/ndirindex$arch$dist.deb.gz";
      if (!-e $sdir && !-e $sfile) {
       print "swim: found wrong database(s), use --ramdiskoff\n";
        exit;
@@ -804,8 +804,8 @@ sub searchdf {
      return ($sfile,$sdir);
    }
    elsif  (!$commands->{"dbpath"} && $commands->{"root"}) {
-     $sfile = "$parent$base/dramdisk/nsearchindex$arch$dist.deb.gz";
-     $sdir = "$parent$base/dramdisk/ndirindex$arch$dist.deb.gz";
+     $sfile = "$main::home$parent$base/dramdisk/nsearchindex$arch$dist.deb.gz";
+     $sdir = "$main::home$parent$base/dramdisk/ndirindex$arch$dist.deb.gz";
      if (!-e $sdir && !-e $sfile) {
        print "swim: found wrong database(s), use --ramdiskoff\n";
        exit;
