@@ -93,6 +93,8 @@ BEGIN {
 	$ENV{'PATH'} = "/usr/sbin:" . $ENV{'PATH'};
     }
 
+    $main::home = $ENV{'HOME'};
+
 }
 
 
@@ -347,8 +349,8 @@ sub command {
 
     # this will handle options with arguments
 
-    $main::home = $ENV{'HOME'};
-    home_builder("$main::home$parent$base/info");    
+    home_builder("$default_directory$parent$base/info");    
+    $main::home = $default_directory;
 
     if ($Getopt::Long::error == 1 || $commands{"root"} || 
 	$commands{"dbpath"}) {
