@@ -3,24 +3,31 @@
 require 5.004;
 use strict;
 
-################################################################################
-#    Package administration and research tool for Debian                       #
-#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
-#                                                                              #
-#    This program is free software; you can redistribute it and/or modify      #
-#    it under the terms of the GNU General Public License as published by      #
-#    the Free Software Foundation; either version 2 of the License, or         #
-#    (at your option) any later version.                                       #
-#                                                                              #
-#    This program is distributed in the hope that it will be useful,           #
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
-#    GNU General Public License for more details.                              #
-#                                                                              #
-#    You should have received a copy of the GNU General Public License         #
-#    along with this program; if not, write to the Free Software               #
-#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
-################################################################################
+############################################################################
+#
+#    Package administration and research tool for Debian                       
+#
+#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum 
+#
+#                                                                             
+#
+#    This program is free software; you can redistribute it and/or modify 
+#
+#    it under the terms of the GNU General Public License as published by     
+#    the Free Software Foundation; either version 2 of the License, or        
+#    (at your option) any later version.                                       
+#                                                                              
+#    This program is distributed in the hope that it will be useful,         
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             
+#    GNU General Public License for more details.                              
+#                                                                            
+#    You should have received a copy of the GNU General Public License        
+#    along with this program; if not, write to the Free Software              
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
+#    USA
+#
+#############################################################################
 
 
 =pod
@@ -41,6 +48,7 @@ line.
 
 =cut
 
+    my $home = $ENV{'HOME'} . "/";
 
    if ($#ARGV == -1) {                                                          
      print "swim: imswim requires arguments, see program for instructions\n";                                                                      
@@ -76,7 +84,7 @@ line.
              # humm let's rebuild the offending backup list, this               
              # is important for --db.                                           
              unshift(@redolist,"/.");                                           
-             open(REDOLIST, ">$ARGV[0]/backup/$the[0].list.bk.bk")        
+             open(REDOLIST, ">$home$ARGV[0]/backup/$the[0].list.bk.bk")        
              or warn "needed to edit $the[0].list because it lacked /.,              
                       but could not open up a backup file\n";                   
                my $rd;                                                          

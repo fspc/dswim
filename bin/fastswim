@@ -3,33 +3,40 @@
 require 5.004;
 use strict;
 
-################################################################################
-#    Package administration and research tool for Debian                       #
-#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
-#                                                                              #
-#    This program is free software; you can redistribute it and/or modify      #
-#    it under the terms of the GNU General Public License as published by      #
-#    the Free Software Foundation; either version 2 of the License, or         #
-#    (at your option) any later version.                                       #
-#                                                                              #
-#    This program is distributed in the hope that it will be useful,           #
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
-#    GNU General Public License for more details.                              #
-#                                                                              #
-#    You should have received a copy of the GNU General Public License         #
-#    along with this program; if not, write to the Free Software               #
-#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
-################################################################################
+############################################################################
+#
+#    Package administration and research tool for Debian                       
+#
+#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum 
+#
+#                                                                             
+#
+#    This program is free software; you can redistribute it and/or modify 
+#
+#    it under the terms of the GNU General Public License as published by     
+#    the Free Software Foundation; either version 2 of the License, or        
+#    (at your option) any later version.                                       
+#                                                                              
+#    This program is distributed in the hope that it will be useful,         
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             
+#    GNU General Public License for more details.                              
+#                                                                            
+#    You should have received a copy of the GNU General Public License        
+#    along with this program; if not, write to the Free Software              
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
+#    USA
+#
+#############################################################################
 
 
 # Because it is a better to write to disk, rather than trying to do
 # everthing in memory, and then it's good to close the process which
 # accomplished this.  I am sure there are better ways.
 
-# Anyways if you want to test fastswim do something like this:                  
-# fastswim --transfer /var/lib/dpkg/info /tmp /var/lib/dpkg and create a        
-# transfer.deb file beforehand in /tmp which has the packagename_version        
+# Anyways if you want to test fastswim do something like this:
+# fastswim --transfer /var/lib/dpkg/info /tmp /var/lib/dpkg and create a 
+# transfer.deb file beforehand in /tmp which has the packagename_version  
 # one to a line. 
 
 my @ppackage;
@@ -40,6 +47,7 @@ my $temp;
 my %HL;
 my @name;
 my %version;
+my $home = $ENV{'HOME'} . "/";
 
 #$| = 1;
 #$#name = 2000;
@@ -107,7 +115,7 @@ my %version;
              # humm let's rebuild the offending backup list, this
              # is important for --db.
              unshift(@redolist,"/."); 
-             open(REDOLIST, ">$ARGV[1]/backup/$thingy.bk.bk")
+             open(REDOLIST, ">$home$ARGV[1]/backup/$thingy.bk.bk")
              or warn "needed to edit $thingy because it lacked /.,
                       but could not open up a backup file\n";
                my $rd;
