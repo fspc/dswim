@@ -131,23 +131,23 @@ sub process_md {
      # now we get to take into account deinstall:ok:config-files
      # situations for an installed system.
      if ($commands->{"initdb"} || $commands->{"rebuilddb"}) {
-       sb(\%$commands); ib(\%commands); my $yich;
-        foreach (values %sb) { 
-         my $zit; my ($nit,$yit) = (split(/\s/,$_))[0,3]; 
-         if ($yit eq "deinstall:ok:config-files" ||
-             $yit eq "purge:ok:config-files") { 
-          ($zit = $nit) =~ s,\+,\\\+,; 
-          if ($ib{"/."} !~ m,$zit,) {
-           if (!defined $yich) {
-             $yich = $nit;
-           } 
-           else {
-             $yich = $yich . " $nit";
-           } 
-          }
-         } 
-        }
-        $ib{"/."} = $ib{"/."} . " $yich";
+	 sb(\%$commands); ib(\%commands); my $yich;
+	 foreach (values %sb) { 
+	     my $zit; my ($nit,$yit) = (split(/\s/,$_))[0,3]; 
+	     if ($yit eq "deinstall:ok:config-files" ||
+		 $yit eq "purge:ok:config-files") { 
+		 ($zit = $nit) =~ s,\+,\\\+,; 
+		 if ($ib{"/."} !~ m,$zit,) {
+		     if (!defined $yich) {
+			 $yich = $nit;
+		     } 
+		     else {
+			 $yich = $yich . " $nit";
+		     } 
+		 }
+	     } 
+	 }
+	 $ib{"/."} = $ib{"/."} . " $yich" if defined $ib{"/."} && $yich;
      }
 
      # after much experimentation it turns out that a flat text file
