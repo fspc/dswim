@@ -1,5 +1,5 @@
 #    Debian System Wide Information Manager
-#    Copyright (C) 1999-2001 Jonathan Rosenbaum 
+#    Copyright (C) 1998-2005 Jonathan Rosenbaum 
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

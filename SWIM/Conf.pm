@@ -1,5 +1,5 @@
 #    Debian System Wide Information Manager
-#    Copyright (C) 1999-2001 Jonathan Rosenbaum
+#    Copyright (C) 1998-2005 Jonathan Rosenbaum
 
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -689,16 +689,16 @@ swim(8), Net::FTP(3pm)
 
 =head1 BUGS
 
-Send directly to mttrader@access.mountain.net.
+Send directly to freesource@freesoftwarepc.com.
 
 =head1 AUTHOR
 
-Jonathan Rosenbaum <mttrader@access.mountain.net> 
+Jonathan Rosenbaum <freesource@freesoftwarepc.com> 
 
 =head1 COPYRIGHT
 
 
-Copyright (c) 1999 Jonathan Rosenbaum. All rights reserved. This program
+Copyright (c) 1998-2005 Jonathan Rosenbaum. All rights reserved. This program
 is free software; you can redistribute it and/or modify it under the GPL. 
 
 =cut
