@@ -56,7 +56,7 @@ my $urgency = "low";
 my $gbootroot_cvs =  "$user_home/avd/avd/swim";
 my $packaging_place = "$user_home/avd/PACKAGING-swim";
 my $packaging_defaults = "$gbootroot_cvs/pkg/dpkg";
-my $email = "freesource\@users.sourceforge.net";
+my $email = "freesource\@freesoftwarepc.com";
 my $name = "Jonathan Rosenbaum";
 my $makefile = "Makefile.pkg";
 
@@ -110,6 +110,8 @@ chdir($gbootroot_cvs) or die "Couldn't change to $gbootroot_cvs: $!\n";
 # Basically we are just concerned with the first part of cp and will
 # use home_builder to make sure the directory exists.
 
+
+
 foreach (@make_lines) {
 	s/\t//;
 	if (/cp/) {
@@ -119,11 +121,18 @@ foreach (@make_lines) {
 	 	$base = dirname($dir);
 		home_builder("$packaging_place/$base");
 		}
-	 system "cp -fa $dir $packaging_place/$base";
+        if ( $_ =~ /cp/ ) {
+	       system "cp -fa $dir $packaging_place/$base";
+         }
+         else {
+	       system "install -d $packaging_place/$dir";
+         }
+
 	}
 	else {
                if (!/mknod|dev/) {
-		    system "$_";
+                    ## no need to do this
+		    ## system "$_";
                }
         }
 }
@@ -238,7 +247,7 @@ if (!$stop) {
 } # end if !$stop
 
 
-system "debuild";
+system "debuild -rfakeroot -i\`.*bz2$\` -k2DAB7037";
 
 sub home_builder {
 
