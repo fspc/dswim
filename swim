@@ -158,6 +158,7 @@ my($result) =
 		"depends",        # like requires, def. needed
 		"recommends",     # packages important to this one
 		"suggests",       # complimentary packages
+		"enhances",       # compliments other packages
 		"replaces",       # package(s) being replaces
 		"provides",       # capabilities provided (virtual)
 		"conflicts",      # package(s) which conflict
@@ -1805,9 +1806,9 @@ Usage: swim [--nopager -n]
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
-                        [-v] [--dbpath <dir>] [--menu -m] 
-                        [--shlibs] [-T] [--pre_depends] [--depends] 
-                        [--recommends] [--suggests] [--conflicts] 
+                        [-v] [--dbpath <dir>] [--menu -m] [--shlibs] 
+                        [-T] [--pre_depends] [--depends] [--recommends] 
+                        [--suggests] [--enhances] [--conflicts] 
                         [--replaces] [--provides] [--md5sum] [--root <dir>] 
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
@@ -1883,9 +1884,9 @@ Usage: swim [--nopager -n]
        swim {--query -q} [-afpgn --dir] [--total -t] [-i] [-l ? <[--df]>]
                         [-d] [-c] [--scripts] [--preinst] [--postinst] 
                         [--prerm] [--postrm] [--config] [--templates] 
-                        [-v] [--dbpath <dir>] [--menu -m] 
-                        [--shlibs] [-T] [--pre_depends] [--depends] 
-                        [--recommends] [--suggests] [--conflicts] 
+                        [-v] [--dbpath <dir>] [--menu -m] [--shlibs] 
+                        [-T] [--pre_depends] [--depends] [--recommends] 
+                        [--suggests] [--enhances] [--conflicts] 
                         [--replaces] [--provides] [--md5sum] [--root <dir>] 
                         [--copyright] [--changelog] [--allgroups] 
                         [--arch <architecture>] [--dists <distribution>] 
@@ -1979,6 +1980,7 @@ usage:
         --depends          - display any real or virtual depends package
         --recommends       - display any real or virtual recommends package
         --suggests         - display any real or virtual suggests package
+        --enhances         - display any real or virtual enhances another package
         --conflicts        - display any real or virtual conflict package
         --replaces         - display packages this package can replace 
         --provides         - display any declared virtual package
