@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# This is a simple approach.  You could have a monthly Cron for stable and
+# then update if any changes were observed, a weekly Cron for frozen, and
+# a daily Cron for unstable.
+
+# For this example a default of unstable is assumed.
+# This downloads only one Contents-arch for the unstable distribution.
+# Updates the Packages using apt, and grabs the Contents-arch and Packages
+# for the stable distribution if there are any changes.
+# Update the sources:
+swim --ftp --Contents DF --onec >> /var/log/swim.log 2>&1;
+swim --apt --update >> /var/log/swim.log 2>&1;
+swim --ftp --dists stable --onec  >> /var/log/swim.log 2>&1;
+
+# This will update the database for the default distribution/architecture
+# using 'cron' to automatically pick the newest packages.
+# Update the databases:
+swim --db >> /var/log/swim.log 2>&1;
+swim --ndb APT --cron --Contents DF >> /var/log/swim.log 2>&1;
