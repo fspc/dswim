@@ -1034,7 +1034,7 @@ sub not_installed {
   my $scount = 0;
 
   my ($pre_depends, $depends, $replaces, $provides, $recommends, 
-      $suggests, $conflicts, @REPLACE);
+      $suggests, $enhances, $conflicts, @REPLACE);
 
   my @conffiles;
   my @conf;
@@ -1479,6 +1479,15 @@ sub not_installed {
                push(@REPLACE, $suggests); 
               }
         }
+        elsif (/^Enhances:/) {
+            $enhances = $_;
+              if (defined($enhances)) {
+               my $vion = substr($version,9);
+               my $nv = "$package[1]" . "_" . "$vion" . "ENH"; 
+               push(@REPLACE, "$nv");
+               push(@REPLACE, $enhances); 
+              }
+        }
         elsif (/^Conflicts:/) {
             $conflicts = $_;
               if (defined($conflicts)) {
@@ -1569,6 +1578,10 @@ sub not_installed {
                if (defined $suggests) {
                   pop(@REPLACE); pop(@REPLACE);
                   undef $suggests;
+               }               
+               if (defined $enhances) {
+                  pop(@REPLACE); pop(@REPLACE);
+                  undef $enhances;
                }               
                if (defined $conflicts) {
                   pop(@REPLACE); pop(@REPLACE);
@@ -1759,6 +1772,10 @@ sub not_installed {
                if (defined $suggests) {
                   pop(@REPLACE); pop(@REPLACE);
                   undef $suggests;
+               }               
+               if (defined $enhances) {
+                  pop(@REPLACE); pop(@REPLACE);
+                  undef $enhances;
                }               
                if (defined $conflicts) {
                   pop(@REPLACE); pop(@REPLACE);

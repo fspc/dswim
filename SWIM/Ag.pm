@@ -179,7 +179,7 @@ sub q_description {
             $commands->{"depends"} || $commands->{"pre_depends"} ||
             $commands->{"recommends"} || $commands->{"suggests"} ||
             $commands->{"conflicts"} || $commands->{"replaces"} ||
-            $commands->{"provides"}; 
+            $commands->{"provides"} || $commands->{"enhances"}; 
            singular(\%commands);
            character(\%commands);
            shlibs(\%commands) if $commands->{"shlibs"};
@@ -187,7 +187,7 @@ sub q_description {
             $commands->{"depends"} || $commands->{"pre_depends"} ||
             $commands->{"recommends"} || $commands->{"suggests"} ||
             $commands->{"conflicts"} || $commands->{"replaces"} ||
-            $commands->{"provides"}; 
+            $commands->{"provides"} || $commands->{"enhances"}; 
         }  
         else { print "package $argument is not installed\n"; }
      }
@@ -226,7 +226,7 @@ sub q_description {
             $commands->{"depends"} || $commands->{"pre_depends"} ||
             $commands->{"recommends"} || $commands->{"suggests"} ||
             $commands->{"conflicts"} || $commands->{"replaces"} ||
-            $commands->{"provides"}; 
+            $commands->{"provides"} || $commands->{"enhances"}; 
            singular(\%commands);
            character(\%commands);
            shlibs(\%commands) if $commands->{"shlibs"};
@@ -234,7 +234,7 @@ sub q_description {
             $commands->{"depends"} || $commands->{"pre_depends"} ||
             $commands->{"recommends"} || $commands->{"suggests"} ||
             $commands->{"conflicts"} || $commands->{"replaces"} ||
-            $commands->{"provides"}; 
+            $commands->{"provides"} || $commands->{"enhances"}; 
         }  
         else { print "package $argument is not installed\n"; }
      }

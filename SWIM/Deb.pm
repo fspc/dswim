@@ -101,11 +101,21 @@ sub deb_package {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
-                if (!($commands->{"T"} || $commands->{"pre_depends"} || 
-                      $commands->{"depends"} || $commands->{"recommends"} ||
-                      $commands->{"suggests"} || $commands->{"provides"} ||
-                      $commands->{"replaces"} || $commands->{"conflicts"} ||
-                      $commands->{"c"} || $commands->{"l"})) {
+                if (
+		    !($commands->{"T"} || 
+		      $commands->{"pre_depends"} || 
+                      $commands->{"depends"} || 
+		      $commands->{"recommends"} ||
+                      $commands->{"suggests"} || 
+		      $commands->{"enhances"} ||
+		      $commands->{"provides"} ||
+                      $commands->{"replaces"} || 
+		      $commands->{"conflicts"} ||
+                      $commands->{"c"} || 
+		      $commands->{"l"})
+
+		    ) {
+
                       print "\n";
                  }
               }                  
@@ -190,12 +200,22 @@ sub deb_package {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
-                if (!($commands->{"T"} || $commands->{"pre_depends"} || 
-                      $commands->{"depends"} || $commands->{"recommends"} ||
-                      $commands->{"suggests"} || $commands->{"provides"} ||
-                      $commands->{"replaces"} || $commands->{"conflicts"} ||
-                      $commands->{"c"} || $commands->{"l"})) {
-                      print "\n";
+                if (
+		    !($commands->{"T"} || 
+		      $commands->{"pre_depends"} || 
+                      $commands->{"depends"} || 
+		      $commands->{"recommends"} ||
+                      $commands->{"suggests"} || 
+		      $commands->{"enhances"} ||
+		      $commands->{"provides"} ||
+                      $commands->{"replaces"} || 
+		      $commands->{"conflicts"} ||
+                      $commands->{"c"} || 
+		      $commands->{"l"})
+		    
+		    ) {
+
+		    print "\n";
                  }
               }                  
               shlibso(\%commands);
@@ -269,12 +289,22 @@ sub deb_package {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
-                if (!($commands->{"T"} || $commands->{"pre_depends"} || 
-                      $commands->{"depends"} || $commands->{"recommends"} ||
-                      $commands->{"suggests"} || $commands->{"provides"} ||
-                      $commands->{"replaces"} || $commands->{"conflicts"} ||
-                      $commands->{"c"} || $commands->{"l"})) {
-                      print "\n";
+                if (
+		    !($commands->{"T"} || 
+		      $commands->{"pre_depends"} || 
+                      $commands->{"depends"} || 
+		      $commands->{"recommends"} ||
+                      $commands->{"suggests"} || 
+		      $commands->{"enhances"} ||
+		      $commands->{"provides"} ||
+                      $commands->{"replaces"} || 
+		      $commands->{"conflicts"} ||
+                      $commands->{"c"} || 
+		      $commands->{"l"})
+
+		    ) {
+
+		    print "\n";
                  }
               }
               shlibso(\%commands);
@@ -352,12 +382,23 @@ sub deb_package {
                  system "$ar -p $argument control.tar.gz | $tar xOz control |\
                          $grep -E \"Description: \w*|[.]\$|^ [\w-]*\"";
                 }
-                if (!($commands->{"T"} || $commands->{"pre_depends"} || 
-                      $commands->{"depends"} || $commands->{"recommends"} ||
-                      $commands->{"suggests"} || $commands->{"provides"} ||
-                      $commands->{"replaces"} || $commands->{"conflicts"} ||
-                      $commands->{"c"} || $commands->{"l"})) {
-                      print "\n";
+                if (
+		    !($commands->{"T"} || 
+		      $commands->{"pre_depends"} || 
+                      $commands->{"depends"} || 
+		      $commands->{"recommends"} ||
+                      $commands->{"suggests"} || 
+		      $commands->{"enhances"} ||
+		      $commands->{"provides"} ||
+                      $commands->{"replaces"} || 
+		      $commands->{"conflicts"} ||
+                      $commands->{"c"} || 
+		      $commands->{"l"})
+
+		    ) {
+                    
+		    print "\n";
+
                  }
               }
               shlibso(\%commands);
@@ -566,16 +607,38 @@ sub printme {
 
   my ($commands) = @_; my %commands = %$commands;
 
-  if ($commands->{"p"} && !($commands->{"i"} || $commands->{"l"} ||
-      $commands->{"df"} || $commands->{"d"} || $commands->{"c"} ||
-      $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"}  || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
-      $commands->{"pre_depends"} || $commands->{"depends"} || 
-      $commands->{"recommends"} || $commands->{"suggests"} ||
-      $commands->{"provides"} || $commands->{"replaces"} ||
-      $commands->{"conflicts"} || $commands->{"requires"} ||
-      $commands->{"changelog"} || $commands->{"m"} || $commands->{"menu"} ||
-      $commands->{"copyright"})) {
+  if (
+      $commands->{"p"} && 
+
+      !($commands->{"i"} || 
+	$commands->{"l"} ||
+	$commands->{"df"} || 
+	$commands->{"d"} || 
+	$commands->{"c"} ||
+	$commands->{"scripts"} || 
+	$commands->{"preinst"} || 
+	$commands->{"postinst"} || 
+	$commands->{"prerm"} || 
+	$commands->{"postrm"}  || 
+	$commands->{"config"} || 
+	$commands->{"templates"} || 
+	$commands->{"T"} ||
+	$commands->{"pre_depends"} || 
+	$commands->{"depends"} || 
+	$commands->{"recommends"} || 
+	$commands->{"suggests"} ||
+	$commands->{"enhances"} ||
+	$commands->{"provides"} || 
+	$commands->{"replaces"} ||
+	$commands->{"conflicts"} || 
+	$commands->{"requires"} ||
+	$commands->{"changelog"} || 
+	$commands->{"m"} || 
+	$commands->{"menu"} ||
+	$commands->{"copyright"})
+
+      ) {
+
       if ( $dpkg_deb) {
        system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
       }
@@ -601,19 +664,41 @@ sub printme {
       }
       print "\n";
   }
-  elsif ($commands->{"p"} && ($commands->{"l"} || $commands{"d"} ||
-         $commands{"c"})
-      && !($commands->{"i"} || $commands->{"df"} ||
-      $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"}  || $commands->{"T"} ||
-      $commands->{"pre_depends"} || $commands->{"depends"} || 
-      $commands->{"recommends"} || $commands->{"suggests"} ||
-      $commands->{"provides"} || $commands->{"replaces"} ||
-      $commands->{"conflicts"} || $commands->{"requires"} ||
-      $commands->{"changelog"} || $commands->{"m"} || $commands->{"menu"} ||
-      $commands->{"copyright"})) {
+  elsif (
+	 $commands->{"p"} && 
+
+	 ($commands->{"l"} || 
+	  $commands{"d"} ||
+	  $commands{"c"}) && 
+
+	 !($commands->{"i"} || 
+	   $commands->{"df"} ||
+	   $commands->{"scripts"} || 
+	   $commands->{"preinst"} || 
+	   $commands->{"postinst"} || 
+	   $commands->{"prerm"} || 
+	   $commands->{"postrm"} || 
+	   $commands->{"config"} || 
+	   $commands->{"templates"}  || 
+	   $commands->{"T"} ||
+	   $commands->{"pre_depends"} || 
+	   $commands->{"depends"} || 
+	   $commands->{"recommends"} || 
+	   $commands->{"suggests"} ||
+	   $commands->{"enhances"} ||
+	   $commands->{"provides"} || 
+	   $commands->{"replaces"} ||
+	   $commands->{"conflicts"} || 
+	   $commands->{"requires"} ||
+	   $commands->{"changelog"} ||
+	   $commands->{"m"} || 
+	   $commands->{"menu"} ||
+	   $commands->{"copyright"})
+
+	 ) {
+
       if ( $dpkg_deb) {
-       system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
+	  system "$dpkg_deb -f $argument Package > $tmp/temp.deb";
       }
       elsif ( $ar) {
        system "$ar -p $argument control.tar.gz | $tar Oxz |\
@@ -1456,6 +1541,21 @@ sub deps {
                 }
                 print "\n";
               }
+              if ($commands->{"enhances"}) {
+                if (!defined $title{$1}) {
+                  print "$1\n";
+                }
+                $title{$1}++; 
+                if ( $dpkg_deb) {
+                 print "Enhances: ";
+                 system "$dpkg_deb -f $argument Enhances";
+                } 
+                elsif ( $ar) {
+                 system "$ar -p $argument control.tar.gz |\ 
+                         $tar xOz control | $grep \"Enhances: \w*\"";
+                }
+                print "\n";
+              }
               if ($commands->{"provides"}) {
                 if (!defined $title{$1}) {
                   print "$1\n";
@@ -1511,6 +1611,8 @@ sub deps {
                   $cat $tmp/temp.deb >> $tmp/fields.deb;";            
           system "$dpkg_deb -f $argument Suggests 2&> $tmp/temp.deb; \
                   $cat $tmp/temp.deb >> $tmp/fields.deb;";            
+          system "$dpkg_deb -f $argument Enhances 2&> $tmp/temp.deb; \
+                  $cat $tmp/temp.deb >> $tmp/fields.deb;";            
           system "$dpkg_deb -f $argument Provides 2&> $tmp/temp.deb; \
                   $cat $tmp/temp.deb >> $tmp/fields.deb;";            
           system "$dpkg_deb -f $argument Replaces 2&> $tmp/temp.deb; \
@@ -1527,6 +1629,8 @@ sub deps {
                   $grep \"Recommends: \w*\" >> $tmp/fields.deb";
           system "$ar -p $argument control.tar.gz | $tar xOz control |\
                   $grep \"Suggests: \w*\" >> $tmp/fields.deb";
+          system "$ar -p $argument control.tar.gz | $tar xOz control |\
+                  $grep \"Enhances: \w*\" >> $tmp/fields.deb";
           system "$ar -p $argument control.tar.gz | $tar xOz control |\
                   $grep \"Provides: \w*\" >> $tmp/fields.deb";
           system "$ar -p $argument control.tar.gz | $tar xOz control |\

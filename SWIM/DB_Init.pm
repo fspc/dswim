@@ -71,7 +71,7 @@ sub database {
   my @status;
 
   my ($replaces, @REPLACE, $provides, $depends, $pre_depends,
-      $recommends, $suggests, $conflicts);
+      $recommends, $suggests, $enhances, $conflicts);
 
   my @conffiles;
   my $line_before;
@@ -398,6 +398,13 @@ sub database {
               if (defined($suggests)) {
                push(@REPLACE, "$package[1]SUG");
                push(@REPLACE, $suggests); 
+              }
+        }
+        elsif (/^Enhances:/) {
+            $enhances = $_;
+              if (defined($enhances)) {
+               push(@REPLACE, "$package[1]ENH");
+               push(@REPLACE, $enhances); 
               }
         }
         elsif (/^Conflicts:/) {

@@ -116,6 +116,21 @@ sub suggests {
  untie %db;
 } # end sub suggests
 
+sub enhances {
+  my ($commands) = @_;
+  my %commands = %$commands;  
+  !$commands->{"n"} ? dbi(\%commands) : ndb(\%commands);
+  if (defined $argument) {
+    my $conf = $argument . "ENH";
+    if (defined $db{$conf}) {      
+     return $db{$conf};
+    }
+    else { return ""; }
+  }
+ untie %db;
+} # end sub enhances
+
+
 # process the database for replaces
 sub conflicts {
   my ($commands) = @_;
@@ -223,6 +238,20 @@ sub s_suggests {
  untie %db;
 } # end sub s_suggests
 
+sub s_enhances {
+  my ($commands) = @_;
+  my %commands = %$commands;  
+  !$commands->{"n"} ? dbi(\%commands) : ndb(\%commands);
+  if (defined $argument) {
+    my $conf = $argument . "ENH";
+    if (defined $db{$conf}) {      
+     return "$argument\n$db{$conf}";
+    }
+    else { return ""; }
+  }
+ untie %db;
+} # end sub s_enhances
+
 # process the database for replaces
 sub s_conflicts {
   my ($commands) = @_;
@@ -247,12 +276,25 @@ sub character {
   my %commands = %$commands;
 
   # for singular cases
-  if ($commands->{"g"} && ($commands->{"T"} || $commands->{"pre_depends"} ||
-      $commands->{"depends"} || $commands->{"recommends"} ||
-      $commands->{"suggests"} || $commands->{"provides"} ||
-      $commands->{"replaces"} || $commands->{"conflicts"}) && 
-      !($commands->{"c"} || $commands->{"d"} || $commands->{"l"} ||
-      $commands->{"i"})) {
+  if (
+      $commands->{"g"} && 
+
+      ($commands->{"T"} || 
+       $commands->{"pre_depends"} ||
+       $commands->{"depends"} || 
+       $commands->{"recommends"} ||
+       $commands->{"suggests"} || 
+       $commands->{"enhances"} ||
+       $commands->{"provides"} ||
+       $commands->{"replaces"} || 
+       $commands->{"conflicts"}) && 
+
+      !($commands->{"c"} || 
+	$commands->{"d"} || 
+	$commands->{"l"} ||
+	$commands->{"i"})
+
+      ) {
        print "$argument\n";
   }       
  
@@ -262,6 +304,7 @@ sub character {
         print depends(\%commands);
         print recommends(\%commands);
         print suggests(\%commands);
+        print enhances(\%commands);
         print provides(\%commands);
         print replaces(\%commands);
         print conflicts(\%commands);
@@ -286,6 +329,11 @@ sub character {
     if (defined $commands->{"suggests"}) {
         print suggests(\%commands);
         delete $commands{"suggests"} if !($commands->{"S"} || $commands->{"g"});
+     }
+
+    if (defined $commands->{"enhances"}) {
+        print enhances(\%commands);
+        delete $commands{"enhances"} if !($commands->{"S"} || $commands->{"g"});
      }
 
     if (defined $commands->{"replaces"}) {
@@ -344,6 +392,14 @@ sub s_character {
          }
 #         else { s_character(\%commands) } 
      }
+    elsif ($commands->{"enhances"}) {
+        print s_enhances(\%commands);
+        delete $commands{"enhances"};
+         if (s_enhances(\%commands) ne "") {
+           character(\%commands);
+         }
+#         else { s_character(\%commands) } 
+     }
     elsif ($commands->{"replaces"}) {
         print s_replaces(\%commands);
         delete $commands{"replaces"};
@@ -375,6 +431,7 @@ sub s_character {
         print s_depends(\%commands);
         print s_recommends(\%commands);
         print s_suggests(\%commands);
+	print s_enhances(\%commands);
         print s_provides(\%commands);
         print s_replaces(\%commands);
         print s_conflicts(\%commands);
@@ -387,10 +444,16 @@ sub s_character {
 # helps to determine if character(\%commands) should be used
 sub which_character {
   my ($commands) = @_;
-      if ($commands->{"pre_depends"} || $commands->{"depends"} || 
-          $commands->{"recommends"} || $commands->{"suggests"} ||
-          $commands->{"replaces"} || $commands->{"provides"} ||
-          $commands->{"conflicts"}) {
+      if (
+	  $commands->{"pre_depends"} || 
+	  $commands->{"depends"} || 
+          $commands->{"recommends"} || 
+	  $commands->{"suggests"} ||
+	  $commands->{"enhances"} ||
+          $commands->{"replaces"} || 
+	  $commands->{"provides"} ||
+          $commands->{"conflicts"}
+	  ) {
           return 1;
        }  
 } # end sub which_character
@@ -425,6 +488,13 @@ sub the_character {
 
     if (defined $commands->{"suggests"}) {
         if (suggests(\%commands) eq "") {
+          print "";
+        }
+        else { return "ok"; }
+     }
+
+    if (defined $commands->{"enhances"}) {
+        if (enhances(\%commands) eq "") {
           print "";
         }
         else { return "ok"; }

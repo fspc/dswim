@@ -83,7 +83,7 @@ sub db {
   # to save time over using status
   my @status;
   my ($replaces, $provides, $depends, $pre_depends, $recommends, $suggests, 
-      $conflicts);
+      $conflicts, $enhances);
   my (@conffiles,$line_before,@conf,@complete,@form,@formly);
   my $format_deb = "$tmp/format.deb";
 
@@ -642,6 +642,12 @@ sub db {
             $suggests = $_;
               if (defined($suggests)) {
                  $ping->put("$package[1]SUG",$suggests);
+              }
+        }
+        elsif (/^Enhances:/) {
+            $enhances = $_;
+              if (defined($enhances)) {
+                 $ping->put("$package[1]ENH",$enhances);
               }
         }
         elsif (/^Conflicts:/) {

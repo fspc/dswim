@@ -57,6 +57,7 @@ sub singular {
 	$commands->{"depends"} || 
 	$commands->{"recommends"} || 
 	$commands->{"suggests"} ||
+	$commands->{"enhances"} ||
 	$commands->{"provides"} || 
 	$commands->{"replaces"} ||
 	$commands->{"conflicts"} || 
@@ -95,6 +96,7 @@ sub singular {
 	   $commands->{"depends"} || 
 	   $commands->{"recommends"} || 
 	   $commands->{"suggests"} ||
+	   $commands->{"enhances"} ||
 	   $commands->{"provides"} || 
 	   $commands->{"replaces"} ||
 	   $commands->{"conflicts"} || 
@@ -133,6 +135,7 @@ sub singular {
 	   $commands->{"depends"} || 
 	   $commands->{"recommends"} || 
 	   $commands->{"suggests"} ||
+	   $commands->{"enhances"} ||
 	   $commands->{"provides"} || 
 	   $commands->{"replaces"} ||
 	   $commands->{"conflicts"} || 
@@ -171,6 +174,7 @@ sub singular {
 	   $commands->{"depends"} || 
 	   $commands->{"recommends"} || 
 	   $commands->{"suggests"} ||
+	   $commands->{"enhances"} ||
 	   $commands->{"provides"} || 
 	   $commands->{"replaces"} ||
 	   $commands->{"conflicts"} || 

@@ -668,7 +668,7 @@ alternative directory and --dbpath and/or --root used.
    my (%exacts,@package,$essential,$version,$maintainer,$things,
        $priority,%group,$group,$section); 
    my ($pre_depends,$depends,$replaces,$provides,$recommends, 
-       $suggests, $conflicts, @REPLACE);
+       $suggests, $enhances, $conflicts, @REPLACE);
    my (@ldescription,@description,$installed_size,$source,$size,$status);
    my $scount = 0; my $count = 0;
    undef %equalizer;
@@ -771,6 +771,15 @@ alternative directory and --dbpath and/or --root used.
                push(@REPLACE, $suggests); 
               }
         }
+        elsif (/^Enhances:/) {
+            $enhances = $_;
+              if (defined($enhances)) {
+               my $vion = substr($version,9);
+               my $nv = "$package[1]" . "_" . "$vion" . "ENH"; 
+               push(@REPLACE, "$nv");
+               push(@REPLACE, $enhances); 
+              }
+	}
         elsif (/^Conflicts:/) {
             $conflicts = $_;
               if (defined($conflicts)) {
@@ -865,6 +874,11 @@ alternative directory and --dbpath and/or --root used.
                   undef @REPLACE;
                   #pop(@REPLACE); pop(@REPLACE);
                   undef $suggests;
+               }               
+               if (defined $enhances) {
+                  undef @REPLACE;
+                  #pop(@REPLACE); pop(@REPLACE);
+                  undef $enhances;
                }               
                if (defined $conflicts) {
                   undef @REPLACE;
@@ -1051,6 +1065,11 @@ alternative directory and --dbpath and/or --root used.
                   undef @REPLACE;
                   #pop(@REPLACE); pop(@REPLACE);
                   undef $suggests;
+               }               
+               if (defined $enhances) {
+                  undef @REPLACE;
+                  #pop(@REPLACE); pop(@REPLACE);
+                  undef $enhances;
                }               
                if (defined $conflicts) {
                   undef @REPLACE;
