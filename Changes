@@ -1,0 +1,135 @@
+# My personal changes copy
+
+
+
+------------------------------------
+
+FM changes:
+
+Databases are automatically rebuilt.  Non-root users have access to the 
+majority of information and packaging features.  Several new options have 
+been added  to support new features found in apt; all virtual options now call
+apt.
+
+
+Private databases are automatically rebuilt for each user.  Non-root users have access to the majority of features.  Several new options have been added  to support a matured apt; all virtual options now call apt.
+
+
+*****************************
+out: DSWIM is a powerful informational tool for Debian's packaging system. Designed with an integrated approach it
+  combines the functionality found in several other programs and scripts. This provides users with a centralized approach for
+  querying the installation, allowing programmers the liberty of writing smaller and simpler code.
+
+  Changes: Private databases are automatically rebuilt for each user. Non-root users have access to the majority of features.
+  Several new options have been added to support a matured apt; all virtual options now call apt.
+
+  License: GNU General Public License (GPL) - Release focus: Major feature enhancements
+
+  Homepage:
+  http://www.sourceforge.net/projects/avd
+  Tar/GZ:
+  [..]tp://prdownloads.sourceforge.net/avd/dswim_0.4.1.orig.tar.gz
+  Changelog:
+  [..]ttp://sourceforge.net/project/shownotes.php?release_id=58559
+  Debian package:
+  http://prdownloads.sourceforge.net/avd/dswim_0.4.1-1_all.deb
+  CVS tree (cvsweb):
+  http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/avd/avd/swim/
+  Mailing list archive:
+  http://sourceforge.net/mail/?group_id=17787
+
+Your new release (ID 60570) has been stored for verification by the freshmeat crew. Please note that submissions may be
+   edited for brevity, grammar and in some cases content. 
+
+**********************
+
+
+---------------------------------
+
+Adds the --enhances option for binary dependencies.
+
+--------------------
+
+Changed Suggests gcc to binutils because now ar is found in it.  Most people
+won't use ar, but you never know.
+
+--------------------
+
+Dswim now creates databases for non-root users.  All db are now created in
+$HOME/default_directory/var/lib/dpkg rather than /var/lib/dpkg, and 
+.swim_history is put here, too.
+
+Separated the documentation into a separate package, but keep man pages 
+around for backwards and current compatibility, and wrote a warning at top.
+
+Removed lots of the -n db options from help because they are broken in 
+relation to major changes in the Debian archive.  Left some just as 
+reminders of dswims inherent ability for older Debian archives.
+
+Updated copylet and swim is now DSWIM .. Debian System Wide Information 
+Manager.  Changed "Package administration and research tool for Debian" to 
+DSWIM.
+
+Changed --nz to --no-download and now works properly with simulate.
+
+--rebuilddb automatically when noticing a change near the beginning of 
+command() after --db --check runs  Added $no_rebuilddb configuration option 
+to allow users to override this behavior.
+
+--remove and --purge are now handled by apt-get and apt's new --reinstall 
+added.
+
+--source (-b, --diff-only, --tar-only) and --build-deb are new options to
+replace the old --ftp options because all this stuff is now handled by
+apt-get.
+
+Added --config and --templates to the query options.
+
+--initdb and --rebuilddb STDOUT output are now STDERR mostly to make debconf
+happy, and both of these options return their corresponding names via their
+functions.
+
+Fixed many of the defined bugs and a few of the regexp bugs ..
+these were just the complaints of the newer Perl.
+
+Fixed undef values when scripts() was called more than once when used with
+-qf, --scripts, -d|-l and -T.
+
+Added swim_pkg to CVS to simplify packaging dswim.
+
+The control dependencies have been improved.
+
+
+
+Description: Debian System Wide Information Manager
+ DSWIM is a powerful informational tool for Debian's packaging system.  
+ Designed with an integral approach it provides much of the same 
+ functionality found in several smaller programs and scripts.  This 
+ allows users a centralized approach to quering the installation, and
+ programmers the liberty of writing smaller and simpler code.  
+
+* it wins
+Description: Debian System Wide Information Manager
+ DSWIM is a powerful informational tool for Debian's packaging system.  
+ Designed with an integral approach it combines the functionality 
+ found in several other programs and scripts.  This provides users with a 
+ centralized approach to querying the installation, and allows programmers 
+ the liberty of writing smaller and simpler code.  
+
+Before:
+swim is a powerful package manager like Red Hat's RPM. It allows an uninstalled distribution to be viewed and tested, adds many enhancements, and combines searching, querying, and installation together in an intuitive and enjoyable manner, making life much easier.
+
+
+
+DSWIM is a powerful informational tool for Debian's packaging system.  Designed with an integral approach it combines the functionality found in several other programs and scripts.  This provides users with a centralized approach to querying the installation, and allows programmers the liberty of writing smaller and simpler code.  
+
+
+
+
+
+
+
+
+
+
+
