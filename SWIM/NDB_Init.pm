@@ -432,7 +432,7 @@ sub initndb {
           # to find if there is a change, otherwise check against
           # themselves.
           my ($section,$site,$scount,%CHECK);
-          if (defined %what) {
+          if ( %what ) {
            foreach $section (keys %what) {
             foreach $scount (0 .. $#{ $what{$section} }) {              
               if (defined $what{$section}[$scount]) {
@@ -480,7 +480,7 @@ sub initndb {
           $subsite = "Site"; $subdate = "Date"; $subsize =  "Size (bytes)";
           $number = "###"; $subrelease = "Release";
           my $ex;
-          defined %what ?
+          %what ?
             write STDOUT :
             ($ex = 0);
             if (defined $ex) {
@@ -620,7 +620,7 @@ sub initndb {
           $~ = "SUBJECT";
           $subsite = "Site"; $subdate = "Date"; $subsize =  "Size (bytes)";
           $number = "###";
-          defined @what ?
+	   @what ?
             write STDOUT :
             ($ex = 0);
             if (defined $ex) {
@@ -707,7 +707,7 @@ sub initndb {
            # PACKAGES #
            ############
            my ($section,$site,$scount,%TIME);
-           if (defined %what) {
+           if ( %what ) {
             foreach $section (keys %what) {
              foreach $scount (0 .. $#{ $what{$section} }) {              
                if (defined $what{$section}[$scount]) {
@@ -784,7 +784,7 @@ sub initndb {
           # SITUATION 0 #
           ###############
           if (m,\.\./|^\.\.$,) {
-           if ($_ !~ m,/[\w-+]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+           if ($_ !~ m,/[\w\+-]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
              my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
              my @pwd =  split(m,/,,$pwd);
              s,\.\./,,g;
@@ -902,7 +902,7 @@ sub initndb {
           ###############
           # this doesn't work to well for anything less simple than ../../
           elsif (m,^\.\./|^\.\.$,) {
-           if ($_ !~ m,/[\w-+]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+           if ($_ !~ m,/[\w\+-]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
              my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
              my @pwd =  split(m,/,,$pwd);
              s,\.\./,,g;
@@ -1602,10 +1602,10 @@ sub not_installed {
                 undef $priority if defined $priority;
                 undef $section if defined $section;      
                 undef $group if defined $group;
-                undef @essential if defined @essential;
+                undef @essential if @essential;
                 undef $maintainer if defined $maintainer;
                 # undef $version if defined $version;
-                # undef @package if defined @package;
+                # undef @package if @package;
                 ###print "GONE $package[1]\n";
                 #print "$things\n";
                 $goon = "yes";
@@ -1792,10 +1792,10 @@ sub not_installed {
                 undef $priority if defined $priority;
                 undef $section if defined $section ;      
                 undef $group if defined $group;
-                undef @essential if defined @essential;
+                undef @essential if @essential;
                 undef $maintainer if defined $maintainer;
                 # undef $version if defined $version;
-                # undef @package if defined @package;
+                # undef @package if @package;
                 ###print "GONE $package[1]\n";
                 #print "$things\n";
                 next;
