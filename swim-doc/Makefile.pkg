@@ -1,0 +1,44 @@
+
+all:install
+
+install:
+	install -d $(DESTDIR)/share/man/man8
+	cp -f swim.8 $(DESTDIR)/share/man/man8
+	install -d $(DESTDIR)/share/man/man5
+	cp -f swimrc.5 $(DESTDIR)/share/man/man5	
+	install -d $(DESTDIR)/share/doc/swim
+	install -d $(DESTDIR)/usr/share/doc/swim/swim.html
+	cp -fa swim.html/* $(DESTDIR)/usr/share/doc/swim/swim.html
+	install -d $(DESTDIR)/usr/share/doc/swim/swimrc.html
+	cp -fa swimrc.html/* $(DESTDIR)/usr/share/doc/swim/swimrc.html
+	install -d $(DESTDIR)/usr/share/doc/swim/examples
+	cp -fa examples/*  $(DESTDIR)/usr/share/doc/swim/examples
+	cp -a QUICKSTART.text $(DESTDIR)/share/doc/swim
+	cp -a REQUIREMENTS.text $(DESTDIR)/share/doc/swim
+	cp -a swim_by_example.html $(DESTDIR)/share/doc/swim
+	cp -a THEMES $(DESTDIR)/share/doc/swim
+	cp -a TODO $(DESTDIR)/share/doc/swim 
+	cp -a BUGS $(DESTDIR)/share/doc/swim
+	cp -a TODO $(DESTDIR)/share/doc/swim
+	cp -a COPYING $(DESTDIR)/share/doc/swim
+	cp -a contact_and_website $(DESTDIR)/share/doc/swim
+	cp -a changelog $(DESTDIR)/share/doc/swim
+	cp -a swim.text $(DESTDIR)/share/doc/swim
+	cp -a swimrc.text $(DESTDIR)/share/doc/swim
+
+remove:
+	rm /usr/share/doc/swim/swim.html/*
+	rmdir /usr/share/doc/swim/swim.html
+	rm /usr/share/doc/swim/swimrc.html/*
+	rmdir /usr/share/doc/swim/swimrc.html
+	rm /usr/share/doc/swim/examples/*
+	rmdir /usr/share/doc/swim/examples
+	rm /usr/share/doc/swim/*
+	rmdir /usr/share/doc/swim
+	rm share/man/man5/swimrc.5
+	rm share/man/man8/swim.8
+
+
+
+
+
