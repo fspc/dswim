@@ -106,7 +106,7 @@ use Getopt::Long;
 use SWIM::Conf;
 use SWIM::Global;
 use SWIM::Library;
-my $version = "0.3.7";
+my $version = "0.4.0";
 
 # The MAIN 
 # First let's determine what options are being used.
@@ -292,7 +292,7 @@ sub command {
 
     # version of the program
     if ($commands{"version"}) {
-	print "SWIM version $version\n";      
+	print "DSWIM version $version\n";      
     }
 
 
@@ -1652,11 +1652,11 @@ sub usage {
 
 # Shameless publication of the ThE_* Project, and also shameless self
 # agrandizing....
-print "SWIM version $version
+print "DSWIM version $version
 Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License\n";
 
-$save = "SWIM version $version
+$save = "DSWIM version $version
 Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
 
@@ -1730,7 +1730,7 @@ Quit?:press q here\n";
 # nusage
 sub nusage {
 
-$save = "SWIM version $version
+$save = "DSWIM version $version
 Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
 
@@ -1801,10 +1801,10 @@ Hints: Searches -                        equiv.   negated [^...]
 
 
 # Tries to emulate rpm --help, but rather futile, because of the great
-# differnces between swim and rpm.
+# differences between swim and rpm.
 sub help {
 
-$save = "SWIM version $version
+$save = "DSWIM version $version
 Copyright (C) 2001 - by Jonathan Rosenbaum <freesource\@users.sourceforge.net>
 This may be freely redistributed under the terms of the GNU General Public License
 
