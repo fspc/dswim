@@ -17,14 +17,13 @@
 
 
 package SWIM::Global;
-#use strict;
 use vars qw(@ISA @EXPORT %EXPORT_TAGS);
   
 use Exporter;
 @ISA = qw(Exporter);
 @EXPORT = qw(%db $ping %ndb %ib $zing %gb $ging %sb $sing %nsb %commands
              $argument $save @stuff @PACKAGES @arg_holder $file_now
-             $arg_count $aptor_count $aptor_group $swim_version);
+             $arg_count $aptor_count $aptor_group $main::home);
 %EXPORT_TAGS = (
                  Info =>  [ qw($argument %db) ]
                );
@@ -55,8 +54,5 @@ my @arg_holder; # helps in tricky situations -> -qxl|d
 my $file_now;   # defined flag for -qlcx & -qglx for file()  
 $arg_count = 0; # helps in tricky situations
 my $aptor_group; # helps when -z is called for groups
-
-# Swim's version
-$swim_version = "0.3.6";
 
 1;

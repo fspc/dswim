@@ -370,7 +370,7 @@ $passive = 0;
 # files under dpkg are somewhere else (including /info*) , see --dbpath as
 # an alternative if you decide to access or make the databases somewhere
 # else.  I should point out that this program was designed to work with only
-# one user .. root.
+# one user .. root .. but now I am changing it --freesource
 $base = '/var/lib/dpkg';
 
 # --dbpath takes care of this so don't touch.
