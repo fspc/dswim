@@ -37,7 +37,7 @@ sub safex {
 
  if ($commands->{"x"} || $commands->{"ftp"} || $commands->{"source"} ||
      $commands->{"source_only"} || $commands->{"remove"} || $commands->{"r"} ||
-     $commands->{"purge"}) {
+     $commands->{"purge"} || $commands->{"reinstall"}) {
  
   
    if (!defined @PACKAGES) {
@@ -62,7 +62,7 @@ sub safex {
       if (($argument =~ m,/, && ($commands->{"y"} || $commands->{"z"} ||
            $commands->{"ftp"} || $commands->{"nz"})) || defined $aptor_group ||
            $commands->{"ftp"} || $commands->{"purge"} || $commands->{"remove"} ||
-           $commands->{"r"}) {
+           $commands->{"r"}  || $commands->{"reinstall"} ) {
        if ($PACKAGES[$#PACKAGES] =~ /_/) {
          $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
          $aptor = $1;
@@ -79,7 +79,7 @@ sub safex {
    else {
       if ($commands->{"y"} || $commands->{"z"} || $commands->{"ftp"} ||
           $commands->{"nz"} || $commands->{"purge"} || $commands->{"remove"} ||
-          $commands->{"r"}) {
+          $commands->{"r"}  || $commands->{"reinstall"}) {
        if ($PACKAGES[$#PACKAGES] =~ /_/) {
          $PACKAGES[$#PACKAGES] =~ m,(.*)_.*,; 
          $aptor = $1;
@@ -162,31 +162,34 @@ sub xyz {
 
   # error correcting  
   if ($commands->{"ftp"} && ($commands->{"r"} || $commands->{"remove"} ||
-      $commands->{"purge"})) {
+      $commands->{"purge"}  || $commands->{"reinstall"}) ) {
     print "swim: --ftp cannot be used with ";  
     print "-r " if defined $commands->{"r"};
     print "--remove " if defined $commands->{"remove"};
     print "--purge " if defined $commands->{"purge"};
+    print "--reinstall " if defined $commands->{"reinstall"};
     print "\n";
     exit;
   }
-  if (($commands->{"r"} || $commands->{"remove"}) && $commands->{"purge"}) {
+  if (($commands->{"r"} || $commands->{"remove"}) && $commands->{"purge"} &&
+      $commands->{"reinstall"}) {
     print "swim: ";
     print "-r " if defined $commands->{"r"};
     print "--remove " if defined $commands->{"remove"};
     print "--purge " if defined $commands->{"purge"};
+    print "--reinstall " if defined $commands->{"reinstall"};
     print "cannot be used together\n";
     exit;
   }
   if (($commands->{"y"} || $commands->{"z"} || $commands->{"x"} ||
-       $commands->{"nz"}) && ($commands->{"ftp"} || $commands->{"purge"})) {
+       $commands->{"nz"}) && ($commands->{"ftp"})) {
     print "swim: -";
     print "x" if $commands->{"x"};
     print "y" if $commands->{"y"};
     print "z" if $commands->{"z"};
     print " --nz" if $commands->{"nz"};
     print " cannot be used with ";
-    print "--purge " if defined $commands->{"purge"};
+    #print "--purge " if defined $commands->{"purge"};
     print "--ftp " if defined $commands->{"ftp"};
     print "\n";
     exit;
@@ -271,6 +274,9 @@ sub xyz {
     !($commands->{"r"} || $commands{"remove"}) ?
       system "$apt_get install -qs $arg" :
       system "$apt_get remove -qs $arg";
+    system "$apt_get --purge remove -qs $arg" if $commands->{"purge"};
+    system "$apt_get --reinstall install -qs $arg" if $commands->{"reinstall"};
+
   }
   #####################
   # INSTALLATION MODE #
@@ -317,7 +323,8 @@ sub xyz {
     #######
     # XYZ #
     #######
-    if (!($commands->{"ftp"} || $commands->{"purge"})) {
+    if (!($commands->{"ftp"} || $commands->{"purge"} || 
+	  $commands->{"reinstall"})) {
      if (!$commands->{"y"}) {
       if (!$commands->{"nz"}) {
        !($commands->{"r"} || $commands{"remove"}) ?
@@ -353,10 +360,11 @@ sub xyz {
       qftp($arg,\%commands);
     }
   
-    ##################
-    # PURGE & REMOVE #
-    ##################
-    elsif ($commands->{"purge"} || $commands->{"remove"} || $commands->{"r"}) {        
+    ##############################
+    # PURGE & REMOVE & REINSTALL #
+    ##############################
+    elsif ($commands->{"purge"} || $commands->{"remove"} || $commands->{"r"} ||
+	   $commands->{"reinstall"}) {        
       purge($arg,\%commands);
     }
 
@@ -384,11 +392,14 @@ sub purge {
 
     if (!$commands->{"n"}) {
      if ($commands->{"purge"}) {
-       system "$dpkg --purge $arg";  
+       system "$apt_get --purge remove $arg";  
 
      }
      elsif ($commands->{"remove"} || $commands->{"r"}) {
-        system "$dpkg -r $arg";  
+        system "$apt_get remove $arg";  
+     }
+     elsif ($commands->{"reinstall"}) {
+	 system "$apt_get --reinstall install $arg";
      }
     }
     else {
@@ -396,6 +407,7 @@ sub purge {
       print "-r " if defined $commands->{"r"};
       print "--remove " if defined $commands->{"remove"};
       print "--purge " if defined $commands->{"purge"};
+      print "--reinstall " if defined $commands->{"reinstall"};
       print "can only be used with installed packages\n";
     }
 
