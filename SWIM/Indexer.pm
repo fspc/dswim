@@ -40,6 +40,7 @@ sub T_indexer {
 
    foreach (@$alot) {
        $argument = $_;
+
        if ($commands->{"scripts"} || 
 	   $commands->{"preinst"} ||
 	   $commands->{"postinst"} || 
@@ -63,6 +64,7 @@ sub T_indexer {
 	   file(\%commands);
        }
        print "\n";
+       return;
    }
 } # end sub T_indexer
 
@@ -412,9 +414,17 @@ sub indexer {
          # -t -C &| -D || -L #
          #####################
          # conf stuf.  Will only show stuff related to -a or -f with conf.
-         elsif (($commands->{"c"} && (!$commands->{"d"} || !$commands->{"l"})) ||
-                ($commands->{"c"} && ($commands->{"d"} || $commands->{"l"}))) {
-           c_indexer(\@alot,\%commands);        
+         elsif (
+		($commands->{"c"} && 
+		 (!$commands->{"d"} || 
+		  !$commands->{"l"})) ||
+
+                ($commands->{"c"} && 
+		 ($commands->{"d"} || 
+		  $commands->{"l"}))) {
+
+	     c_indexer(\@alot,\%commands);        
+
          } # end elsif         
         } 
 
@@ -438,6 +448,7 @@ sub indexer {
          # -D #
          ######
          if ($commands->{"d"} && !$commands->{"c"}) {
+
           if ($commands->{"T"}) {
             T_indexer(\@alot,\%commands);
           }
@@ -451,9 +462,16 @@ sub indexer {
          ################
          # NOT -C,-D,-L  #
          ################
-         elsif (!$commands->{"c"} && (!$commands->{"d"} || !$commands->{"l"})) {     
-          if ($commands->{"T"}) {
-             T_indexer(\@alot,\%commands);
+         elsif (!$commands->{"c"} && 
+		
+		(!$commands->{"d"} || !$commands->{"l"})
+
+		) {     
+
+	     if ($commands->{"T"}) {
+             
+		 T_indexer(\@alot,\%commands);
+
           }
           elsif (which_character(\%commands)) {
              which_character_indexer(\@alot,\%commands);
@@ -468,14 +486,21 @@ sub indexer {
          # -C &| -D || -L #
          ##################
          # conf stuf.  Will only show stuff related to -a or -f with conf.
-         elsif (($commands->{"c"} && (!$commands->{"d"} || !$commands->{"l"})) ||
-                ($commands->{"c"} && ($commands->{"d"} || $commands->{"l"}))) {
+         elsif (
+		($commands->{"c"} && 
+		 (!$commands->{"d"} || !$commands->{"l"})) ||
+                
+		($commands->{"c"} && 
+		 
+		 ($commands->{"d"} || $commands->{"l"}))) {
+
                c_indexer(\@alot,\%commands);
-         }         
-        
-        } # without -t
-    }
-      else { 
+
+	   }         
+	 
+     } # without -t
+   }
+   else { 
         $argument =~ m,.*\/(.*$),;
          if ($1) {
           my $file = $1; 
@@ -535,3 +560,8 @@ sub indexer {
 
 
 1;
+
+
+
+
+
