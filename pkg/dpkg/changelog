@@ -1,3 +1,10 @@
+dswim (0.4.0-2) unstable; urgency=low
+
+  * Changed Suggests gcc to binutils because now ar is found in it.  Most people
+    won't use ar, but you never know.
+
+ -- Jonathan Rosenbaum <freesource@users.sourceforge.net>  Tue, 23 Oct 2001 22:27:25 -0400
+
 dswim (0.4.0-1) unstable; urgency=high
 
   * Dswim now creates databases for non-root users.  All db are now created in
