@@ -29,7 +29,7 @@ use Exporter;
              $splt $mv $imswim $swim_conf $debug $port $timeout
              $firewall $passive $apt_sources $HISTORY $alt);
 %EXPORT_TAGS = (
-               Path => [ qw($tmp $parent $base $library) ],
+               Path => [ qw($tmp $parent $base $library $default_directory) ],
                Deb => [ qw($pwd $dpkg_deb $ar $tar $grep $tmp $md5sum $cat $mv) ],
                Qftp => [ qw($default_root_directory $permission @FTP 
                             $default_directory $swim_conf) ],
@@ -127,7 +127,7 @@ $alt = "debian";
 # own choice. 
 # Naming Convention: Contents = Contents-dist.gz 
 # Packages = Packages-arch-dist-section.gz 
-$default_directory = '/root/.swim';
+$default_directory = $main::home . "/.swim";
 
 
 # The default root directory is the key to easy management of packages
