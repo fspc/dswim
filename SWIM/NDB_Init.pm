@@ -591,6 +591,7 @@ sub initndb {
  
           exit if $#ARGV == -1;
 
+
           ################################
           # APT || DF CONTENTS SITUATION #
           ################################
@@ -1313,6 +1314,12 @@ sub not_installed {
     # it happens to have more than one version, this means running
     # a check, but if the package exists in another architecture, then
     # it isn't a repeat.
+
+  # 2003 This is my customized approach using "apt-cache dumpavail" rather
+  # then lists/packages
+
+  $argument = "apt-cache dumpavail|";
+
     my (%Package_count,%not_me,$packler,%not_me2,%warch,%arc);
     open(PACKAGE, "$argument");
       while (<PACKAGE>) {
