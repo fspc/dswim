@@ -1,27 +1,33 @@
 #!/usr/bin/perl -w
 
-#use diagnostics;
 use strict;
 use DB_File;
 
-################################################################################
-#    Package administration and research tool for Debian                       #
-#    Copyright (C) 1999-2000 Jonathan D. Rosenbaum                             #
-#                                                                              #
-#    This program is free software; you can redistribute it and/or modify      #
-#    it under the terms of the GNU General Public License as published by      #
-#    the Free Software Foundation; either version 2 of the License, or         #
-#    (at your option) any later version.                                       #
-#                                                                              #
-#    This program is distributed in the hope that it will be useful,           #
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
-#    GNU General Public License for more details.                              #
-#                                                                              #
-#    You should have received a copy of the GNU General Public License         #
-#    along with this program; if not, write to the Free Software               #
-#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.#
-################################################################################
+############################################################################
+#
+#    Package administration and research tool for Debian                       
+#
+#    Copyright (C) 1999-2001 Jonathan D. Rosenbaum 
+#
+#                                                                             
+#
+#    This program is free software; you can redistribute it and/or modify 
+#
+#    it under the terms of the GNU General Public License as published by     
+#    the Free Software Foundation; either version 2 of the License, or        
+#    (at your option) any later version.                                       
+#                                                                              
+#    This program is distributed in the hope that it will be useful,         
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             
+#    GNU General Public License for more details.                              
+#                                                                            
+#    You should have received a copy of the GNU General Public License        
+#    along with this program; if not, write to the Free Software              
+#    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
+#    USA
+#
+#############################################################################
 
 
 =pod
@@ -44,7 +50,7 @@ SWIM::NDB_Init.
 
 
  if ($#ARGV == -1) {
-  print "swim: longswim requires many arguments, see program for instructions\n";
+  print STDERR "swim: longswim requires many arguments, see program for instructions\n";
   exit;
  }
 
@@ -97,8 +103,8 @@ sub nmd {
              s,^(\./)+,,;  # filter for Debians altered dir structure 
              print CONTENTSDB $_;
           $x = 1 if $x == 6;
-          print "|\r" if $x == 1 || $x == 4; print "/\r" if $x == 2;
-          print "-\r" if $x == 3 || $x == 6; print "\\\r" if $x == 5;
+          print STDERR "|\r" if $x == 1 || $x == 4; print STDERR "/\r" if $x == 2;
+          print STDERR "-\r" if $x == 3 || $x == 6; print STDERR "\\\r" if $x == 5;
           $x++;             
              chomp $_;
              # find all directories
@@ -448,14 +454,14 @@ sub nmd {
     close(FILEDIR);
     close(CONTENTS);
 
-    print "Compress contents\n";
+    print STDERR "Compress contents\n";
     system "$gzip", "-9", "$contentsindex";
     utime(time,$Contents_mtime,$contentsindex); 
-    print "Cleaning up\n";
+    print STDERR "Cleaning up\n";
     # this will add a newline, but better to do a Ctrl-C than to have the
     # process hang and respawn itself - something which sometimes happens
     kill INT => $$;
-    print "swim: please press Ctrl-c\n"; # just in case :)
+    print STDERR "swim: please press Ctrl-c\n"; # just in case :)
 
     # probably don't need to do this ends the program 
     #undef %all;
