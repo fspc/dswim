@@ -34,64 +34,162 @@ sub singular {
   my %commands = %$commands;
 
   # for files, dirs, or groups
-  if (($commands->{"f"} || $commands->{"dir"} ||  $commands->{"g"} || 
-      $commands->{"q"}) && 
-      !($commands->{"i"} || $commands->{"l"} ||
-      $commands->{"df"} || $commands->{"d"} || $commands->{"c"} ||
-      $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
-      $commands->{"pre_depends"} || $commands->{"depends"} || 
-      $commands->{"recommends"} || $commands->{"suggests"} ||
-      $commands->{"provides"} || $commands->{"replaces"} ||
-      $commands->{"conflicts"} || $commands->{"requires"} ||
-      $commands->{"changelog"} || $commands->{"m"} || $commands->{"menu"} ||
-      $commands->{"copyright"})) {
-        print "$argument\n";
+  if (
+      ($commands->{"f"} || 
+       $commands->{"dir"} ||  
+       $commands->{"g"} || 
+       $commands->{"q"}) && 
+
+      !($commands->{"i"} || 
+	$commands->{"l"} ||
+	$commands->{"df"} || 
+	$commands->{"d"} || 
+	$commands->{"c"} ||
+	$commands->{"scripts"} || 
+	$commands->{"preinst"} || 
+	$commands->{"postinst"} || 
+	$commands->{"prerm"} || 
+	$commands->{"postrm"} || 
+	$commands->{"config"} || 
+	$commands->{"templates"} || 
+	$commands->{"T"} ||
+	$commands->{"pre_depends"} || 
+	$commands->{"depends"} || 
+	$commands->{"recommends"} || 
+	$commands->{"suggests"} ||
+	$commands->{"provides"} || 
+	$commands->{"replaces"} ||
+	$commands->{"conflicts"} || 
+	$commands->{"requires"} ||
+	$commands->{"changelog"} || 
+	$commands->{"m"} || 
+	$commands->{"menu"} ||
+	$commands->{"copyright"})
+      
+      ) {
+      
+      print "$argument\n";
+
   }
-  elsif (($commands->{"f"}  || $commands->{"dir"} ||  $commands->{"g"} ||
-      $commands->{"q"}) && 
-      $commands {"c"} && !($commands->{"i"} || 
-      $commands->{"df"} || $commands->{"d"} || $commands->{"l"} ||
-      $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} &&
-      $commands->{"pre_depends"} || $commands->{"depends"} || 
-      $commands->{"recommends"} || $commands->{"suggests"} ||
-      $commands->{"provides"} || $commands->{"replaces"} ||
-      $commands->{"conflicts"} || $commands->{"requires"} ||
-      $commands->{"changelog"}  || $commands->{"m"} || $commands->{"menu"} ||
-      $commands->{"copyright"})) {
-        print "$argument\n";
+  elsif (
+	 ($commands->{"f"}  || 
+	  $commands->{"dir"} ||  
+	  $commands->{"g"} ||
+	  $commands->{"q"}) && 
+
+	 $commands {"c"} && 
+
+	 !($commands->{"i"} || 
+	   $commands->{"df"} || 
+	   $commands->{"d"} || 
+	   $commands->{"l"} ||
+	   $commands->{"scripts"} || 
+	   $commands->{"preinst"} ||
+	   $commands->{"postinst"} || 
+	   $commands->{"prerm"} || 
+	   $commands->{"postrm"} || 
+	   $commands->{"config"} || 
+	   $commands->{"templates"} || 
+	   $commands->{"T"} &&
+	   $commands->{"pre_depends"} || 
+	   $commands->{"depends"} || 
+	   $commands->{"recommends"} || 
+	   $commands->{"suggests"} ||
+	   $commands->{"provides"} || 
+	   $commands->{"replaces"} ||
+	   $commands->{"conflicts"} || 
+	   $commands->{"requires"} ||
+	   $commands->{"changelog"}  || 
+	   $commands->{"m"} || 
+	   $commands->{"menu"} ||
+	   $commands->{"copyright"})
+
+	 ) {
+
+      print "$argument\n";
+
   }
-  elsif (($commands->{"f"}  || $commands->{"dir"} || $commands->{"g"} ||
-      $commands->{"q"}) && 
-      $commands {"c"} && $commands->{"d"} &&
-      !($commands->{"i"} || $commands->{"df"} || $commands->{"l"} || 
-      $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
-      $commands->{"pre_depends"} || $commands->{"depends"} || 
-      $commands->{"recommends"} || $commands->{"suggests"} ||
-      $commands->{"provides"} || $commands->{"replaces"} ||
-      $commands->{"conflicts"} || $commands->{"requires"} ||
-      $commands->{"changelog"}  || $commands->{"m"} || $commands->{"menu"} ||
-      $commands->{"copyright"})) {
-        print "$argument\n";
+  elsif (
+	 ($commands->{"f"}  || 
+	  $commands->{"dir"} || 
+	  $commands->{"g"} ||
+	  $commands->{"q"}) && 
+
+	 $commands {"c"} && 
+	 $commands->{"d"} &&
+
+	 !($commands->{"i"} || 
+	   $commands->{"df"} || 
+	   $commands->{"l"} || 
+	   $commands->{"scripts"} || 
+	   $commands->{"preinst"} || 
+	   $commands->{"postinst"} || 
+	   $commands->{"prerm"} || 
+	   $commands->{"postrm"} || 
+	   $commands->{"config"} || 
+	   $commands->{"templates"} || 
+	   $commands->{"T"} ||
+	   $commands->{"pre_depends"} || 
+	   $commands->{"depends"} || 
+	   $commands->{"recommends"} || 
+	   $commands->{"suggests"} ||
+	   $commands->{"provides"} || 
+	   $commands->{"replaces"} ||
+	   $commands->{"conflicts"} || 
+	   $commands->{"requires"} ||
+	   $commands->{"changelog"}  || 
+	   $commands->{"m"} || 
+	   $commands->{"menu"} ||
+	   $commands->{"copyright"})
+
+	 ) {
+
+      print "$argument\n";
   }
-  elsif (($commands->{"f"}  || $commands->{"dir"} ||  $commands->{"g"} ||
-      $commands->{"q"}) && 
-      $commands {"c"} && ($commands->{"d"} ||
-      $commands->{"l"}) && !($commands->{"i"} || $commands->{"df"} || 
-      $commands->{"scripts"} || $commands->{"preinst"} || $commands->{"postinst"} || 
-      $commands->{"prerm"} || $commands->{"postrm"} || $commands->{"config"} || $commands->{"templates"} || $commands->{"T"} ||
-      $commands->{"pre_depends"} || $commands->{"depends"} || 
-      $commands->{"recommends"} || $commands->{"suggests"} ||
-      $commands->{"provides"} || $commands->{"replaces"} ||
-      $commands->{"conflicts"} || $commands->{"requires"} ||
-      $commands->{"changelog"}  || $commands->{"m"} || $commands->{"menu"} ||
-      $commands->{"copyright"})) {
-        print "$argument\n";
+  elsif (
+	 ($commands->{"f"}  || 
+	  $commands->{"dir"} ||  
+	  $commands->{"g"} ||
+	  $commands->{"q"}) && 
+
+	 $commands {"c"} && 
+
+	 ($commands->{"d"} ||
+	  $commands->{"l"}) && 
+
+	 !($commands->{"i"} || 
+	   $commands->{"df"} || 
+	   $commands->{"scripts"} || 
+	   $commands->{"preinst"} || 
+	   $commands->{"postinst"} || 
+	   $commands->{"prerm"} || 
+	   $commands->{"postrm"} || 
+	   $commands->{"config"} || 
+	   $commands->{"templates"} || 
+	   $commands->{"T"} ||
+	   $commands->{"pre_depends"} || 
+	   $commands->{"depends"} || 
+	   $commands->{"recommends"} || 
+	   $commands->{"suggests"} ||
+	   $commands->{"provides"} || 
+	   $commands->{"replaces"} ||
+	   $commands->{"conflicts"} || 
+	   $commands->{"requires"} ||
+	   $commands->{"changelog"}  || 
+	   $commands->{"m"} || 
+	   $commands->{"menu"} ||
+	   $commands->{"copyright"})
+
+	 ) {
+
+      print "$argument\n";
+
   }
 
 } # end sub singular
 
+# Now that is fun.
 
 1;
+
+
