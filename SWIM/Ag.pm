@@ -64,10 +64,10 @@ sub description {
      }
     if ($db{"$argument"}){
        my $package = $db{"$argument"};
-       print $package;
+       print "$package\n";
     }
       else { 
-        print "package $argument is not installed\n"; 
+        print "package $argument is not installed\n\n"; 
         return "not installed";
       }
   }
