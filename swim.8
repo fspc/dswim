@@ -1,7 +1,10 @@
 .rn '' }`
-''' $RCSfile: swim.8,v $$Revision: 1.1.1.1 $$Date: 2001/01/27 00:02:37 $
+''' $RCSfile: swim.8,v $$Revision: 1.2 $$Date: 2001/10/12 18:04:00 $
 '''
 ''' $Log: swim.8,v $
+''' Revision 1.2  2001/10/12 18:04:00  freesource
+''' A little message, to be improved apon.
+'''
 ''' Revision 1.1.1.1  2001/01/27 00:02:37  freesource
 ''' Does this thing work now?
 '''
@@ -191,11 +194,11 @@
 .\}
 .rm #[ #] #H #V #F C
 .SH "NAME"
-swim \- package administration and research tool for Debian packages
+dswim \- Debian System Wide Infomation Manager
 .SH "SYNOPSIS"
 swim [options]
 .SH "DESCRIPTION"
-\fBswim\fR is a powerful \fIpackage administration\fR and \fIresearch tool\fR for
+\fBdswim\fR is a powerful \fIpackage administration\fR and \fIresearch tool\fR for
 both an \fIinstalled Debian distribution\fR, and/or \fInot-installed virtual
 Debian distribution(s)\fR allowing querying of software packages with a
 variety of package information options, and powerful searches. Virtual
@@ -203,8 +206,12 @@ options which include ftp, installation, and package removal capabilities
 can be seamlessly combined with querying or searches. \fBswim\fR can be used
 on computer systems which either have, or do not have a Debian
 distribution installed. 
-.SH "NOTE"
-This manual is outdated.
+.SH "WARNING"
+This manual hasn't had a serious update since 1999, and many parts are 
+inaccurate in relationship to the new structure and functionality found
+in Debian.  New options have been added to dswim which aren't described
+below, and some of the options described have been temporarily removed 
+from help until they are revised to support Debian's new archive hierarchy.
 .SH "COMMAND LINE OPTION SYNTAX"
 When you press ``\fBswim\fR <\fBenter\fR>`` you will see a listing of command
 line options in a particular syntax. This is to help you understand under
@@ -1422,9 +1429,9 @@ and \fB--root\fR.
 .SH "SEE ALSO"
 \fIswimrc\fR\|(5), apt-\fIget\fR\|(8), sources.\fIlist\fR\|(5), \fIdpkg\fR\|(8)
 .SH "BUGS"
-Send directly to mttrader@access.mountain.net
+Report to the Bug Tracking System at http://sourceforge.net/projects/avd
 .SH "AUTHOR"
-Jonathan D. Rosenbaum <mttrader@access.mountain.net>
+Jonathan Rosenbaum <freesource@users.sourceforge.net>
 .SH "COPYRIGHT"
 Copyright (c) 1999 Jonathan Rosenbaum. All rights reserved. This program
 is free software; you can redistribute it and/or modify it under the GPL. 
