@@ -1562,11 +1562,11 @@ sub usage {
 # agrandizing....
 print "SWIM version $swim_version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
-This may be freely redistributed under the terms of the GNU Public License\n";
+This may be freely redistributed under the terms of the GNU General Public License\n";
 
 $save = "SWIM version $swim_version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
-This may be freely redistributed under the terms of the GNU Public License
+This may be freely redistributed under the terms of the GNU General Public License
 
 Usage: swim [--nopager -n]
        swim {--help} [--nopager -n]
@@ -1661,7 +1661,7 @@ sub nusage {
 
 $save = "SWIM version $swim_version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
-This may be freely redistributed under the terms of the GNU Public License
+This may be freely redistributed under the terms of the GNU General Public License
 
 Usage: swim [--nopager -n]
        swim {--help} [--nopager -n]
@@ -1754,7 +1754,7 @@ sub help {
 
 $save = "SWIM version $swim_version
 Copyright (C) 2000 - by Jonathan Rosenbaum for ThE_* Project
-This may be freely redistributed under the terms of the GNU Public License
+This may be freely redistributed under the terms of the GNU General Public License
 
 usage:
    --help                   - print this message
