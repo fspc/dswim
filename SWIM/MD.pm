@@ -54,7 +54,7 @@ sub process_md {
      my $count1 = 1;
 
      my($place) = finddb(\%commands);
-     $place = "$default_directory$place";
+     #$place = "$default_directory$place";
           
      # Let's determine what architecture and distribution this person is
      # interested in.
