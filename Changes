@@ -1,61 +1,12 @@
-# My personal changes copy
-
-
-
-------------------------------------
-
-FM changes:
-
-Databases are automatically rebuilt.  Non-root users have access to the 
-majority of information and packaging features.  Several new options have 
-been added  to support new features found in apt; all virtual options now call
-apt.
-
-
-Private databases are automatically rebuilt for each user.  Non-root users have access to the majority of features.  Several new options have been added  to support a matured apt; all virtual options now call apt.
-
-
-*****************************
-out: DSWIM is a powerful informational tool for Debian's packaging system. Designed with an integrated approach it
-  combines the functionality found in several other programs and scripts. This provides users with a centralized approach for
-  querying the installation, allowing programmers the liberty of writing smaller and simpler code.
-
-  Changes: Private databases are automatically rebuilt for each user. Non-root users have access to the majority of features.
-  Several new options have been added to support a matured apt; all virtual options now call apt.
-
-  License: GNU General Public License (GPL) - Release focus: Major feature enhancements
-
-  Homepage:
-  http://www.sourceforge.net/projects/avd
-  Tar/GZ:
-  [..]tp://prdownloads.sourceforge.net/avd/dswim_0.4.1.orig.tar.gz
-  Changelog:
-  [..]ttp://sourceforge.net/project/shownotes.php?release_id=58559
-  Debian package:
-  http://prdownloads.sourceforge.net/avd/dswim_0.4.1-1_all.deb
-  CVS tree (cvsweb):
-  http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/avd/avd/swim/
-  Mailing list archive:
-  http://sourceforge.net/mail/?group_id=17787
-
-Your new release (ID 60570) has been stored for verification by the freshmeat crew. Please note that submissions may be
-   edited for brevity, grammar and in some cases content. 
-
-**********************
-
-
----------------------------------
-
+0.4.1 - 10/24/2001
+------------------
+	
 Adds the --enhances option for binary dependencies.
 
---------------------
+0.4.0 - 10/23/2001
+------------------	
 
-Changed Suggests gcc to binutils because now ar is found in it.  Most people
-won't use ar, but you never know.
-
---------------------
-
-Dswim now creates databases for non-root users.  All db are now created in
+ Dswim now creates databases for non-root users.  All db are now created in
 $HOME/default_directory/var/lib/dpkg rather than /var/lib/dpkg, and 
 .swim_history is put here, too.
 
@@ -99,37 +50,81 @@ Added swim_pkg to CVS to simplify packaging dswim.
 
 The control dependencies have been improved.
 
+0.3.6 - 10/20/2000
+------------------
+	
+Made swim perl-5.6 happy.  Thanks to Douglas du Boulay
+<ddb@crystal.uwa.edu.au> for pointing this out.
 
+0.3.5 -  01/28/2000
+-------------------
 
-Description: Debian System Wide Information Manager
- DSWIM is a powerful informational tool for Debian's packaging system.  
- Designed with an integral approach it provides much of the same 
- functionality found in several smaller programs and scripts.  This 
- allows users a centralized approach to quering the installation, and
- programmers the liberty of writing smaller and simpler code.  
+Fixed a minor bug pertaining to the mtime of Contents which occured
+during initial building of the uninstalled filesystem using FDBDF or
+DF.  This bug arose as a result of a bug fix in 0.3.4.
 
-* it wins
-Description: Debian System Wide Information Manager
- DSWIM is a powerful informational tool for Debian's packaging system.  
- Designed with an integral approach it combines the functionality 
- found in several other programs and scripts.  This provides users with a 
- centralized approach to querying the installation, and allows programmers 
- the liberty of writing smaller and simpler code.  
+0.3.4 - 01/23/2000
+------------------
 
-Before:
-swim is a powerful package manager like Red Hat's RPM. It allows an uninstalled distribution to be viewed and tested, adds many enhancements, and combines searching, querying, and installation together in an intuitive and enjoyable manner, making life much easier.
+Made the changelog and copyright option work properly in relation to
+the fsstnd Debian has adopted with backwards compatibility.  Fixed a
+regexp in Qftp to properly deal with packages which match one another,
+but aren't the same.  Fixed xyzr to work properly with ps.  Fixed share
+-d/l output for p option.  Added an indication when extraction
+succeeds.  Now Contents is properly filtered for ndb. Removed extra
+output from menu for package option.  Added example documentation,
+thanks to John Lapeyre for the suggestion.  Also, thanks to Joel Soete
+for reporting corrupt sources from a faulty upload, and to tucows.com
+for adding swim to their archive and awarding swim 5 Penguins.
 
+0.3.3 - 01/15/2000
+------------------
 
+Repaired a bug in longswim causing the uninstalled filesystem to be
+made with packages which looked like spaces due to a return code error,
+which caused some trouble for the virtual directories.  ncontents is
+now filtered of ./, though it was cool to look at.
 
-DSWIM is a powerful informational tool for Debian's packaging system.  Designed with an integral approach it combines the functionality found in several other programs and scripts.  This provides users with a centralized approach to querying the installation, and allows programmers the liberty of writing smaller and simpler code.  
+0.3.2 - 01/05/2000
+------------------
 
+Fixed to properly find documentation in the not-installed new Debian
+share directories, perl5 in Depends for the new Debian perl policy, and
+year 2000 in help.
 
+0.3.1 - 01/04/2000
+------------------
 
+Because of change in Debian's directory structure in Contents, added a
+filter so that not-installed database is properly made without repeats.
+Fixed a documentation error in QUICKSTART.  Made swim@the.netpedia.net
+default anonymous login.  Minor documentation improvements. 
 
+0.3.0 - 06/15/1999
+------------------
 
+Many significant bug fixes, users of earlier releases should rebuild
+their databases.  Additional useful features including a history and
+the ability to update the not-installed databases.
 
+0.2.9 - 05/27/1999
+------------------
 
+Interim Release
 
+0.2.8 - 03/13/1999
+------------------
 
+Fixed a minor bug which was preventing virtual options --xyz and --ftp 
+from working with searches.
 
+0.2.7 - 03/12/1999
+------------------
 
+Fixed file test in SWIM::Conf causing a failed startup.
+
+0.2.6
+-----
+	
+Initial Release.
+	
