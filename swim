@@ -2049,7 +2049,7 @@ usage:
      --lowmem              - use low memory method to make databases
      --split_data <lines>  - change size of database making files by
                              altering the amount of lines 
-     --check                - check what will be updated (--db)
+     --check               - check what will be updated (--db)
 
 \n";
 
