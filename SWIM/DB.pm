@@ -876,12 +876,19 @@ sub db {
 	  } # if defined        
 	  else {
 	      dbi(\%commands);
-	      print "$_ $db{$package_name}\n";
-	      $zing->put($_,$db{$package_name});    
+
+	      #$zing->put($_,$db{$package_name});    
+	      # wow, very weird .. used to work fine, but this did the trick :)
+	      # otherwise the key and value were placed in random places 
+	      # and never together
+	      # inspired here - http://modperlbook.org/html/ch19_06.html
+	      # in 19.6.2. Read/Write Access
+
+	      $ib{$_} = $db{$package_name};
 	  }
 
-      untie %db;
-      untie $zing;
+	  untie %db;
+	  untie $zing;
 
       } # end while
 
