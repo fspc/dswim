@@ -532,7 +532,7 @@ sub file {
      if (defined $argument) {
         if (!defined $db{"$argument"}) {
          print "package $argument is not installed\n";          
-         exit;
+         return "not installed";
         }
      }
      nfile(\%commands);

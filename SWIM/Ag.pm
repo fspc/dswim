@@ -68,7 +68,7 @@ sub description {
     }
       else { 
         print "package $argument is not installed\n"; 
-        exit;
+        return "not installed";
       }
   }
   untie %db;
