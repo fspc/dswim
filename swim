@@ -2051,16 +2051,6 @@ usage:
                              altering the amount of lines 
      --check                - check what will be updated (--db)
 
-      Alternative Sections
-        --main                - extract main section
-        --contrib             - extract contrib section
-        --non-free            - extract non-free section
-        --non-us              - extract non-us section          
-      Automate 
-        --cron                - automate database production
-      Test
-        -v                    - check built-in comparison function
-
 \n";
 
 } # end sub help
