@@ -1100,7 +1100,7 @@ alternative directory and --dbpath and/or --root used.
        # From here on we can start putting stuff in the databases
        elsif (defined $ok) { 
          # first the package relationships
-         if (defined @REPLACE) {
+         if (@REPLACE) {
            my %relationship = @REPLACE;
            foreach (keys %relationship) {
               $ping->put($_,$relationship{$_});  
@@ -1108,7 +1108,7 @@ alternative directory and --dbpath and/or --root used.
            undef @REPLACE; 
          }
          # second the groups
-         if (defined %group) {
+         if ( %group ) {
             if (!defined $gb{$group}) {
               $ging->put($group,$package[1]);
             }
@@ -1120,7 +1120,7 @@ alternative directory and --dbpath and/or --root used.
             undef %group;
          }
          # third Filename
-         if (defined @FILENAME) {
+         if (@FILENAME) {
            my %filename = @FILENAME;
            foreach (keys %filename) {
             $ping->put($_,$filename{$_});  
@@ -1606,7 +1606,7 @@ alternative directory and --dbpath and/or --root used.
    unlink("$place/.packagesdiff$arch$dist.deb");
    rename("$place/.packagesdiff$arch$dist.deb.bk",
           "$place/.packagesdiff$arch$dist.deb");
-   if (defined @PDbk) {
+   if (@PDbk) {
      print "\n"; $x = 1;  
      # now we get to add a few more seconds checking to see if packages
      # which haven't changed can now be found in Contents, so

@@ -89,7 +89,7 @@ sub find_contents {
           ###############
           # this doesn't work to well for anything less simple than ../../
           if (m,^\.\./|^\.\.$,) {
-           if ($_ !~ m,/[\w-+]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
+           if ($_ !~ m,/[\w\+-]+/[\.\$\^\+\?\*\[\]\w-]*$,) {
              my $dd; tr/\/// ? ($dd = tr/\///) : ($dd = 1); 
              my @pwd =  split(m,/,,$pwd);
              s,\.\./,,g;
